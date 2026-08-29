@@ -1,0 +1,21 @@
+name: raw_games
+type: duckdb.seed
+parameters:
+  path: raw_games.csv
+columns:
+  - name: game_seq
+    type: integer
+    checks:
+      - name: not_null
+  - name: player
+    type: string
+    checks:
+      - name: not_null
+  - name: total_score
+    type: integer
+  - name: upper_bonus_hit
+    type: boolean
+  - name: yahtzee_count
+    type: integer
+  - name: zeros_taken
+    type: integer

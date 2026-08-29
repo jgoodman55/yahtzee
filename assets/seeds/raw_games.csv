@@ -1,0 +1,11 @@
+game_seq,player,total_score,upper_bonus_hit,yahtzee_count,zeros_taken
+1,jordan,214,true,1,1
+1,partner,231,true,0,0
+2,jordan,187,false,0,2
+2,partner,175,false,1,1
+3,jordan,255,true,2,0
+3,partner,201,true,0,1
+4,jordan,198,true,0,1
+4,partner,244,true,1,0
+5,jordan,163,false,0,3
+5,partner,190,false,0,1

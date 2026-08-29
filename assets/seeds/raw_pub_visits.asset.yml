@@ -1,0 +1,9 @@
+name: raw_pub_visits
+type: duckdb.seed
+parameters:
+  path: raw_pub_visits.csv
+columns:
+  - name: merchant_name_raw
+    type: string
+    checks:
+      - name: not_null

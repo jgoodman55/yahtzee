@@ -1,0 +1,9 @@
+id: yahtzee-analytics
+schedule: daily          # meaningless for a manually-updated hobby project,
+                         # but Bruin wants something — run manually via
+                         # `bruin run` whenever you add games
+start_date: "2024-01-01"
+default_connections:
+  duckdb: duckdb-default
+notifications:
+  slack: []              # add a webhook here later if you want run alerts

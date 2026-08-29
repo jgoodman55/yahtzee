@@ -1,0 +1,16 @@
+name: seed_pubs
+type: duckdb.seed
+parameters:
+  path: seed_pubs.csv
+  enforce_schema: false   # keep this loose — you'll be hand-editing this file
+columns:
+  - name: merchant_name_raw
+    type: string
+  - name: pub_name
+    type: string
+  - name: lat
+    type: float
+  - name: lng
+    type: float
+  - name: note
+    type: string

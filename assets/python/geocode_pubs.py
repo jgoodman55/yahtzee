@@ -1,5 +1,6 @@
 """@bruin
 name: mart_pub_locations
+connection: duckdb-default
 type: python
 depends:
   - raw_pub_visits
@@ -15,6 +16,20 @@ materialization:
 #   3. Google Places Text Search (needs GOOGLE_PLACES_API_KEY, small free tier)
 #   4. unresolved            (flagged for you to review and add to the seed)
 #
+# Then dedupes across sources by physical proximity: "Anchor Bar" (seed) and
+# "Anchor Bankside (South" (a card-statement merchant string) are different
+# text but the same building — string similarity alone won't reliably catch
+# that (fuzzy name matching is fooled by chain pub naming and abbreviations
+# just as easily as it's helped by them). Instead, once each merchant string
+# has *coordinates* (from any of the three sources above), venues within
+# ~50m of each other are treated as the same physical pub and collapsed to
+# one row, keeping the seed's name/coords as authoritative when a seed match
+# is involved.
+#
+# Set OFFLINE_TEST=1 to skip live Nominatim/Google calls entirely (seed
+# matches only, everything else marked unresolved) — useful for testing the
+# rest of the Bruin pipeline without network access or API keys.
+#
 # Requires: requests  (add to requirements.txt next to this asset)
 
 import os
@@ -27,12 +42,17 @@ from bruin import query
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
 GOOGLE_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY")
+OFFLINE_TEST = os.environ.get("OFFLINE_TEST") == "1"
 
 # Nominatim's usage policy requires a real identifying User-Agent and max 1 req/sec.
 HEADERS = {"User-Agent": "yahtzee-analytics-personal-project (contact: you@example.com)"}
 
 PUB_OSM_CLASSES = {"pub", "bar", "biergarten"}
 PUB_GOOGLE_TYPES = {"bar", "night_club"}  # Google has no distinct "pub" type
+
+# ~50m at London's latitude — tight enough not to merge genuinely different
+# pubs a couple of blocks apart, loose enough to absorb GPS/geocoding jitter.
+DEDUPE_RADIUS_DEGREES = 0.00045
 
 
 def try_seed(merchant: str, seed_df: pd.DataFrame):
@@ -50,6 +70,8 @@ def try_seed(merchant: str, seed_df: pd.DataFrame):
 
 
 def try_nominatim(merchant: str):
+    if OFFLINE_TEST:
+        return None
     try:
         resp = requests.get(
             NOMINATIM_URL,
@@ -77,7 +99,7 @@ def try_nominatim(merchant: str):
 
 
 def try_google_places(merchant: str):
-    if not GOOGLE_API_KEY:
+    if OFFLINE_TEST or not GOOGLE_API_KEY:
         return None
     try:
         resp = requests.post(
@@ -125,12 +147,48 @@ def resolve_merchant(merchant: str, seed_df: pd.DataFrame) -> dict:
     }
 
 
-def main():
+def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
+    """Collapses rows whose coordinates are within DEDUPE_RADIUS_DEGREES of
+    each other into a single pub, preferring a seed-sourced row's name/coords
+    as the canonical one when a seed match is in the cluster."""
+    locatable = df[df["lat"].notna()].copy()
+    unresolved = df[df["lat"].isna()].copy()
+    if locatable.empty:
+        return df
+
+    locatable = locatable.sort_values(by="source", key=lambda s: s.map({"seed": 0}).fillna(1))
+    clusters = []  # list of dicts: {lat, lng, canonical_row, merged_merchant_names}
+    for _, row in locatable.iterrows():
+        match = next(
+            (c for c in clusters
+             if abs(c["lat"] - row["lat"]) < DEDUPE_RADIUS_DEGREES
+             and abs(c["lng"] - row["lng"]) < DEDUPE_RADIUS_DEGREES),
+            None,
+        )
+        if match:
+            match["merged_merchant_names"].append(row["merchant_name_raw"])
+        else:
+            clusters.append({
+                "lat": row["lat"], "lng": row["lng"],
+                "canonical_row": row, "merged_merchant_names": [row["merchant_name_raw"]],
+            })
+
+    deduped_rows = []
+    for c in clusters:
+        row = c["canonical_row"].copy()
+        row["merged_from"] = ", ".join(c["merged_merchant_names"])
+        deduped_rows.append(row)
+
+    return pd.concat([pd.DataFrame(deduped_rows), unresolved], ignore_index=True)
+
+
+def materialize():
     visits = query("select distinct merchant_name_raw from raw_pub_visits")
     seed = query("select * from seed_pubs")
 
     resolved = [resolve_merchant(m, seed) for m in visits["merchant_name_raw"]]
     result_df = pd.DataFrame(resolved)
+    result_df = dedupe_by_proximity(result_df)
 
     unresolved_count = (result_df["source"] == "unresolved").sum()
     if unresolved_count:
@@ -138,11 +196,7 @@ def main():
             f"{unresolved_count} venue(s) unresolved — review them and add rows "
             "to assets/seeds/seed_pubs.csv, then re-run."
         )
+    if OFFLINE_TEST:
+        print("OFFLINE_TEST=1 — skipped live geocoding, seed matches only.")
 
     return result_df
-
-
-# Bruin python assets: the last expression / a `df`-returning main() pattern
-# materializes the table. If your installed Bruin version expects an explicit
-# global instead, assign it directly: df = main()
-df = main()

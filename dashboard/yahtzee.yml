@@ -1,49 +1,80 @@
-# DAC dashboard definition. DAC is a separate binary from the Bruin CLI
-# (bruin-data/dac) — run `dac init` alongside this pipeline, point it at the
-# same .bruin.yml connections, then `dac validate --dir dashboard` before
-# trusting the exact widget schema below; it's a reasonable starting point
-# but DAC's YAML shape is worth confirming against `dac validate`'s output.
-title: Yahtzee Head-to-Head
-description: Jordan vs. partner — every game, ordered by sequence not date.
+schema: https://getbruin.com/schemas/dac/dashboard/v1
+name: Yahtzee Head-to-Head
+description: Jordan vs. Erin — every game, ordered by sequence not date.
+connection: duckdb-default
 
-widgets:
-  - type: stat
-    title: Total games
-    query: select count(*) as value from mart_head_to_head
+rows:
+  - widgets:
+      - name: Total games
+        type: chart
+        chart: gauge
+        col: 4
+        sql: |
+          select count(*)::integer as current, count(*)::integer as target
+          from mart_head_to_head
+        value: current
+        target: target
 
-  - type: stat
-    title: Jordan wins
-    query: select max(jordan_cum_wins) as value from mart_head_to_head
+      - name: Jordan wins
+        type: chart
+        chart: gauge
+        col: 4
+        sql: |
+          select max(jordan_cum_wins)::integer as current,
+                 count(*)::integer as target
+          from mart_head_to_head
+        value: current
+        target: target
 
-  - type: stat
-    title: Partner wins
-    query: select max(partner_cum_wins) as value from mart_head_to_head
+      - name: Erin wins
+        type: chart
+        chart: gauge
+        col: 4
+        sql: |
+          select max(erin_cum_wins)::integer as current,
+                 count(*)::integer as target
+          from mart_head_to_head
+        value: current
+        target: target
 
-  - type: line
-    title: Cumulative wins by game sequence
-    query: |
-      select game_seq, jordan_cum_wins, partner_cum_wins
-      from mart_head_to_head
-      order by game_seq
-    x: game_seq
-    y: [jordan_cum_wins, partner_cum_wins]
+  - widgets:
+      - name: Cumulative wins by game sequence
+        type: chart
+        chart: line
+        col: 12
+        sql: |
+          select game_seq, jordan_cum_wins, erin_cum_wins
+          from mart_head_to_head
+          order by game_seq
+        x: game_seq
+        y: [jordan_cum_wins, erin_cum_wins]
 
-  - type: bar
-    title: Margin of victory by game
-    query: select game_seq, winner, margin from mart_head_to_head order by game_seq
-    x: game_seq
-    y: margin
+  - widgets:
+      - name: Margin of victory by game
+        type: chart
+        chart: bar
+        col: 12
+        sql: |
+          select game_seq, margin
+          from mart_head_to_head
+          order by game_seq
+        x: game_seq
+        y: margin
 
-  - type: table
-    title: Commentary log
-    query: |
-      select game_seq, winner, margin_comment, yahtzee_comment, bonus_comment, streak_comment
-      from mart_head_to_head
-      order by game_seq desc
+  - widgets:
+      - name: Commentary log
+        type: table
+        col: 12
+        sql: |
+          select game_seq, winner, margin_comment, yahtzee_comment, bonus_comment, streak_comment
+          from mart_head_to_head
+          order by game_seq desc
 
-  - type: markdown
-    title: Win-race animation
-    content: |
-      Rendered separately via `visuals/win_race_animation.py` (matplotlib,
-      not a DAC-native widget). Drop the exported `win_race.mp4`/`.gif` next
-      to this dashboard and embed it, or link out to it.
+  - widgets:
+      - name: Data quality — totals mismatches
+        type: table
+        col: 12
+        sql: |
+          select game_seq, player_key, computed_total, recorded_total
+          from fact_games
+          where not totals_match

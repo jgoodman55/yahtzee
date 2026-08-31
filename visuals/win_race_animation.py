@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 DB_PATH = "../yahtzee.duckdb"
-PLAYERS = ["jordan", "partner"]
-COLORS = {"jordan": "#3B82F6", "partner": "#EF4444"}
+PLAYERS = ["jordan", "erin"]
+COLORS = {"jordan": "#3B82F6", "erin": "#EF4444"}
 
 
 def load_data():
@@ -36,7 +36,7 @@ def build_caption(row) -> str:
 
 def animate(df):
     fig, ax = plt.subplots(figsize=(8, 5))
-    max_wins = max(df["jordan_cum_wins"].max(), df["partner_cum_wins"].max()) + 1
+    max_wins = max(df["jordan_cum_wins"].max(), df["erin_cum_wins"].max()) + 1
 
     def draw(frame_idx):
         ax.clear()
@@ -45,10 +45,10 @@ def animate(df):
 
         bars = ax.bar(
             PLAYERS,
-            [row["jordan_cum_wins"], row["partner_cum_wins"]],
+            [row["jordan_cum_wins"], row["erin_cum_wins"]],
             color=[COLORS[p] for p in PLAYERS],
         )
-        for bar, val in zip(bars, [row["jordan_cum_wins"], row["partner_cum_wins"]]):
+        for bar, val in zip(bars, [row["jordan_cum_wins"], row["erin_cum_wins"]]):
             ax.text(bar.get_x() + bar.get_width() / 2, val + 0.1, str(int(val)),
                      ha="center", fontweight="bold")
 

@@ -1,0 +1,14 @@
+name: raw_players
+type: duckdb.seed
+parameters:
+  path: raw_players.csv
+columns:
+  - name: player_key
+    type: string
+    checks:
+      - name: not_null
+      - name: unique
+  - name: display_name
+    type: string
+    checks:
+      - name: not_null

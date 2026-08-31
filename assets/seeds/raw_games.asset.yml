@@ -11,11 +11,28 @@ columns:
     type: string
     checks:
       - name: not_null
-  - name: total_score
+  - name: category
+    type: string
+    checks:
+      - name: not_null
+      - name: accepted_values
+        value:
+          - ones
+          - twos
+          - threes
+          - fours
+          - fives
+          - sixes
+          - upper_bonus
+          - three_of_a_kind
+          - four_of_a_kind
+          - full_house
+          - small_straight
+          - large_straight
+          - yahtzee
+          - chance
+          - yahtzee_bonus
+  - name: score
     type: integer
-  - name: upper_bonus_hit
-    type: boolean
-  - name: yahtzee_count
-    type: integer
-  - name: zeros_taken
-    type: integer
+    checks:
+      - name: not_null

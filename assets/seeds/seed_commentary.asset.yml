@@ -1,0 +1,13 @@
+name: seed_commentary
+type: duckdb.seed
+parameters:
+  path: seed_commentary.csv
+columns:
+  - name: category
+    type: string
+    checks:
+      - name: not_null
+  - name: phrase
+    type: string
+    checks:
+      - name: not_null

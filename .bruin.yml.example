@@ -1,0 +1,17 @@
+# Local DuckDB only — no warehouse credentials.
+# Copy to .bruin.yml at the repo root (Bruin gitignores the live file):
+#   cp .bruin.yml.example .bruin.yml
+default_environment: default
+
+environments:
+  default:
+    connections:
+      duckdb:
+        - name: duckdb-default
+          path: yahtzee.duckdb
+          # DuckDB allows one writer; parallel seeds otherwise fail with file-lock errors.
+          max_concurrent_assets: 1
+        # DAC serves widgets in parallel; read_only lets them share the file.
+        - name: local_duckdb
+          path: yahtzee.duckdb
+          read_only: true

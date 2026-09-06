@@ -1,29 +1,49 @@
-# DAC Project
+# Yahtzee DAC dashboard
 
-This project was generated with `dac init`.
+One DAC dashboard with two tabs: **Head-to-head** (record, streaks, commentary,
+totals spot-check) and **Pubs** (Vega-Lite lon/lat pins + venue table). Pubs
+are not joined to games. See `pub_map.md` for why Leaflet cannot live inside
+DAC 0.15.
 
-`dac init` initialized this directory as a Git repository so Bruin can discover the project root immediately.
+Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
+via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
+through `duckdb-default` (same file, writable, one asset at a time).
+
+Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/).
+
+## Prerequisites
+
+From the repo root:
+
+```shell
+# Bruin + DAC CLIs (https://getbruin.com/docs/dac/getting-started/quickstart.html)
+# curl -LsSf https://getbruin.com/install/cli | sh
+# curl -LsSf https://getbruin.com/install/dac | sh
+
+cp -n ../.bruin.yml.example ../.bruin.yml   # if .bruin.yml is missing
+pip install -r ../assets/python/requirements.txt
+OFFLINE_TEST=1 bruin run                    # builds marts into yahtzee.duckdb
+```
+
+`dac` walks upward from this directory to find the repo-root `.bruin.yml`.
 
 ## Commands
 
 ```shell
 dac validate --dir .
+dac validate --dir . --with-database
+dac check --dir .
 dac serve --dir . --open
 ```
 
-The generated dashboards use a local DuckDB connection named `local_duckdb`. The starter queries include inline sample data, so there is no seed step.
+The dashboard is served at `http://localhost:8321`.
 
-## Agent Skills
+## Connection
 
-This project includes DAC's bundled dashboard authoring skill:
+This project uses two DuckDB connections to the same `yahtzee.duckdb` file:
 
-- `.claude/skills/create-dashboard/SKILL.md`
-- `.codex/skills/create-dashboard` symlinked to the same skill for Codex
+- `duckdb-default` — writable, `max_concurrent_assets: 1`, used by `bruin run`
+- `local_duckdb` — `read_only: true`, used by this dashboard so widgets can
+  query in parallel without DuckDB file-lock errors
 
-Restart your agent session to pick up newly installed skills.
-
-To inspect one generated widget from the command line:
-
-```shell
-dac query --dir . --dashboard "Semantic Sales" --widget "Revenue"
-```
+The empty `data/dac-demo.duckdb` leftover from `dac init` is unused.

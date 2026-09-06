@@ -146,11 +146,31 @@ calls, and everything else runs entirely off the seed CSVs already in
 
 ```bash
 cd yahtzee
+cp -n .bruin.yml.example .bruin.yml   # local DuckDB connection; no secrets
 pip install -r assets/python/requirements.txt
 
 bruin validate          # sanity-checks pipeline.yml + .bruin.yml + asset schemas
 bruin run                # runs the full DAG against the sample data in this repo
+                         # DuckDB is single-writer; .bruin.yml.example sets
+                         # max_concurrent_assets: 1. If a run still hits a file
+                         # lock, retry with: bruin run --workers 1
 ```
+
+`.bruin.yml` is gitignored (Bruin default). This repo ships `.bruin.yml.example`
+with a `duckdb-default` connection pointing at `yahtzee.duckdb`. Copy it before
+the first `bruin` / `dac` command.
+
+Then serve the dashboard (after `bruin run` has built the marts):
+
+```bash
+dac validate --dir dashboard
+dac check --dir dashboard
+dac serve --dir dashboard --open
+```
+
+The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,
+`read_only: true`) so widgets can query in parallel. Stop `dac serve` before
+another `bruin run` — DuckDB still cannot mix a writer with open readers.
 
 That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →
 `int_commentary` → `mart_head_to_head`, plus `mart_pub_locations` (which will

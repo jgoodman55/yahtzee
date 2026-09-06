@@ -1,5 +1,8 @@
+# Live Bruin connection file (copy from .bruin.yml.example). Safe to commit
+# if you only use the local DuckDB path — this project has no warehouse secrets.
 .bruin.yml
 logs/runs
 logs/*.log
 __pycache__/
 *.py[cod]
+logs/queries

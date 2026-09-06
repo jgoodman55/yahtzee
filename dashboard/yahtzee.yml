@@ -1,10 +1,11 @@
 schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
-description: Jordan vs. Erin — every game, ordered by sequence not date.
-connection: duckdb-default
+description: Jordan vs. Erin — games and pub venues, kept as separate grains.
+connection: local_duckdb
 
 rows:
-  - widgets:
+  - tab: Head-to-head
+    widgets:
       - name: Total games
         type: chart
         chart: gauge
@@ -12,7 +13,8 @@ rows:
         sql: |
           select count(*)::integer as current, count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
       - name: Jordan wins
@@ -23,7 +25,8 @@ rows:
           select max(jordan_cum_wins)::integer as current,
                  count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
       - name: Erin wins
@@ -34,10 +37,12 @@ rows:
           select max(erin_cum_wins)::integer as current,
                  count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
-  - widgets:
+  - tab: Head-to-head
+    widgets:
       - name: Cumulative wins by game sequence
         type: chart
         chart: line
@@ -46,10 +51,13 @@ rows:
           select game_seq, jordan_cum_wins, erin_cum_wins
           from mart_head_to_head
           order by game_seq
-        x: game_seq
-        y: [jordan_cum_wins, erin_cum_wins]
+        x:
+          field: game_seq
+        y:
+          field: [jordan_cum_wins, erin_cum_wins]
 
-  - widgets:
+  - tab: Head-to-head
+    widgets:
       - name: Margin of victory by game
         type: chart
         chart: bar
@@ -58,10 +66,13 @@ rows:
           select game_seq, margin
           from mart_head_to_head
           order by game_seq
-        x: game_seq
-        y: margin
+        x:
+          field: game_seq
+        y:
+          field: margin
 
-  - widgets:
+  - tab: Head-to-head
+    widgets:
       - name: Commentary log
         type: table
         col: 12
@@ -70,7 +81,8 @@ rows:
           from mart_head_to_head
           order by game_seq desc
 
-  - widgets:
+  - tab: Head-to-head
+    widgets:
       - name: Data quality — totals mismatches
         type: table
         col: 12
@@ -78,3 +90,76 @@ rows:
           select game_seq, player_key, computed_total, recorded_total
           from fact_games
           where not totals_match
+
+  - tab: Pubs
+    widgets:
+      - name: Pubs are standalone
+        type: text
+        col: 12
+        content: |
+          Venue pins come from `mart_pub_locations` only. There is **no
+          game-to-pub join** — we kept `game_seq`, not dates.
+
+          DAC 0.15 has no native map widget, and TSX compiles to the same
+          widget model (no Leaflet/MapLibre/HTML embed). This tab uses a
+          Vega-Lite lon/lat projection over confirmed pubs, plus a table
+          for unresolved venues.
+
+  - tab: Pubs
+    height: 420
+    widgets:
+      - name: Confirmed pub pins
+        type: chart
+        chart: vega-lite
+        col: 12
+        sql: |
+          select
+            coalesce(pub_name, merchant_name_raw) as pub_name,
+            lat::double as lat,
+            lng::double as lng,
+            source
+          from mart_pub_locations
+          where is_confirmed_pub
+            and lat is not null
+            and lng is not null
+        spec:
+          data: { name: dac }
+          # One confirmed seed pin today (Anchor Bar). Center/scale keep it
+          # on a London frame; DAC rejects remote tile/GeoJSON data.url.
+          projection:
+            type: mercator
+            center: [-0.12, 51.51]
+            scale: 60000
+          layer:
+            - mark: { type: circle, size: 280, color: "#3B82F6", tooltip: true }
+              encoding:
+                longitude: { field: lng, type: quantitative }
+                latitude: { field: lat, type: quantitative }
+                tooltip:
+                  - { field: pub_name, type: nominal, title: Pub }
+                  - { field: source, type: nominal, title: Source }
+            - mark:
+                type: text
+                dy: -14
+                fontSize: 11
+                fontWeight: 600
+              encoding:
+                longitude: { field: lng, type: quantitative }
+                latitude: { field: lat, type: quantitative }
+                text: { field: pub_name, type: nominal }
+
+  - tab: Pubs
+    widgets:
+      - name: All venues
+        type: table
+        col: 12
+        sql: |
+          select
+            merchant_name_raw,
+            pub_name,
+            lat,
+            lng,
+            source,
+            is_confirmed_pub
+          from mart_pub_locations
+          order by is_confirmed_pub desc, coalesce(pub_name, merchant_name_raw)

@@ -168,6 +168,10 @@ dac check --dir dashboard
 dac serve --dir dashboard --open
 ```
 
+The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,
+`read_only: true`) so widgets can query in parallel. Stop `dac serve` before
+another `bruin run` — DuckDB still cannot mix a writer with open readers.
+
 That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →
 `int_commentary` → `mart_head_to_head`, plus `mart_pub_locations` (which will
 attempt live geocoding unless you set `OFFLINE_TEST=1` — see below). Inspect

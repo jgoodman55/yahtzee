@@ -20,7 +20,9 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 - `seed_commentary.csv` — catchphrase bank, categorized (`big_margin`,
   `narrow_margin`, `tie`, `streak`, `no_bonus_either`, `bonus_split`,
   `multi_yahtzee`, `zero_yahtzee`, `totals_mismatch`).
-- `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs (unchanged).
+- `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs. One visit-log
+  row per visit (`visit_count` on `mart_pub_locations` is the row count per
+  merchant, summed on proximity-dedup). Not joined to games.
 
 **Staging → dims/facts → intermediate → marts**
 - `stg_games`, `stg_players` — typed/cleaned staging views (`stg_games`
@@ -107,8 +109,10 @@ network access or API keys.
 - Head-to-head record, average score, category breakdown, streaks, and a
   data-quality widget surfacing any `totals_match = false` rows — built as
   Bruin DAC pages querying the marts directly.
-- Standalone map page (pub pins, sized by visit count) — embedded as a custom
-  HTML/JS component since DAC doesn't have a native map widget.
+- Standalone Leaflet map (`dashboard/pub_map.html`) — visit-sized bubbles from
+  `mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit; the Pubs tab
+  links out to this page. Default tiles are free OSM (no API key). See
+  `dashboard/pub_map.md`.
 
 ## 5. Animation
 
@@ -169,6 +173,11 @@ Then serve the dashboard (after `bruin run` has built the marts):
 dac validate --dir dashboard
 dac check --dir dashboard
 dac serve --dir dashboard --open
+
+# Interactive pub map (not inside DAC — open beside it)
+python3 dashboard/scripts/export_pub_map.py
+python3 -m http.server 8765 --directory dashboard
+# http://localhost:8765/pub_map.html
 ```
 
 The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,

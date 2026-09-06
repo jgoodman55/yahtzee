@@ -1,9 +1,11 @@
 # Yahtzee DAC dashboard
 
 One DAC dashboard with two tabs: **Head-to-head** (record, streaks, commentary,
-totals spot-check) and **Pubs** (Vega-Lite lon/lat pins + venue table). Pubs
-are not joined to games. See `pub_map.md` for why Leaflet cannot live inside
-DAC 0.15.
+totals spot-check) and **Pubs** (link to the standalone Leaflet map + Vega-Lite
+fallback + venue table). Pubs are not joined to games.
+
+DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (OSM
+tiles, no API key). See `pub_map.md` for regenerate / serve / `dac build`.
 
 Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
@@ -37,6 +39,19 @@ dac serve --dir . --open
 ```
 
 The dashboard is served at `http://localhost:8321`.
+
+## Interactive pub map
+
+After `bruin run`, refresh the GeoJSON the Leaflet page reads:
+
+```shell
+python3 scripts/export_pub_map.py
+python3 -m http.server 8765 --directory .
+# http://localhost:8765/pub_map.html
+```
+
+Or open `pub_map.html` as a local file. Optional MapTiler streets:
+`?maptiler=YOUR_KEY` — not required.
 
 ## Connection
 

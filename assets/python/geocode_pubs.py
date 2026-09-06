@@ -9,8 +9,8 @@ materialization:
   type: table
 @bruin"""
 
-# Resolves each distinct merchant name in raw_pub_visits to a confirmed pub
-# location, in priority order:
+# Resolves each merchant name in raw_pub_visits to a confirmed pub location
+# (visit_count is the number of visit-log rows per merchant), in priority order:
 #   1. seed_pubs.csv        (manual, free, highest trust)
 #   2. OpenStreetMap Nominatim (free, no key)
 #   3. Google Places Text Search (needs GOOGLE_PLACES_API_KEY, small free tier)
@@ -165,30 +165,46 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
              and abs(c["lng"] - row["lng"]) < DEDUPE_RADIUS_DEGREES),
             None,
         )
+        visit_count = int(row.get("visit_count") or 1)
         if match:
             match["merged_merchant_names"].append(row["merchant_name_raw"])
+            match["visit_count"] += visit_count
         else:
             clusters.append({
                 "lat": row["lat"], "lng": row["lng"],
-                "canonical_row": row, "merged_merchant_names": [row["merchant_name_raw"]],
+                "canonical_row": row,
+                "merged_merchant_names": [row["merchant_name_raw"]],
+                "visit_count": visit_count,
             })
 
     deduped_rows = []
     for c in clusters:
         row = c["canonical_row"].copy()
         row["merged_from"] = ", ".join(c["merged_merchant_names"])
+        row["visit_count"] = int(c["visit_count"])
         deduped_rows.append(row)
 
     return pd.concat([pd.DataFrame(deduped_rows), unresolved], ignore_index=True)
 
 
 def materialize():
-    visits = query("select distinct merchant_name_raw from raw_pub_visits")
+    visits = query(
+        "select merchant_name_raw, count(*)::integer as visit_count "
+        "from raw_pub_visits group by 1"
+    )
     seed = query("select * from seed_pubs")
 
-    resolved = [resolve_merchant(m, seed) for m in visits["merchant_name_raw"]]
+    resolved = []
+    for _, visit in visits.iterrows():
+        row = resolve_merchant(visit["merchant_name_raw"], seed)
+        row["visit_count"] = int(visit["visit_count"])
+        resolved.append(row)
     result_df = pd.DataFrame(resolved)
     result_df = dedupe_by_proximity(result_df)
+    if "visit_count" in result_df.columns:
+        result_df["visit_count"] = (
+            result_df["visit_count"].fillna(1).astype(int)
+        )
 
     unresolved_count = (result_df["source"] == "unresolved").sum()
     if unresolved_count:

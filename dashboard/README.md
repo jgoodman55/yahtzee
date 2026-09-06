@@ -1,8 +1,19 @@
 # Yahtzee DAC dashboard
 
-One DAC dashboard with two tabs: **Head-to-head** (record, streaks, commentary,
-totals spot-check) and **Pubs** (link to the standalone Leaflet map + Vega-Lite
-fallback + venue table). Pubs are not joined to games.
+One DAC app, five tabs that go simple → deep. Dark theme (`yahtzee-dark`):
+Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
+
+| Tab | What’s on it |
+|---|---|
+| **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks |
+| **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
+| **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
+| **Deep cuts** | Lifetime points, avg/median, bonus & yahtzee rates, upper/chance averages, margin histogram, closest/blowouts, commentary, totals spot-check |
+| **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
+
+Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
+`mart_game_trends`, `mart_category_stats`, plus `mart_head_to_head` /
+`fact_games` / `mart_pub_locations`).
 
 DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (OSM
 tiles, no API key). See `pub_map.md` for regenerate / serve / `dac build`.
@@ -24,7 +35,7 @@ From the repo root:
 
 cp -n ../.bruin.yml.example ../.bruin.yml   # if .bruin.yml is missing
 pip install -r ../assets/python/requirements.txt
-OFFLINE_TEST=1 bruin run                    # builds marts into yahtzee.duckdb
+OFFLINE_TEST=1 bruin run --workers 1        # builds marts into yahtzee.duckdb
 ```
 
 `dac` walks upward from this directory to find the repo-root `.bruin.yml`.
@@ -35,8 +46,12 @@ OFFLINE_TEST=1 bruin run                    # builds marts into yahtzee.duckdb
 dac validate --dir .
 dac validate --dir . --with-database
 dac check --dir .
-dac serve --dir . --open
+dac serve --dir . --template yahtzee-dark --open
 ```
+
+`--template yahtzee-dark` loads `themes/yahtzee-dark.yml` (extends `bruin-dark`,
+pink/blue chart tokens). The viewer still has a light/dark toggle; start from
+dark.
 
 The dashboard is served at `http://localhost:8321`.
 

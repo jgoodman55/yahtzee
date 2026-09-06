@@ -61,8 +61,8 @@ def try_seed(merchant: str, seed_df: pd.DataFrame):
         row = match.iloc[0]
         return {
             "pub_name": row["pub_name"],
-            "lat": row["lat"],
-            "lng": row["lng"],
+            "lat": float(row["lat"]),
+            "lng": float(row["lng"]),
             "source": "seed",
             "is_confirmed_pub": True,
         }
@@ -156,6 +156,11 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
     if locatable.empty:
         return df
 
+    locatable["lat"] = pd.to_numeric(locatable["lat"], errors="coerce")
+    locatable["lng"] = pd.to_numeric(locatable["lng"], errors="coerce")
+    locatable = locatable.dropna(subset=["lat", "lng"])
+    if locatable.empty:
+        return df
     locatable = locatable.sort_values(by="source", key=lambda s: s.map({"seed": 0}).fillna(1))
     clusters = []  # list of dicts: {lat, lng, canonical_row, merged_merchant_names}
     for _, row in locatable.iterrows():

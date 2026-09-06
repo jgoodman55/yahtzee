@@ -36,3 +36,7 @@ columns:
     type: integer
     checks:
       - name: not_null
+  - name: recorded_total
+    type: integer
+    checks:
+      - name: not_null

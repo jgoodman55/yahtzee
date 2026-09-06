@@ -2,7 +2,7 @@
 Reads photographed Yahtzee scorecards (handwritten — see
 scorecard_format.md for the physical layout and known notation quirks)
 using a vision-capable Claude model, spot-checks the arithmetic, and
-writes clean results to the pipeline's seed CSVs.
+writes clean results to the pipeline's `raw_games.csv` seed.
 
 Each photographed sheet can hold up to 3 games. Game numbering comes
 from the filename, not from guessing — name files like:
@@ -39,7 +39,6 @@ import anthropic
 
 SEEDS_DIR = Path(__file__).parent.parent / "assets" / "seeds"
 RAW_GAMES_CSV = SEEDS_DIR / "raw_games.csv"
-RAW_TOTALS_CSV = SEEDS_DIR / "raw_game_totals.csv"
 FORMAT_DOC = Path(__file__).parent / "scorecard_format.md"
 
 CATEGORIES = [
@@ -169,13 +168,12 @@ def write_to_seeds(game_seq: int, game: dict):
     with open(RAW_GAMES_CSV, "a", newline="") as f:
         writer = csv.writer(f)
         for player in ("jordan", "erin"):
+            recorded_total = game[player]["recorded_total"]
             for category in CATEGORIES:
-                writer.writerow([game_seq, player, category, game[player][category]])
-
-    with open(RAW_TOTALS_CSV, "a", newline="") as f:
-        writer = csv.writer(f)
-        for player in ("jordan", "erin"):
-            writer.writerow([game_seq, player, game[player]["recorded_total"]])
+                writer.writerow([
+                    game_seq, player, category,
+                    game[player][category], recorded_total,
+                ])
 
 
 def main():

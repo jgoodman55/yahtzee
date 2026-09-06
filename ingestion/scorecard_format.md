@@ -1,6 +1,10 @@
 # Scorecard format reference
 
 Refer to the layout below when converting Yahtzee scorecard images to CSVs.
+Category boxes become `raw_games.csv` rows (`game_seq, player, category,
+score, recorded_total`). The **Grand Total** on the card is
+`recorded_total` — write the same value on all 15 category rows for that
+`(game_seq, player)`. There is no separate totals CSV.
 
 ## Physical layout
 

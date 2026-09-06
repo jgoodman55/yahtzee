@@ -6,7 +6,6 @@ materialization:
 depends:
   - dim_player
   - stg_games
-  - stg_game_totals
 @bruin */
 
 with agg as (
@@ -14,6 +13,7 @@ with agg as (
         game_seq,
         player,
         sum(score) as computed_total,
+        max(recorded_total) as recorded_total,
         sum(case when category in ('ones','twos','threes','fours','fives','sixes','upper_bonus')
                  then score else 0 end)                                as upper_section_total,
         max(case when category = 'upper_bonus' then score end) > 0    as upper_bonus_hit,
@@ -31,8 +31,8 @@ select
     dim.display_name,
     a.game_seq,
     a.computed_total,
-    t.recorded_total,
-    (a.computed_total = t.recorded_total) as totals_match,
+    a.recorded_total,
+    (a.computed_total = a.recorded_total) as totals_match,
     a.upper_section_total,
     a.upper_bonus_hit,
     a.scored_natural_yahtzee,
@@ -42,7 +42,4 @@ select
 from dim_player dim
 left join agg a
     on dim.player_key = a.player
-left join stg_game_totals t
-    on t.game_seq = a.game_seq
-    and t.player = a.player
 order by a.game_seq, dim.player_key

@@ -151,6 +151,9 @@ pip install -r assets/python/requirements.txt
 
 bruin validate          # sanity-checks pipeline.yml + .bruin.yml + asset schemas
 bruin run                # runs the full DAG against the sample data in this repo
+                         # DuckDB is single-writer; .bruin.yml.example sets
+                         # max_concurrent_assets: 1. If a run still hits a file
+                         # lock, retry with: bruin run --workers 1
 ```
 
 `.bruin.yml` is gitignored (Bruin default). This repo ships `.bruin.yml.example`

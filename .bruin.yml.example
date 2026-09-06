@@ -9,3 +9,5 @@ environments:
       duckdb:
         - name: duckdb-default
           path: yahtzee.duckdb
+          # DuckDB allows one writer; parallel seeds otherwise fail with file-lock errors.
+          max_concurrent_assets: 1

@@ -1,4 +1,4 @@
-schema: https://getbruin.com/schemas/docs/dac/dashboard/v1
+schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
 description: Jordan vs. Erin — every game, ordered by sequence not date.
 connection: duckdb-default

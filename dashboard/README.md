@@ -2,7 +2,8 @@
 
 Head-to-head record, streaks, commentary, and a totals spot-check widget.
 Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
-via the `duckdb-default` connection in `.bruin.yml`.
+via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
+through `duckdb-default` (same file, writable, one asset at a time).
 
 ## Prerequisites
 
@@ -33,6 +34,10 @@ The dashboard is served at `http://localhost:8321`.
 
 ## Connection
 
-This project uses `duckdb-default` (same name as `pipeline.yml`), not the
-`local_duckdb` / `data/dac-demo.duckdb` names from `dac init`. The demo DuckDB
-file is unused leftover from scaffolding.
+This project uses two DuckDB connections to the same `yahtzee.duckdb` file:
+
+- `duckdb-default` — writable, `max_concurrent_assets: 1`, used by `bruin run`
+- `local_duckdb` — `read_only: true`, used by this dashboard so widgets can
+  query in parallel without DuckDB file-lock errors
+
+The empty `data/dac-demo.duckdb` leftover from `dac init` is unused.

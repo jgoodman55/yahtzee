@@ -85,9 +85,8 @@ rows:
           **Erin** is electric pink (`#FF2D92`). **Jordan** is electric blue (`#2D9CFF`).
 
           High scores, lifetime points, and averages use **`recorded_total`** — the grand
-          total written on the card. Wins and margins still use `computed_total` from
-          `int_win_loss` (sum of the 15 boxes). Seed game 2 Erin is the known mismatch
-          (recorded 180 vs computed 175).
+          total written on the card. Wins and margins use `computed_total` from
+          `int_win_loss` (sum of the 15 boxes).
 
           Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
           player-game is `total_yahtzees >= 2` (bonus ≥ 100).
@@ -420,13 +419,6 @@ rows:
 
   - tab: Deep cuts
     widgets:
-      - name: Totals mismatches
-        type: metric
-        col: 4
-        description: Player-games where computed_total ≠ recorded_total
-        query: headline
-        value: { field: totals_mismatch_count, type: number, format: ",.0f" }
-
       - name: Ties
         type: metric
         col: 4
@@ -435,13 +427,13 @@ rows:
 
       - name: Erin median
         type: metric
-        col: 2
+        col: 4
         query: headline
         value: { field: erin_median_score, type: number, format: ",.0f" }
 
       - name: Jordan median
         type: metric
-        col: 2
+        col: 4
         query: headline
         value: { field: jordan_median_score, type: number, format: ",.0f" }
 
@@ -557,8 +549,7 @@ rows:
             avg_upper_pre_bonus,
             avg_chance,
             current_win_streak,
-            longest_win_streak,
-            totals_mismatch_count
+            longest_win_streak
           from mart_player_kpis
           order by player_key
         columns:
@@ -624,10 +615,6 @@ rows:
             label: Longest
             number: number
             align: right
-          - name: totals_mismatch_count
-            label: Mismatch
-            number: number
-            align: right
 
   - tab: Deep cuts
     widgets:
@@ -651,31 +638,6 @@ rows:
             label: Bonus
           - name: streak_comment
             label: Streak
-
-  - tab: Deep cuts
-    widgets:
-      - name: Totals spot-check
-        type: table
-        col: 12
-        description: computed_total vs recorded_total where they disagree
-        sql: |
-          select game_seq, player_key, computed_total, recorded_total
-          from fact_games
-          where not totals_match
-          order by game_seq, player_key
-        columns:
-          - name: game_seq
-            label: Game
-          - name: player_key
-            label: Player
-          - name: computed_total
-            label: Computed
-            number: number
-            align: right
-          - name: recorded_total
-            label: Recorded
-            number: number
-            align: right
 
   - tab: Pubs
     widgets:

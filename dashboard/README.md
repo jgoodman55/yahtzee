@@ -8,12 +8,12 @@ Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 | **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks |
 | **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
 | **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
-| **Deep cuts** | Lifetime points, avg/median, bonus & yahtzee rates, upper/chance averages, margin histogram, closest/blowouts, commentary, totals spot-check |
+| **Deep cuts** | Lifetime points, avg/median, bonus & yahtzee rates, upper/chance averages, margin histogram, closest/blowouts, commentary |
 | **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`, plus `mart_head_to_head` /
-`fact_games` / `mart_pub_locations`).
+`mart_pub_locations`).
 
 DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (OSM
 tiles, no API key). See `pub_map.md` for regenerate / serve / `dac build`.

@@ -6,6 +6,35 @@ connection: local_duckdb
 # Colors used on every series: Erin #FF2D92, Jordan #2D9CFF.
 # Serve with --template yahtzee-dark (themes/yahtzee-dark.yml).
 # KPI definitions live in mart_headline_kpis (see SQL comments there).
+#
+# DAC metric widgets always paint the figure with --dac-text-primary (no
+# value.color). Overview big numbers are Vega-Lite text marks so Erin / Jordan
+# / combined totals can use the brand colors. Labels stay the muted widget name.
+
+# Shared mark styles for Overview KPI figures (schema allows x-* extensions).
+x-kpi-erin-mark: &erin_mark
+  type: text
+  fontSize: 32
+  fontWeight: 600
+  align: left
+  baseline: middle
+  color: "#FF2D92"
+
+x-kpi-jordan-mark: &jordan_mark
+  type: text
+  fontSize: 32
+  fontWeight: 600
+  align: left
+  baseline: middle
+  color: "#2D9CFF"
+
+x-kpi-neutral-mark: &neutral_mark
+  type: text
+  fontSize: 32
+  fontWeight: 600
+  align: left
+  baseline: middle
+  color: "#FFFFFF"
 
 queries:
   headline:
@@ -92,99 +121,181 @@ rows:
           player-game is `total_yahtzees >= 2` (bonus ≥ 100).
 
   - tab: Overview
+    height: 120
     widgets:
       - name: Total games
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Distinct game_seq in int_win_loss
         query: headline
-        value: { field: total_games, type: number, format: ",.0f" }
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: total_games, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Erin wins
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Games Erin won on computed_total
         query: headline
-        value: { field: erin_wins, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_wins, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan wins
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Games Jordan won on computed_total
         query: headline
-        value: { field: jordan_wins, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_wins, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
   - tab: Overview
+    height: 120
     widgets:
       - name: Erin high score
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: max(recorded_total) for Erin
         query: headline
-        value: { field: erin_high_score, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_high_score, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan high score
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: max(recorded_total) for Jordan
         query: headline
-        value: { field: jordan_high_score, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_high_score, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Total yahtzees
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Natural 50s plus yahtzee_bonus/100, both players
         query: headline
-        value: { field: total_yahtzees, type: number, format: ",.0f" }
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: total_yahtzees, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
   - tab: Overview
+    height: 120
     widgets:
       - name: Erin upper bonuses
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Times Erin scored the 35 upper bonus
         query: headline
-        value: { field: erin_upper_bonuses, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_upper_bonuses, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan upper bonuses
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Times Jordan scored the 35 upper bonus
         query: headline
-        value: { field: jordan_upper_bonuses, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_upper_bonuses, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Multi-yahtzee player-games
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         description: Player-games with 2+ yahtzees (yahtzee + bonus ≥ 100)
         query: headline
-        value: { field: multi_yahtzee_player_games, type: number, format: ",.0f" }
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: multi_yahtzee_player_games, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
   - tab: Overview
+    height: 120
     widgets:
       - name: Erin current streak
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: erin_current_streak, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_current_streak, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan current streak
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_current_streak, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_current_streak, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Erin longest streak
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: erin_longest_streak, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_longest_streak, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan longest streak
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_longest_streak, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_longest_streak, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
   - tab: Races
     widgets:

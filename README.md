@@ -114,7 +114,8 @@ electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Tabs go
 simple → deep:
 
 1. **Overview** — games, wins, high scores (`recorded_total`), yahtzees,
-   upper bonuses, multi-yahtzee player-games, streaks
+   upper bonuses, multi-yahtzee player-games, streaks. Big numbers: Erin
+   pink (`#FF2D92`), Jordan blue (`#2D9CFF`), combined totals white.
 2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
 3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
 4. **Deep cuts** — lifetime points, rates, margins, category averages, commentary

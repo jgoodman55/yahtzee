@@ -1,9 +1,15 @@
 # Yahtzee DAC dashboard
 
-Head-to-head record, streaks, commentary, and a totals spot-check widget.
+One DAC dashboard with two tabs: **Head-to-head** (record, streaks, commentary,
+totals spot-check) and **Pubs** (Vega-Lite lon/lat pins + venue table). Pubs
+are not joined to games. See `pub_map.md` for why Leaflet cannot live inside
+DAC 0.15.
+
 Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
 through `duckdb-default` (same file, writable, one asset at a time).
+
+Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/).
 
 ## Prerequisites
 

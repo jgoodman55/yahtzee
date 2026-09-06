@@ -1,4 +1,4 @@
-schema: https://getbruin.com/schemas/dac/dashboard/v1
+schema: https://getbruin.com/schemas/docs/dac/dashboard/v1
 name: Yahtzee Head-to-Head
 description: Jordan vs. Erin — every game, ordered by sequence not date.
 connection: duckdb-default
@@ -12,7 +12,8 @@ rows:
         sql: |
           select count(*)::integer as current, count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
       - name: Jordan wins
@@ -23,7 +24,8 @@ rows:
           select max(jordan_cum_wins)::integer as current,
                  count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
       - name: Erin wins
@@ -34,7 +36,8 @@ rows:
           select max(erin_cum_wins)::integer as current,
                  count(*)::integer as target
           from mart_head_to_head
-        value: current
+        value:
+          field: current
         target: target
 
   - widgets:
@@ -46,8 +49,10 @@ rows:
           select game_seq, jordan_cum_wins, erin_cum_wins
           from mart_head_to_head
           order by game_seq
-        x: game_seq
-        y: [jordan_cum_wins, erin_cum_wins]
+        x:
+          field: game_seq
+        y:
+          field: [jordan_cum_wins, erin_cum_wins]
 
   - widgets:
       - name: Margin of victory by game
@@ -58,8 +63,10 @@ rows:
           select game_seq, margin
           from mart_head_to_head
           order by game_seq
-        x: game_seq
-        y: margin
+        x:
+          field: game_seq
+        y:
+          field: margin
 
   - widgets:
       - name: Commentary log

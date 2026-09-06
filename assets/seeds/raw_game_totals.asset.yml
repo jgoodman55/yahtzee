@@ -1,0 +1,17 @@
+name: raw_game_totals
+type: duckdb.seed
+parameters:
+  path: raw_game_totals.csv
+columns:
+  - name: game_seq
+    type: integer
+    checks:
+      - name: not_null
+  - name: player
+    type: string
+    checks:
+      - name: not_null
+  - name: recorded_total
+    type: integer
+    checks:
+      - name: not_null

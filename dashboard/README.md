@@ -1,29 +1,38 @@
-# DAC Project
+# Yahtzee DAC dashboard
 
-This project was generated with `dac init`.
+Head-to-head record, streaks, commentary, and a totals spot-check widget.
+Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
+via the `duckdb-default` connection in `.bruin.yml`.
 
-`dac init` initialized this directory as a Git repository so Bruin can discover the project root immediately.
+## Prerequisites
+
+From the repo root:
+
+```shell
+# Bruin + DAC CLIs (https://getbruin.com/docs/dac/getting-started/quickstart.html)
+# curl -LsSf https://getbruin.com/install/cli | sh
+# curl -LsSf https://getbruin.com/install/dac | sh
+
+cp -n ../.bruin.yml.example ../.bruin.yml   # if .bruin.yml is missing
+pip install -r ../assets/python/requirements.txt
+OFFLINE_TEST=1 bruin run                    # builds marts into yahtzee.duckdb
+```
+
+`dac` walks upward from this directory to find the repo-root `.bruin.yml`.
 
 ## Commands
 
 ```shell
 dac validate --dir .
+dac validate --dir . --with-database
+dac check --dir .
 dac serve --dir . --open
 ```
 
-The generated dashboards use a local DuckDB connection named `local_duckdb`. The starter queries include inline sample data, so there is no seed step.
+The dashboard is served at `http://localhost:8321`.
 
-## Agent Skills
+## Connection
 
-This project includes DAC's bundled dashboard authoring skill:
-
-- `.claude/skills/create-dashboard/SKILL.md`
-- `.codex/skills/create-dashboard` symlinked to the same skill for Codex
-
-Restart your agent session to pick up newly installed skills.
-
-To inspect one generated widget from the command line:
-
-```shell
-dac query --dir . --dashboard "Semantic Sales" --widget "Revenue"
-```
+This project uses `duckdb-default` (same name as `pipeline.yml`), not the
+`local_duckdb` / `data/dac-demo.duckdb` names from `dac init`. The demo DuckDB
+file is unused leftover from scaffolding.

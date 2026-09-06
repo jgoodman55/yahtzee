@@ -146,10 +146,23 @@ calls, and everything else runs entirely off the seed CSVs already in
 
 ```bash
 cd yahtzee
+cp -n .bruin.yml.example .bruin.yml   # local DuckDB connection; no secrets
 pip install -r assets/python/requirements.txt
 
 bruin validate          # sanity-checks pipeline.yml + .bruin.yml + asset schemas
 bruin run                # runs the full DAG against the sample data in this repo
+```
+
+`.bruin.yml` is gitignored (Bruin default). This repo ships `.bruin.yml.example`
+with a `duckdb-default` connection pointing at `yahtzee.duckdb`. Copy it before
+the first `bruin` / `dac` command.
+
+Then serve the dashboard (after `bruin run` has built the marts):
+
+```bash
+dac validate --dir dashboard
+dac check --dir dashboard
+dac serve --dir dashboard --open
 ```
 
 That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →

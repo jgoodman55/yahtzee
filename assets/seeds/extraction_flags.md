@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 (101 games from 34 sheets).
+Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -135,13 +135,29 @@ Sheets: IMG_2903–IMG_2911 (9 sheets, 27 games × 2 players).
 - **IMG_2911** game 3 / jordan / `threes`: Re-read as 9 (earlier OCR 7); matches upper total 58 and recorded_total 198.
 - **IMG_2911** game 3 / jordan / `player`: Header looks like I; treated as jordan.
 
-## Category sum vs recorded_total mismatches (kept written total)
+## Category sum vs recorded_total (recomputed after Jordan review)
 
-- **IMG_2906** game 3 / jordan: sum=227, recorded_total=228
-- **IMG_2907** game 3 / erin: sum=162, recorded_total=160
-- **IMG_2908** game 3 / erin: sum=186, recorded_total=198
-- **IMG_2909** game 2 / erin: sum=274, recorded_total=280
-- **IMG_2910** game 3 / erin: sum=161, recorded_total=171
+The notes below record what was written on the cards. The seed now uses
+`recorded_total = sum(score)` for every `(game_seq, player)` so
+`fact_games.totals_match` is true for all 204 player-games.
+
+Recomputed recorded_totals: (1,erin)=201; (14,jordan)=209; (20,jordan)=168;
+(23,erin)=239; (23,jordan)=192; (25,jordan)=241; (35,erin)=454;
+(41,erin)=225; (43,jordan)=303; (45,jordan)=151; (66,jordan)=227;
+(69,erin)=162; (72,erin)=186; (74,erin)=274; (78,erin)=161;
+(82,jordan)=399; (83,erin)=245.
+
+Category-score corrections in the same pass: game 33 jordan rebuilt
+(duplicate `fours` / missing `fives` → fives=15); (35,erin,chance) 28→23;
+(68,jordan,yahtzee) 50→0; (101,jordan,fives) 24→25.
+
+Historical written-vs-sum notes (superseded by the recomputed totals):
+
+- **IMG_2906** game 3 / jordan: written 228, category sum 227
+- **IMG_2907** game 3 / erin: written 160, category sum 162
+- **IMG_2908** game 3 / erin: written 198, category sum 186
+- **IMG_2909** game 2 / erin: written 280, category sum 274
+- **IMG_2910** game 3 / erin: written 171, category sum 161
 
 
 ## part4_flags.md

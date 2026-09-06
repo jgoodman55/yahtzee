@@ -140,8 +140,9 @@ network access or API keys.
 7. Wire everything into `pipeline.yml`, validate, run
 
 See `/assets` for the Bruin pipeline (102 photographed games in
-`raw_games.csv`; `fact_games.totals_match` flags written-total mismatches
-instead of rewriting them), `/ingestion` for the OCR helper, `/docs/scorecard_ingest.md`
+`raw_games.csv`; `recorded_total` was recomputed from category sums after
+Jordan's review, and `fact_games.totals_match` remains the spot-check),
+`/ingestion` for the OCR helper, `/docs/scorecard_ingest.md`
 for photo provenance, and `/visuals` for the animation script.
 
 ## 8. Running just the Bruin portion
@@ -201,8 +202,9 @@ duckdb yahtzee.duckdb "select * from mart_head_to_head"
 `raw_game_totals.csv` (`game_seq,player,recorded_total`), join it onto
 `raw_games` on `(game_seq, player)` so every category row gets a
 `recorded_total` column, then drop `raw_game_totals.csv` /
-`stg_game_totals`. Written totals that do not match `sum(score)` are kept
-as-is and flagged on `fact_games.totals_match`.
+`stg_game_totals`. The 102-game seed now sets `recorded_total` to
+`sum(score)` after Jordan's category review; `fact_games.totals_match`
+is still the spot-check if those ever diverge again.
 
 ## 9. Testing without any API keys
 

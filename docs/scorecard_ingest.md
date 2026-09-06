@@ -24,7 +24,7 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
 
-`recorded_total` is the **written grand total**, repeated on all 15 category rows for that `(game_seq, player)`. Do not rewrite it to match `sum(score)` — some cards have intentional arithmetic mismatches, and `fact_games.totals_match` is the spot-check.
+`recorded_total` is repeated on all 15 category rows for that `(game_seq, player)`. After Jordan's category review it was set to `sum(score)` for every player-game (0 remaining mismatches). `fact_games.totals_match` still compares computed vs recorded as a spot-check. Historical card-vs-sum notes stay in `extraction_flags.md`.
 
 ## Pipeline
 

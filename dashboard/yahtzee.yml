@@ -97,13 +97,21 @@ rows:
         type: text
         col: 12
         content: |
-          Venue pins come from `mart_pub_locations` only. There is **no
-          game-to-pub join** — we kept `game_seq`, not dates.
+          **Primary map:** [Open the interactive Leaflet map](http://localhost:8765/pub_map.html)
+          — visit-sized bubbles, street tiles, click a pin for name + visits.
 
-          DAC 0.15 has no native map widget, and TSX compiles to the same
-          widget model (no Leaflet/MapLibre/HTML embed). This tab uses a
-          Vega-Lite lon/lat projection over confirmed pubs, plus a table
-          for unresolved venues.
+          DAC 0.15 cannot embed Leaflet, MapLibre, MapKit, or an iframe
+          (`text` is Markdown only). This is the closest practical equivalent
+          (not Apple MapKit). Serve it next to DAC:
+
+          `python3 -m http.server 8765 --directory dashboard`
+
+          or open `dashboard/pub_map.html` directly in a browser (`file://`
+          works; tiles still load). Regenerate data after `bruin run` with
+          `python3 dashboard/scripts/export_pub_map.py`.
+
+          Venues come from `mart_pub_locations` only — **no game-to-pub join**.
+          The Vega plot below is a no-tiles fallback inside DAC.
 
   - tab: Pubs
     height: 420
@@ -117,26 +125,29 @@ rows:
             coalesce(pub_name, merchant_name_raw) as pub_name,
             lat::double as lat,
             lng::double as lng,
-            source
+            source,
+            coalesce(visit_count, 1)::integer as visit_count
           from mart_pub_locations
           where is_confirmed_pub
             and lat is not null
             and lng is not null
         spec:
           data: { name: dac }
-          # One confirmed seed pin today (Anchor Bar). Center/scale keep it
-          # on a London frame; DAC rejects remote tile/GeoJSON data.url.
+          # Fallback only — DAC rejects remote tile/GeoJSON data.url.
+          # Open pub_map.html for the real tiled map.
           projection:
             type: mercator
             center: [-0.12, 51.51]
             scale: 60000
           layer:
-            - mark: { type: circle, size: 280, color: "#3B82F6", tooltip: true }
+            - mark: { type: circle, color: "#d97706", tooltip: true }
               encoding:
                 longitude: { field: lng, type: quantitative }
                 latitude: { field: lat, type: quantitative }
+                size: { field: visit_count, type: quantitative, title: Visits }
                 tooltip:
                   - { field: pub_name, type: nominal, title: Pub }
+                  - { field: visit_count, type: quantitative, title: Visits }
                   - { field: source, type: nominal, title: Source }
             - mark:
                 type: text
@@ -160,6 +171,7 @@ rows:
             lat,
             lng,
             source,
+            coalesce(visit_count, 1)::integer as visit_count,
             is_confirmed_pub
           from mart_pub_locations
-          order by is_confirmed_pub desc, coalesce(pub_name, merchant_name_raw)
+          order by is_confirmed_pub desc, visit_count desc, coalesce(pub_name, merchant_name_raw)

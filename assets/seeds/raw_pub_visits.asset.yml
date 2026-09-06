@@ -1,5 +1,6 @@
 name: raw_pub_visits
 type: duckdb.seed
+description: One row per pub visit (merchant string). Counted into mart_pub_locations.visit_count. Not joined to games.
 parameters:
   path: raw_pub_visits.csv
 columns:

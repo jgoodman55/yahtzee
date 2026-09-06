@@ -12,10 +12,10 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 **Raw (seeds)**
 - `raw_games.csv` — one row per `game_seq` × `player` × `category` (all 15
   scorecard boxes: the 6 upper categories, `upper_bonus`, the 7 lower
-  categories, `chance`, `yahtzee_bonus`) — the full scorecard, not just totals.
-- `raw_game_totals.csv` — the grand total as literally written on the card,
-  per `game_seq` × `player` — kept separate from the category rows so it can
-  be used as an independent spot-check.
+  categories, `chance`, `yahtzee_bonus`) plus `recorded_total`, the grand
+  total as written on the card. The same `recorded_total` is repeated on
+  all 15 category rows for a `(game_seq, player)` so the spot-check stays
+  on one seed file.
 - `raw_players.csv` — player dimension source (`player_key`, `display_name`).
 - `seed_commentary.csv` — catchphrase bank, categorized (`big_margin`,
   `narrow_margin`, `tie`, `streak`, `no_bonus_either`, `bonus_split`,
@@ -23,13 +23,15 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 - `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs (unchanged).
 
 **Staging → dims/facts → intermediate → marts**
-- `stg_games`, `stg_game_totals`, `stg_players` — typed/cleaned staging views.
+- `stg_games`, `stg_players` — typed/cleaned staging views (`stg_games`
+  passes `recorded_total` through).
 - `dim_player` — player dimension.
 - `fact_games` — grain `game_seq` × `player`: aggregated from category rows,
-  joined to `dim_player` (dim left-joined to the aggregate) and to
-  `stg_game_totals` for a `totals_match` flag — this is the spot-check: if
-  the 15 category scores don't sum to the recorded total, it's flagged, not
-  silently trusted either way.
+  joined to `dim_player` (dim left-joined to the aggregate). Computes
+  `sum(score)` as `computed_total` and compares it to `recorded_total` for
+  a `totals_match` flag — this is the spot-check: if the 15 category scores
+  don't sum to the recorded total, it's flagged, not silently trusted
+  either way.
 - `int_win_loss` — pivots `fact_games` to game grain: winner, margin,
   cumulative wins, streaks.
 - `int_commentary` — **Python** asset: deterministically (seeded by
@@ -63,7 +65,8 @@ prompt, so corrections there improve future scans too).
    uncertain cell, stops the write for that whole sheet — the extraction is
    dumped to a `*.review.json` file for you to check by eye instead of
    silently trusting either the arithmetic or the handwriting.
-5. Only a clean sheet gets appended to `raw_games.csv` / `raw_game_totals.csv`.
+5. Only a clean sheet gets appended to `raw_games.csv` (15 category rows
+   per player, each carrying that player's `recorded_total`).
 
 Batch mode: `python scan_scorecard.py --dir /path/to/photos` processes every
 `scorecard_games_*` file in a folder in one run.
@@ -123,8 +126,8 @@ network access or API keys.
 
 ## 7. Build order
 
-1. Seeds + `stg_games`/`stg_game_totals`/`stg_players` + `dim_player` +
-   `fact_games` (get the core stats and spot-check working first)
+1. Seeds + `stg_games`/`stg_players` + `dim_player` + `fact_games`
+   (get the core stats and spot-check working first)
 2. `int_win_loss` + `int_commentary` (cheeky logic)
 3. `ingestion/scan_scorecard.py` for scanning real scorecards
 4. Pub geocoding pipeline + `mart_pub_locations`
@@ -182,8 +185,15 @@ duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
 Once you're happy with it, swap the sample rows in `assets/seeds/raw_games.csv`
-and `raw_game_totals.csv` for your real scorecards (via `ingestion/scan_scorecard.py`
-or by hand) and re-run.
+for your real scorecards (via `ingestion/scan_scorecard.py` or by hand) and
+re-run.
+
+**Migrating an older two-file seed:** if you still have a separate
+`raw_game_totals.csv` (`game_seq,player,recorded_total`), join it onto
+`raw_games` on `(game_seq, player)` so every category row gets a
+`recorded_total` column, then drop `raw_game_totals.csv` /
+`stg_game_totals`. Sample data already ships in the single-file shape;
+Erin game 2 stays an intentional mismatch (computed 175 vs recorded 180).
 
 ## 9. Testing without any API keys
 

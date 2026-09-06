@@ -73,10 +73,7 @@ queries:
         max(case when player_key = 'jordan' then avg_score end) as "Jordan"
       from mart_category_stats
       group by category
-      order by case
-        when category in ('ones','twos','threes','fours','fives','sixes') then 0
-        else 1
-      end, category
+      order by min(category_ord)
 
 rows:
   - tab: Overview
@@ -314,7 +311,7 @@ rows:
             miss_rate,
             avg_score
           from mart_category_stats
-          order by section, category, player_key
+          order by category_ord, player_key
         columns:
           - name: player
             label: Player

@@ -12,15 +12,15 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 
 ## Numbering
 
-- `game_seq` is continuous **1–101**
+- `game_seq` is continuous **1–102**
 - Mapping of sequence → photo → column group is in `assets/seeds/sheet_game_crosswalk.csv`
-- One unfinished game on `IMG_2890` was skipped, so that sheet contributes only 2 games (seqs 16–17) and the next sheet (`IMG_2891`) continues at 18
+- `IMG_2890` game 3 is included as `game_seq` **18** (Erin recorded_total **173**, Jordan **224**). Later sheets continue at 19.
 
 ## Seed files
 
 | File | Role |
 |---|---|
-| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 101 games = 3030 data rows). Players are `jordan` / `erin`. |
+| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 102 games = 3060 data rows). Players are `jordan` / `erin`. |
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
 

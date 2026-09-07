@@ -44,7 +44,8 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   the dashboard commentary table and the animation.
 - `mart_player_kpis` / `mart_headline_kpis` / `mart_game_trends` /
   `mart_category_stats` — dashboard marts (lifetime KPIs, race series, zeros
-  and category miss rates). High scores use `recorded_total`.
+  and category miss rates; upper `avg_dice_count` = score / face). High scores
+  use `recorded_total`.
 - `mart_pub_locations` — geocoded, deduped pub list (seed → Nominatim →
   Google Places → unresolved) — standalone, not joined to games.
 
@@ -118,7 +119,9 @@ simple → deep:
    pink (`#FF2D92`), Jordan blue (`#2D9CFF`), combined totals white.
 2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
 3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
-4. **Deep cuts** — lifetime points, rates, margins, category averages, commentary
+4. **Deep cuts** — lifetime points, rates, margins, upper dice-count averages
+   (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
+   chance), commentary
 5. **Pubs** — link to the standalone Leaflet map (not joined to games)
 
 Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,

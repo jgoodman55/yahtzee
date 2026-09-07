@@ -154,10 +154,11 @@ links out to this page. Default tiles are free OSM (no API key). See
 6. Animation script
 7. Wire everything into `pipeline.yml`, validate, run
 
-See `/assets` for the Bruin pipeline (verified against the sample data with
-DuckDB — the full staging → fact → mart chain runs and the spot-check
-correctly flags an intentionally-seeded totals mismatch in the sample data),
-`/ingestion` for the OCR helper, and `/visuals` for the animation script.
+See `/assets` for the Bruin pipeline (102 photographed games in
+`raw_games.csv`; `recorded_total` was recomputed from category sums after
+Jordan's review, and `fact_games.totals_match` remains the spot-check),
+`/ingestion` for the OCR helper, `/docs/scorecard_ingest.md`
+for photo provenance, and `/visuals` for the animation script.
 
 ## 8. Running just the Bruin portion
 
@@ -172,7 +173,7 @@ cp -n .bruin.yml.example .bruin.yml   # local DuckDB connection; no secrets
 pip install -r assets/python/requirements.txt
 
 bruin validate          # sanity-checks pipeline.yml + .bruin.yml + asset schemas
-bruin run                # runs the full DAG against the sample data in this repo
+bruin run                # runs the full DAG against the scorecard seed in this repo
                          # DuckDB is single-writer; .bruin.yml.example sets
                          # max_concurrent_assets: 1. If a run still hits a file
                          # lock, retry with: bruin run --workers 1
@@ -210,16 +211,17 @@ directly:
 duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
-Once you're happy with it, swap the sample rows in `assets/seeds/raw_games.csv`
-for your real scorecards (via `ingestion/scan_scorecard.py` or by hand) and
-re-run.
+`assets/seeds/raw_games.csv` already holds the 102 games from Drive sheets
+`IMG_2885`–`IMG_2918`. Re-run after appending more sheets (via
+`ingestion/scan_scorecard.py` or by hand). See `docs/scorecard_ingest.md`.
 
 **Migrating an older two-file seed:** if you still have a separate
 `raw_game_totals.csv` (`game_seq,player,recorded_total`), join it onto
 `raw_games` on `(game_seq, player)` so every category row gets a
 `recorded_total` column, then drop `raw_game_totals.csv` /
-`stg_game_totals`. Sample data already ships in the single-file shape;
-Erin game 2 stays an intentional mismatch (computed 175 vs recorded 180).
+`stg_game_totals`. The 102-game seed now sets `recorded_total` to
+`sum(score)` after Jordan's category review; `fact_games.totals_match`
+is still the spot-check if those ever diverge again.
 
 ## 9. Testing without any API keys
 

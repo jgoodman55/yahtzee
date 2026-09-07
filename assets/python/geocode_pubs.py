@@ -164,10 +164,12 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
     locatable = locatable.sort_values(by="source", key=lambda s: s.map({"seed": 0}).fillna(1))
     clusters = []  # list of dicts: {lat, lng, canonical_row, merged_merchant_names}
     for _, row in locatable.iterrows():
+        lat = float(row["lat"])
+        lng = float(row["lng"])
         match = next(
             (c for c in clusters
-             if abs(c["lat"] - row["lat"]) < DEDUPE_RADIUS_DEGREES
-             and abs(c["lng"] - row["lng"]) < DEDUPE_RADIUS_DEGREES),
+             if abs(c["lat"] - lat) < DEDUPE_RADIUS_DEGREES
+             and abs(c["lng"] - lng) < DEDUPE_RADIUS_DEGREES),
             None,
         )
         visit_count = int(row.get("visit_count") or 1)
@@ -176,7 +178,7 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
             match["visit_count"] += visit_count
         else:
             clusters.append({
-                "lat": row["lat"], "lng": row["lng"],
+                "lat": lat, "lng": lng,
                 "canonical_row": row,
                 "merged_merchant_names": [row["merchant_name_raw"]],
                 "visit_count": visit_count,

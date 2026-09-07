@@ -8,7 +8,7 @@ Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 | **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
 | **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
 | **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
-| **Deep cuts** | Lifetime points, avg/median, bonus & yahtzee rates, upper/chance averages, margin histogram, upper avg dice count (ones–sixes, 0–5) and lower sum-box avg points (3oak / 4oak / chance), closest/blowouts, commentary |
+| **Deep cuts** | Lifetime points, rates, margin histogram, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), closest/blowouts, commentary |
 | **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,

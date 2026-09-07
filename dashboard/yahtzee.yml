@@ -1,167 +1,665 @@
 schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
-description: Jordan vs. Erin — games and pub venues, kept as separate grains.
+description: Erin (pink) vs Jordan (blue) — dark analytics. High scores use recorded_total.
 connection: local_duckdb
 
+# Colors used on every series: Erin #FF2D92, Jordan #2D9CFF.
+# Serve with --template yahtzee-dark (themes/yahtzee-dark.yml).
+# KPI definitions live in mart_headline_kpis (see SQL comments there).
+
+queries:
+  headline:
+    sql: select * from mart_headline_kpis
+  races:
+    sql: |
+      select
+        game_seq,
+        erin_cum_wins as "Erin",
+        jordan_cum_wins as "Jordan"
+      from mart_game_trends
+      order by game_seq
+  cum_yahtzees:
+    sql: |
+      select
+        game_seq,
+        erin_cum_yahtzees as "Erin",
+        jordan_cum_yahtzees as "Jordan"
+      from mart_game_trends
+      order by game_seq
+  yahtzees_per_game:
+    sql: |
+      select
+        game_seq,
+        erin_yahtzees as "Erin",
+        jordan_yahtzees as "Jordan"
+      from mart_game_trends
+      order by game_seq
+  multi_yahtzee_cum:
+    sql: |
+      select
+        game_seq,
+        erin_cum_multi_yahtzee_games as "Erin",
+        jordan_cum_multi_yahtzee_games as "Jordan"
+      from mart_game_trends
+      order by game_seq
+  zeros_per_game:
+    sql: |
+      select
+        game_seq,
+        erin_zeros as "Erin",
+        jordan_zeros as "Jordan"
+      from mart_game_trends
+      order by game_seq
+  conversion_miss:
+    sql: |
+      select
+        category,
+        max(case when player_key = 'erin' then miss_rate end) as "Erin",
+        max(case when player_key = 'jordan' then miss_rate end) as "Jordan"
+      from mart_category_stats
+      where is_conversion_box
+      group by category
+      order by case category
+        when 'full_house' then 1
+        when 'small_straight' then 2
+        when 'large_straight' then 3
+        when 'yahtzee' then 4
+      end
+  category_avg:
+    sql: |
+      select
+        category,
+        max(case when player_key = 'erin' then avg_score end) as "Erin",
+        max(case when player_key = 'jordan' then avg_score end) as "Jordan"
+      from mart_category_stats
+      group by category
+      order by min(category_ord)
+
 rows:
-  - tab: Head-to-head
+  - tab: Overview
+    widgets:
+      - name: How to read this
+        type: text
+        col: 12
+        content: |
+          **Erin** is electric pink (`#FF2D92`). **Jordan** is electric blue (`#2D9CFF`).
+
+          High scores, lifetime points, and averages use **`recorded_total`** — the grand
+          total written on the card. Wins and margins use `computed_total` from
+          `int_win_loss` (sum of the 15 boxes).
+
+          Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
+          player-game is `total_yahtzees >= 2` (bonus ≥ 100).
+
+  - tab: Overview
     widgets:
       - name: Total games
-        type: chart
-        chart: gauge
+        type: metric
         col: 4
-        sql: |
-          select count(*)::integer as current, count(*)::integer as target
-          from mart_head_to_head
-        value:
-          field: current
-        target: target
-
-      - name: Jordan wins
-        type: chart
-        chart: gauge
-        col: 4
-        sql: |
-          select max(jordan_cum_wins)::integer as current,
-                 count(*)::integer as target
-          from mart_head_to_head
-        value:
-          field: current
-        target: target
+        description: Distinct game_seq in int_win_loss
+        query: headline
+        value: { field: total_games, type: number, format: ",.0f" }
 
       - name: Erin wins
-        type: chart
-        chart: gauge
+        type: metric
         col: 4
-        sql: |
-          select max(erin_cum_wins)::integer as current,
-                 count(*)::integer as target
-          from mart_head_to_head
-        value:
-          field: current
-        target: target
+        description: Games Erin won on computed_total
+        query: headline
+        value: { field: erin_wins, type: number, format: ",.0f" }
 
-  - tab: Head-to-head
+      - name: Jordan wins
+        type: metric
+        col: 4
+        description: Games Jordan won on computed_total
+        query: headline
+        value: { field: jordan_wins, type: number, format: ",.0f" }
+
+  - tab: Overview
     widgets:
-      - name: Cumulative wins by game sequence
+      - name: Erin high score
+        type: metric
+        col: 4
+        description: max(recorded_total) for Erin
+        query: headline
+        value: { field: erin_high_score, type: number, format: ",.0f" }
+
+      - name: Jordan high score
+        type: metric
+        col: 4
+        description: max(recorded_total) for Jordan
+        query: headline
+        value: { field: jordan_high_score, type: number, format: ",.0f" }
+
+      - name: Total yahtzees
+        type: metric
+        col: 4
+        description: Natural 50s plus yahtzee_bonus/100, both players
+        query: headline
+        value: { field: total_yahtzees, type: number, format: ",.0f" }
+
+  - tab: Overview
+    widgets:
+      - name: Erin upper bonuses
+        type: metric
+        col: 4
+        description: Times Erin scored the 35 upper bonus
+        query: headline
+        value: { field: erin_upper_bonuses, type: number, format: ",.0f" }
+
+      - name: Jordan upper bonuses
+        type: metric
+        col: 4
+        description: Times Jordan scored the 35 upper bonus
+        query: headline
+        value: { field: jordan_upper_bonuses, type: number, format: ",.0f" }
+
+      - name: Multi-yahtzee player-games
+        type: metric
+        col: 4
+        description: Player-games with 2+ yahtzees (yahtzee + bonus ≥ 100)
+        query: headline
+        value: { field: multi_yahtzee_player_games, type: number, format: ",.0f" }
+
+  - tab: Overview
+    widgets:
+      - name: Erin current streak
+        type: metric
+        col: 3
+        query: headline
+        value: { field: erin_current_streak, type: number, format: ",.0f" }
+
+      - name: Jordan current streak
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_current_streak, type: number, format: ",.0f" }
+
+      - name: Erin longest streak
+        type: metric
+        col: 3
+        query: headline
+        value: { field: erin_longest_streak, type: number, format: ",.0f" }
+
+      - name: Jordan longest streak
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_longest_streak, type: number, format: ",.0f" }
+
+  - tab: Races
+    widgets:
+      - name: Race notes
+        type: text
+        col: 12
+        content: |
+          X-axis is **`game_seq`**, not calendar date. Lines are cumulative so the
+          picture stays readable as the seed grows toward ~100 games.
+
+  - tab: Races
+    height: 360
+    widgets:
+      - name: Cumulative wins
         type: chart
         chart: line
         col: 12
-        sql: |
-          select game_seq, jordan_cum_wins, erin_cum_wins
-          from mart_head_to_head
-          order by game_seq
-        x:
-          field: game_seq
-        y:
-          field: [jordan_cum_wins, erin_cum_wins]
+        description: Running win counts by game sequence
+        query: races
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Wins, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
 
-  - tab: Head-to-head
+  - tab: Races
+    height: 320
     widgets:
-      - name: Margin of victory by game
+      - name: Cumulative yahtzees
+        type: chart
+        chart: line
+        col: 12
+        description: Running yahtzee count (50-box + bonus/100)
+        query: cum_yahtzees
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Yahtzees, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
+
+  - tab: Races
+    height: 300
+    widgets:
+      - name: Yahtzees per game
+        type: chart
+        chart: bar
+        col: 6
+        description: Yahtzees scored that game — 2+ is a multi-yahtzee card
+        query: yahtzees_per_game
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Yahtzees, beginAtZero: true }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
+
+      - name: Cumulative multi-yahtzee games
+        type: chart
+        chart: line
+        col: 6
+        description: Running count of player-games with 2+ yahtzees
+        query: multi_yahtzee_cum
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Games, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
+
+  - tab: Zeros
+    widgets:
+      - name: Zero rules
+        type: text
+        col: 12
+        content: |
+          A **zero** is a scratched scoring box. `upper_bonus` and `yahtzee_bonus`
+          are excluded (those are 0/35 and 0/100×n, not category scratches).
+
+          Conversion boxes are the fixed lower-section scores: full house (25),
+          small straight (30), large straight (40), yahtzee (50). Miss rate is
+          the share of games scored 0.
+
+  - tab: Zeros
+    height: 320
+    widgets:
+      - name: Zeros per game
+        type: chart
+        chart: line
+        col: 12
+        description: Count of 0-score categories that game (bonuses excluded)
+        query: zeros_per_game
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Zeros, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
+
+  - tab: Zeros
+    height: 320
+    widgets:
+      - name: Lower-section miss rate
         type: chart
         chart: bar
         col: 12
-        sql: |
-          select game_seq, margin
-          from mart_head_to_head
-          order by game_seq
-        x:
-          field: game_seq
-        y:
-          field: margin
+        description: Share of games scored 0 on FH / SS / LS / Yahtzee
+        query: conversion_miss
+        x: { field: category, type: category, title: Category }
+        y: { field: [Erin, Jordan], type: number, title: Miss rate, format: ".0%", beginAtZero: true }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
 
-  - tab: Head-to-head
+  - tab: Zeros
     widgets:
-      - name: Commentary log
+      - name: Zeros by category
+        type: table
+        col: 12
+        sql: |
+          select
+            display_name as player,
+            category,
+            section,
+            games,
+            zero_count,
+            miss_rate,
+            avg_score
+          from mart_category_stats
+          order by category_ord, player_key
+        columns:
+          - name: player
+            label: Player
+          - name: category
+            label: Category
+          - name: section
+            label: Section
+          - name: games
+            label: Games
+            number: number
+            align: right
+          - name: zero_count
+            label: Zeros
+            number: number
+            align: right
+          - name: miss_rate
+            label: Miss rate
+            number: ".0%"
+            align: right
+          - name: avg_score
+            label: Avg
+            number: number
+            align: right
+
+  - tab: Deep cuts
+    widgets:
+      - name: Erin lifetime points
+        type: metric
+        col: 3
+        description: Sum of recorded_total
+        query: headline
+        value: { field: erin_lifetime_points, type: number, format: ",.0f" }
+
+      - name: Jordan lifetime points
+        type: metric
+        col: 3
+        description: Sum of recorded_total
+        query: headline
+        value: { field: jordan_lifetime_points, type: number, format: ",.0f" }
+
+      - name: Erin avg / median
+        type: metric
+        col: 3
+        description: Average recorded_total (median is on the player table)
+        query: headline
+        value: { field: erin_avg_score, type: number, format: ",.1f" }
+
+      - name: Jordan avg / median
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_avg_score, type: number, format: ",.1f" }
+
+  - tab: Deep cuts
+    widgets:
+      - name: Erin bonus rate
+        type: metric
+        col: 3
+        query: headline
+        value: { field: erin_bonus_rate, type: number, format: ".0%" }
+
+      - name: Jordan bonus rate
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_bonus_rate, type: number, format: ".0%" }
+
+      - name: Erin yahtzees / game
+        type: metric
+        col: 3
+        query: headline
+        value: { field: erin_yahtzees_per_game, type: number, format: ".2f" }
+
+      - name: Jordan yahtzees / game
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_yahtzees_per_game, type: number, format: ".2f" }
+
+  - tab: Deep cuts
+    widgets:
+      - name: Erin upper avg (pre-bonus)
+        type: metric
+        col: 3
+        description: Average of ones–sixes only
+        query: headline
+        value: { field: erin_avg_upper_pre_bonus, type: number, format: ",.1f" }
+
+      - name: Jordan upper avg (pre-bonus)
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_avg_upper_pre_bonus, type: number, format: ",.1f" }
+
+      - name: Erin chance avg
+        type: metric
+        col: 3
+        query: headline
+        value: { field: erin_avg_chance, type: number, format: ",.1f" }
+
+      - name: Jordan chance avg
+        type: metric
+        col: 3
+        query: headline
+        value: { field: jordan_avg_chance, type: number, format: ",.1f" }
+
+  - tab: Deep cuts
+    widgets:
+      - name: Ties
+        type: metric
+        col: 4
+        query: headline
+        value: { field: ties, type: number, format: ",.0f" }
+
+      - name: Erin median
+        type: metric
+        col: 4
+        query: headline
+        value: { field: erin_median_score, type: number, format: ",.0f" }
+
+      - name: Jordan median
+        type: metric
+        col: 4
+        query: headline
+        value: { field: jordan_median_score, type: number, format: ",.0f" }
+
+  - tab: Deep cuts
+    height: 300
+    widgets:
+      - name: Win margin distribution
+        type: chart
+        chart: histogram
+        col: 6
+        description: "Absolute margin from computed_total (int_win_loss)"
+        sql: |
+          select margin
+          from mart_game_trends
+        x: { field: margin, type: number, title: Margin }
+        bins: 8
+
+      - name: Category averages
+        type: chart
+        chart: bar
+        col: 6
+        description: Who scores higher on each box (bonuses excluded)
+        query: category_avg
+        x: { field: category, type: category, title: Category }
+        y: { field: [Erin, Jordan], type: number, title: Avg, beginAtZero: true }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
+
+  - tab: Deep cuts
+    widgets:
+      - name: Closest games
+        type: table
+        col: 6
+        sql: |
+          select
+            game_seq,
+            winner,
+            margin,
+            erin_computed_total as erin,
+            jordan_computed_total as jordan
+          from mart_game_trends
+          order by margin asc, game_seq
+          limit 8
+        columns:
+          - name: game_seq
+            label: Game
+          - name: winner
+            label: Winner
+          - name: margin
+            label: Margin
+            number: number
+            align: right
+          - name: erin
+            label: Erin
+            number: number
+            align: right
+          - name: jordan
+            label: Jordan
+            number: number
+            align: right
+
+      - name: Biggest blowouts
+        type: table
+        col: 6
+        sql: |
+          select
+            game_seq,
+            winner,
+            margin,
+            erin_computed_total as erin,
+            jordan_computed_total as jordan
+          from mart_game_trends
+          order by margin desc, game_seq
+          limit 8
+        columns:
+          - name: game_seq
+            label: Game
+          - name: winner
+            label: Winner
+          - name: margin
+            label: Margin
+            number: number
+            align: right
+          - name: erin
+            label: Erin
+            number: number
+            align: right
+          - name: jordan
+            label: Jordan
+            number: number
+            align: right
+
+  - tab: Deep cuts
+    widgets:
+      - name: Player lifetime
+        type: table
+        col: 12
+        sql: |
+          select
+            display_name as player,
+            games_played,
+            wins,
+            high_score,
+            lifetime_points,
+            avg_score,
+            median_score,
+            total_yahtzees,
+            multi_yahtzee_games,
+            upper_bonus_hits,
+            upper_bonus_rate,
+            yahtzees_per_game,
+            avg_upper_pre_bonus,
+            avg_chance,
+            current_win_streak,
+            longest_win_streak
+          from mart_player_kpis
+          order by player_key
+        columns:
+          - name: player
+            label: Player
+          - name: games_played
+            label: Games
+            number: number
+            align: right
+          - name: wins
+            label: Wins
+            number: number
+            align: right
+          - name: high_score
+            label: High
+            number: number
+            align: right
+          - name: lifetime_points
+            label: Points
+            number: number
+            align: right
+          - name: avg_score
+            label: Avg
+            number: number
+            align: right
+          - name: median_score
+            label: Median
+            number: number
+            align: right
+          - name: total_yahtzees
+            label: Yahtzees
+            number: number
+            align: right
+          - name: multi_yahtzee_games
+            label: Multi-Y
+            number: number
+            align: right
+          - name: upper_bonus_hits
+            label: Bonuses
+            number: number
+            align: right
+          - name: upper_bonus_rate
+            label: Bonus %
+            number: ".0%"
+            align: right
+          - name: yahtzees_per_game
+            label: Y / game
+            number: number
+            align: right
+          - name: avg_upper_pre_bonus
+            label: Upper
+            number: number
+            align: right
+          - name: avg_chance
+            label: Chance
+            number: number
+            align: right
+          - name: current_win_streak
+            label: Streak
+            number: number
+            align: right
+          - name: longest_win_streak
+            label: Longest
+            number: number
+            align: right
+
+  - tab: Deep cuts
+    widgets:
+      - name: Commentary
         type: table
         col: 12
         sql: |
           select game_seq, winner, margin_comment, yahtzee_comment, bonus_comment, streak_comment
           from mart_head_to_head
           order by game_seq desc
-
-  - tab: Head-to-head
-    widgets:
-      - name: Data quality — totals mismatches
-        type: table
-        col: 12
-        sql: |
-          select game_seq, player_key, computed_total, recorded_total
-          from fact_games
-          where not totals_match
+        columns:
+          - name: game_seq
+            label: Game
+          - name: winner
+            label: Winner
+          - name: margin_comment
+            label: Margin
+          - name: yahtzee_comment
+            label: Yahtzee
+          - name: bonus_comment
+            label: Bonus
+          - name: streak_comment
+            label: Streak
 
   - tab: Pubs
     widgets:
-      - name: Pubs are standalone
+      - name: Pub map
         type: text
         col: 12
         content: |
-          **Primary map:** [Open the interactive Leaflet map](http://localhost:8765/pub_map.html)
-          — visit-sized bubbles, street tiles, click a pin for name + visits.
+          Venues are a **separate grain** from games — there is no game-to-pub join.
 
-          DAC 0.15 cannot embed Leaflet, MapLibre, MapKit, or an iframe
-          (`text` is Markdown only). This is the closest practical equivalent
-          (not Apple MapKit). Serve it next to DAC:
+          **[Open the interactive Leaflet map](http://localhost:8765/pub_map.html)**
+          (visit-sized bubbles, street tiles, click a pin for name + visits).
+
+          DAC cannot embed Leaflet or MapKit. Serve the map beside this dashboard:
 
           `python3 -m http.server 8765 --directory dashboard`
 
-          or open `dashboard/pub_map.html` directly in a browser (`file://`
-          works; tiles still load). Regenerate data after `bruin run` with
-          `python3 dashboard/scripts/export_pub_map.py`.
-
-          Venues come from `mart_pub_locations` only — **no game-to-pub join**.
-          The Vega plot below is a no-tiles fallback inside DAC.
-
-  - tab: Pubs
-    height: 420
-    widgets:
-      - name: Confirmed pub pins
-        type: chart
-        chart: vega-lite
-        col: 12
-        sql: |
-          select
-            coalesce(pub_name, merchant_name_raw) as pub_name,
-            lat::double as lat,
-            lng::double as lng,
-            source,
-            coalesce(visit_count, 1)::integer as visit_count
-          from mart_pub_locations
-          where is_confirmed_pub
-            and lat is not null
-            and lng is not null
-        spec:
-          data: { name: dac }
-          # Fallback only — DAC rejects remote tile/GeoJSON data.url.
-          # Open pub_map.html for the real tiled map.
-          projection:
-            type: mercator
-            center: [-0.12, 51.51]
-            scale: 60000
-          layer:
-            - mark: { type: circle, color: "#d97706", tooltip: true }
-              encoding:
-                longitude: { field: lng, type: quantitative }
-                latitude: { field: lat, type: quantitative }
-                size: { field: visit_count, type: quantitative, title: Visits }
-                tooltip:
-                  - { field: pub_name, type: nominal, title: Pub }
-                  - { field: visit_count, type: quantitative, title: Visits }
-                  - { field: source, type: nominal, title: Source }
-            - mark:
-                type: text
-                dy: -14
-                fontSize: 11
-                fontWeight: 600
-              encoding:
-                longitude: { field: lng, type: quantitative }
-                latitude: { field: lat, type: quantitative }
-                text: { field: pub_name, type: nominal }
+          or open `dashboard/pub_map.html` directly. After `bruin run`, refresh
+          pins with `python3 dashboard/scripts/export_pub_map.py`.
 
   - tab: Pubs
     widgets:
-      - name: All venues
+      - name: Venues
         type: table
         col: 12
         sql: |
@@ -175,3 +673,20 @@ rows:
             is_confirmed_pub
           from mart_pub_locations
           order by is_confirmed_pub desc, visit_count desc, coalesce(pub_name, merchant_name_raw)
+        columns:
+          - name: merchant_name_raw
+            label: Merchant
+          - name: pub_name
+            label: Pub
+          - name: lat
+            label: Lat
+          - name: lng
+            label: Lng
+          - name: source
+            label: Source
+          - name: visit_count
+            label: Visits
+            number: number
+            align: right
+          - name: is_confirmed_pub
+            label: Confirmed

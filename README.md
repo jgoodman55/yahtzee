@@ -41,7 +41,10 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   Seeded, not truly random, so re-running the pipeline doesn't change the
   jokes each time.
 - `mart_head_to_head` — `int_win_loss` joined with `int_commentary` — feeds
-  the dashboard and the animation.
+  the dashboard commentary table and the animation.
+- `mart_player_kpis` / `mart_headline_kpis` / `mart_game_trends` /
+  `mart_category_stats` — dashboard marts (lifetime KPIs, race series, zeros
+  and category miss rates). High scores use `recorded_total`.
 - `mart_pub_locations` — geocoded, deduped pub list (seed → Nominatim →
   Google Places → unresolved) — standalone, not joined to games.
 
@@ -106,13 +109,25 @@ network access or API keys.
 
 ## 4. Dashboard (Bruin DAC)
 
-- Head-to-head record, average score, category breakdown, streaks, and a
-  data-quality widget surfacing any `totals_match = false` rows — built as
-  Bruin DAC pages querying the marts directly.
-- Standalone Leaflet map (`dashboard/pub_map.html`) — visit-sized bubbles from
-  `mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit; the Pubs tab
-  links out to this page. Default tiles are free OSM (no API key). See
-  `dashboard/pub_map.md`.
+Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
+electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Tabs go
+simple → deep:
+
+1. **Overview** — games, wins, high scores (`recorded_total`), yahtzees,
+   upper bonuses, multi-yahtzee player-games, streaks
+2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
+3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
+4. **Deep cuts** — lifetime points, rates, margins, category averages, commentary
+5. **Pubs** — link to the standalone Leaflet map (not joined to games)
+
+Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
+`mart_game_trends`, `mart_category_stats`. Serve with
+`dac serve --dir dashboard --template yahtzee-dark`.
+
+Standalone Leaflet map (`dashboard/pub_map.html`) — visit-sized bubbles from
+`mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit; the Pubs tab
+links out to this page. Default tiles are free OSM (no API key). See
+`dashboard/pub_map.md`.
 
 ## 5. Animation
 
@@ -172,7 +187,7 @@ Then serve the dashboard (after `bruin run` has built the marts):
 ```bash
 dac validate --dir dashboard
 dac check --dir dashboard
-dac serve --dir dashboard --open
+dac serve --dir dashboard --template yahtzee-dark --open
 
 # Interactive pub map (not inside DAC — open beside it)
 python3 dashboard/scripts/export_pub_map.py
@@ -185,9 +200,11 @@ The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,
 another `bruin run` — DuckDB still cannot mix a writer with open readers.
 
 That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →
-`int_commentary` → `mart_head_to_head`, plus `mart_pub_locations` (which will
-attempt live geocoding unless you set `OFFLINE_TEST=1` — see below). Inspect
-results directly:
+`int_commentary` → `mart_head_to_head` plus the dashboard marts
+(`mart_player_kpis`, `mart_headline_kpis`, `mart_game_trends`,
+`mart_category_stats`), and `mart_pub_locations` (which will attempt live
+geocoding unless you set `OFFLINE_TEST=1` — see below). Inspect results
+directly:
 
 ```bash
 duckdb yahtzee.duckdb "select * from mart_head_to_head"

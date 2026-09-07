@@ -1,0 +1,25 @@
+# Erin #FF2D92 (electric pink) · Jordan #2D9CFF (electric blue)
+name: yahtzee-dark
+extends: bruin-dark
+tokens:
+  background: "#0A0C10"
+  surface: "#12171F"
+  surface-hover: "#1A2130"
+  border: "#2A3344"
+  text-primary: "#F3F6FA"
+  text-secondary: "#A8B3C5"
+  text-muted: "#6D7889"
+  accent: "#FF2D92"
+  accent-hover: "#FF5AA8"
+  accent-subtle: "#3A1528"
+  success: "#34D399"
+  warning: "#FBBF24"
+  error: "#F87171"
+  chart-1: "#FF2D92"
+  chart-2: "#2D9CFF"
+  chart-3: "#A78BFA"
+  chart-4: "#34D399"
+  chart-5: "#FBBF24"
+  chart-6: "#F472B6"
+  chart-7: "#22D3EE"
+  chart-8: "#FB7185"

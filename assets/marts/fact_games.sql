@@ -14,10 +14,14 @@ with agg as (
         player,
         sum(score) as computed_total,
         max(recorded_total) as recorded_total,
+        sum(case when category in ('ones','twos','threes','fours','fives','sixes')
+                 then score else 0 end)                                as upper_pre_bonus,
         sum(case when category in ('ones','twos','threes','fours','fives','sixes','upper_bonus')
                  then score else 0 end)                                as upper_section_total,
+        max(case when category = 'chance' then score end)             as chance_score,
         max(case when category = 'upper_bonus' then score end) > 0    as upper_bonus_hit,
         max(case when category = 'yahtzee' then score end) > 0        as scored_natural_yahtzee,
+        -- Seed stores each extra Yahtzee as +100 on yahtzee_bonus (Hasbro boxes).
         coalesce(max(case when category = 'yahtzee_bonus' then score end), 0) / 100 as yahtzee_bonus_count,
         sum(case
                 when category not in ('upper_bonus', 'yahtzee_bonus') and score = 0
@@ -33,11 +37,14 @@ select
     a.computed_total,
     a.recorded_total,
     (a.computed_total = a.recorded_total) as totals_match,
+    a.upper_pre_bonus,
     a.upper_section_total,
+    a.chance_score,
     a.upper_bonus_hit,
     a.scored_natural_yahtzee,
     a.yahtzee_bonus_count,
     (case when a.scored_natural_yahtzee then 1 else 0 end) + a.yahtzee_bonus_count as total_yahtzees,
+    ((case when a.scored_natural_yahtzee then 1 else 0 end) + a.yahtzee_bonus_count) >= 2 as has_multi_yahtzee,
     a.zeros_taken
 from dim_player dim
 left join agg a

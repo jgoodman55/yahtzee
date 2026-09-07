@@ -83,7 +83,6 @@ The baked Vega plot remains the in-dashboard fallback.
 
 ## Prototype (this repo)
 
-`yahtzee.yml` is one dashboard with two tabs:
-
-- **Head-to-head** — games, commentary, totals spot-check
-- **Pubs** — link to the Leaflet map, Vega-Lite fallback, **All venues** table
+`yahtzee.yml` is one dashboard with five tabs (Overview → Races → Zeros →
+Deep cuts → **Pubs**). The Pubs tab is a link to this Leaflet page plus the
+venue table — DAC still cannot embed the map.

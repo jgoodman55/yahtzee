@@ -6,8 +6,8 @@
 - `overview_kpi_colors.png` — same Overview capture (alias)
 - `races_cumulative.png` — Races tab (cumulative wins / yahtzees through game 102)
 - `races_cumulative_wins.png` — same Races capture (alias)
-- `zeros_conversion.png` — Zeros tab (per-game zeros + miss rates)
-- `deep_cuts.png` — Deep cuts (rates, margins, closest/blowouts)
+- `zeros_conversion.png` — Zeros tab (per-game zeros + miss rates with bar labels)
+- `deep_cuts.png` — Deep cuts (upper dice-count + lower sum-box averages with bar labels; Erin/Jordan win-margin histograms)
 - `pubs_tab_leaflet_link.png` — Pubs tab (Leaflet link + venue table)
 - `leaflet_pub_map_anchor_bar.png` — standalone Leaflet map, Anchor Bar popup (3 visits)
 

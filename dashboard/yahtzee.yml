@@ -36,6 +36,38 @@ x-kpi-neutral-mark: &neutral_mark
   baseline: middle
   color: "#FFFFFF"
 
+# Native DAC bar charts have no datalabels field (showValues is heatmap-only).
+# Vega-Lite layered bar + text is the same escape hatch Overview uses for
+# branded KPI figures.
+x-vl-dark: &vl_dark
+  background: transparent
+  view: { stroke: null }
+  axis:
+    labelColor: "#A8B3C5"
+    titleColor: "#A8B3C5"
+    gridColor: "#2A3344"
+    domainColor: "#2A3344"
+    tickColor: "#2A3344"
+  legend:
+    labelColor: "#F3F6FA"
+    title: null
+    orient: bottom
+
+x-player-color: &player_color
+  field: player
+  type: nominal
+  scale:
+    domain: ["Erin", "Jordan"]
+    range: ["#FF2D92", "#2D9CFF"]
+  legend: { title: null, orient: bottom }
+
+x-bar-label: &bar_label
+  type: text
+  dy: -8
+  fontSize: 11
+  fontWeight: 600
+  color: "#F3F6FA"
+
 queries:
   headline:
     sql: select * from mart_headline_kpis
@@ -94,15 +126,40 @@ queries:
         when 'large_straight' then 3
         when 'yahtzee' then 4
       end
-  category_avg:
+  upper_avg_dice:
     sql: |
       select
         category,
+        max(case when player_key = 'erin' then avg_dice_count end) as "Erin",
+        max(case when player_key = 'jordan' then avg_dice_count end) as "Jordan"
+      from mart_category_stats
+      where section = 'upper'
+      group by category
+      order by min(category_ord)
+  lower_sum_avg:
+    sql: |
+      select
+        case category
+          when 'three_of_a_kind' then '3 of a kind'
+          when 'four_of_a_kind' then '4 of a kind'
+          else category
+        end as category,
         max(case when player_key = 'erin' then avg_score end) as "Erin",
         max(case when player_key = 'jordan' then avg_score end) as "Jordan"
       from mart_category_stats
+      where is_sum_box
       group by category
       order by min(category_ord)
+  erin_win_margins:
+    sql: |
+      select margin
+      from mart_game_trends
+      where winner = 'erin'
+  jordan_win_margins:
+    sql: |
+      select margin
+      from mart_game_trends
+      where winner = 'jordan'
 
 rows:
   - tab: Overview
@@ -396,15 +453,41 @@ rows:
     widgets:
       - name: Lower-section miss rate
         type: chart
-        chart: bar
+        chart: vega-lite
         col: 12
         description: Share of games scored 0 on FH / SS / LS / Yahtzee
         query: conversion_miss
-        x: { field: category, type: category, title: Category }
-        y: { field: [Erin, Jordan], type: number, title: Miss rate, format: ".0%", beginAtZero: true }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
+        spec:
+          height: 220
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          transform:
+            - fold: ["Erin", "Jordan"]
+              as: ["player", "value"]
+          encoding:
+            x:
+              field: category
+              type: nominal
+              title: Category
+              sort:
+                - full_house
+                - small_straight
+                - large_straight
+                - yahtzee
+              axis: { labelAngle: 0 }
+            xOffset: { field: player }
+            y:
+              field: value
+              type: quantitative
+              title: Miss rate
+              axis: { format: ".0%" }
+              scale: { domainMin: 0 }
+            color: *player_color
+          layer:
+            - mark: { type: bar }
+            - mark: *bar_label
+              encoding:
+                text: { field: value, type: quantitative, format: ".0%" }
 
   - tab: Zeros
     widgets:
@@ -549,30 +632,146 @@ rows:
         value: { field: jordan_median_score, type: number, format: ",.0f" }
 
   - tab: Deep cuts
+    widgets:
+      - name: Category average notes
+        type: text
+        col: 12
+        content: |
+          **Upper** charts average **dice count** (`score / face`), so ones–sixes
+          share a 0–5 scale (18 on sixes = 3 dice). **Lower** charts average
+          **points** on the three sum boxes only (3oak / 4oak / chance). Fixed
+          conversion boxes (FH / SS / LS / Yahtzee) stay on the Zeros miss-rate
+          chart, not here.
+
+          **Win margin** is `abs(computed_total difference)` from the winner's
+          perspective. Ties are excluded. Erin and Jordan each get their own
+          histogram.
+
+  - tab: Deep cuts
+    height: 320
+    widgets:
+      - name: Upper section — avg dice count
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Average dice per face (score / 1..6). Same 0–5 scale for ones–sixes.
+        query: upper_avg_dice
+        spec:
+          height: 240
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          transform:
+            - fold: ["Erin", "Jordan"]
+              as: ["player", "value"]
+          encoding:
+            x:
+              field: category
+              type: nominal
+              title: Face
+              sort: [ones, twos, threes, fours, fives, sixes]
+              axis: { labelAngle: 0 }
+            xOffset: { field: player }
+            y:
+              field: value
+              type: quantitative
+              title: Avg dice
+              scale: { domain: [0, 5] }
+            color: *player_color
+          layer:
+            - mark: { type: bar }
+            - mark: *bar_label
+              encoding:
+                text: { field: value, type: quantitative, format: ".1f" }
+
+      - name: Lower sum boxes — avg points
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Average points on 3oak / 4oak / chance only (typical 0–30).
+        query: lower_sum_avg
+        spec:
+          height: 240
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          transform:
+            - fold: ["Erin", "Jordan"]
+              as: ["player", "value"]
+          encoding:
+            x:
+              field: category
+              type: nominal
+              title: Category
+              sort: ["3 of a kind", "4 of a kind", chance]
+              axis: { labelAngle: 0 }
+            xOffset: { field: player }
+            y:
+              field: value
+              type: quantitative
+              title: Avg points
+              scale: { domain: [0, 30] }
+            color: *player_color
+          layer:
+            - mark: { type: bar }
+            - mark: *bar_label
+              encoding:
+                text: { field: value, type: quantitative, format: ".1f" }
+
+  - tab: Deep cuts
     height: 300
     widgets:
-      - name: Win margin distribution
+      - name: Erin win margins
         type: chart
-        chart: histogram
+        chart: vega-lite
         col: 6
-        description: "Absolute margin from computed_total (int_win_loss)"
-        sql: |
-          select margin
-          from mart_game_trends
-        x: { field: margin, type: number, title: Margin }
-        bins: 8
+        description: Margin on games Erin won (computed_total). Ties excluded.
+        query: erin_win_margins
+        spec:
+          height: 220
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: margin
+              type: quantitative
+              bin: { maxbins: 8 }
+              title: Margin
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          layer:
+            - mark: { type: bar, color: "#FF2D92" }
+            - mark: *bar_label
+              encoding:
+                text: { aggregate: count, format: "d" }
 
-      - name: Category averages
+      - name: Jordan win margins
         type: chart
-        chart: bar
+        chart: vega-lite
         col: 6
-        description: Who scores higher on each box (bonuses excluded)
-        query: category_avg
-        x: { field: category, type: category, title: Category }
-        y: { field: [Erin, Jordan], type: number, title: Avg, beginAtZero: true }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
+        description: Margin on games Jordan won (computed_total). Ties excluded.
+        query: jordan_win_margins
+        spec:
+          height: 220
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: margin
+              type: quantitative
+              bin: { maxbins: 8 }
+              title: Margin
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          layer:
+            - mark: { type: bar, color: "#2D9CFF" }
+            - mark: *bar_label
+              encoding:
+                text: { aggregate: count, format: "d" }
 
   - tab: Deep cuts
     widgets:

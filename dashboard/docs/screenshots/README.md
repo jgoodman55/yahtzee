@@ -1,6 +1,10 @@
 # Dashboard screenshots
 
+<<<<<<< HEAD
 102-game captures from `dac serve --template yahtzee-dark` after Overview KPI colors landed on main:
+=======
+Captured from `dac serve --template yahtzee-dark` on the 102-game seed (Overview KPIs: Erin pink, Jordan blue, combined white).
+>>>>>>> b708f5f (Refresh dark DAC screenshots on the 102-game seed.)
 
 - `overview_kpi_colors.png` — Overview (102 games; Erin pink, Jordan blue, combined white)
 - `races_cumulative_wins.png` — Races tab (cumulative wins / yahtzees through game 102)

@@ -5,7 +5,7 @@ Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 
 | Tab | What’s on it |
 |---|---|
-| **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks |
+| **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
 | **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
 | **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
 | **Deep cuts** | Lifetime points, avg/median, bonus & yahtzee rates, upper/chance averages, margin histogram, closest/blowouts, commentary |

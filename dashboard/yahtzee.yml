@@ -8,10 +8,12 @@ connection: local_duckdb
 # KPI definitions live in mart_headline_kpis (see SQL comments there).
 #
 # DAC metric widgets always paint the figure with --dac-text-primary (no
-# value.color). Overview big numbers are Vega-Lite text marks so Erin / Jordan
-# / combined totals can use the brand colors. Labels stay the muted widget name.
+# value.color). Overview and Deep cuts big numbers are Vega-Lite text marks so
+# Erin / Jordan / combined totals can use the brand colors. Labels stay the
+# muted widget name. Tables have no cell-color field; charts use series colors
+# or Vega-Lite scales.
 
-# Shared mark styles for Overview KPI figures (schema allows x-* extensions).
+# Shared mark styles for Overview / Deep cuts KPI figures (schema allows x-* extensions).
 x-kpi-erin-mark: &erin_mark
   type: text
   fontSize: 32
@@ -160,6 +162,14 @@ queries:
       select margin
       from mart_game_trends
       where winner = 'jordan'
+  erin_recorded_totals:
+    sql: |
+      select erin_recorded_total as recorded_total
+      from mart_game_trends
+  jordan_recorded_totals:
+    sql: |
+      select jordan_recorded_total as recorded_total
+      from mart_game_trends
 
 rows:
   - tab: Overview
@@ -530,106 +540,200 @@ rows:
             align: right
 
   - tab: Deep cuts
+    height: 120
     widgets:
       - name: Erin lifetime points
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         description: Sum of recorded_total
         query: headline
-        value: { field: erin_lifetime_points, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_lifetime_points, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan lifetime points
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         description: Sum of recorded_total
         query: headline
-        value: { field: jordan_lifetime_points, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_lifetime_points, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Erin avg / median
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         description: Average recorded_total (median is on the player table)
         query: headline
-        value: { field: erin_avg_score, type: number, format: ",.1f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_avg_score, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
       - name: Jordan avg / median
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_avg_score, type: number, format: ",.1f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_avg_score, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
   - tab: Deep cuts
+    height: 120
     widgets:
       - name: Erin bonus rate
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: erin_bonus_rate, type: number, format: ".0%" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_bonus_rate, type: quantitative, format: ".0%" }
+          height: 40
+          padding: 0
 
       - name: Jordan bonus rate
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_bonus_rate, type: number, format: ".0%" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_bonus_rate, type: quantitative, format: ".0%" }
+          height: 40
+          padding: 0
 
       - name: Erin yahtzees / game
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: erin_yahtzees_per_game, type: number, format: ".2f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_yahtzees_per_game, type: quantitative, format: ".2f" }
+          height: 40
+          padding: 0
 
       - name: Jordan yahtzees / game
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_yahtzees_per_game, type: number, format: ".2f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f" }
+          height: 40
+          padding: 0
 
   - tab: Deep cuts
+    height: 120
     widgets:
       - name: Erin upper avg (pre-bonus)
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         description: Average of ones–sixes only
         query: headline
-        value: { field: erin_avg_upper_pre_bonus, type: number, format: ",.1f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
       - name: Jordan upper avg (pre-bonus)
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_avg_upper_pre_bonus, type: number, format: ",.1f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
       - name: Erin chance avg
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: erin_avg_chance, type: number, format: ",.1f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_avg_chance, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
       - name: Jordan chance avg
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 3
         query: headline
-        value: { field: jordan_avg_chance, type: number, format: ",.1f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_avg_chance, type: quantitative, format: ",.1f" }
+          height: 40
+          padding: 0
 
   - tab: Deep cuts
+    height: 120
     widgets:
       - name: Ties
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         query: headline
-        value: { field: ties, type: number, format: ",.0f" }
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: ties, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Erin median
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         query: headline
-        value: { field: erin_median_score, type: number, format: ",.0f" }
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_median_score, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
       - name: Jordan median
-        type: metric
+        type: chart
+        chart: vega-lite
         col: 4
         query: headline
-        value: { field: jordan_median_score, type: number, format: ",.0f" }
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_median_score, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
 
   - tab: Deep cuts
     widgets:
@@ -646,6 +750,10 @@ rows:
           **Win margin** is `abs(computed_total difference)` from the winner's
           perspective. Ties are excluded. Erin and Jordan each get their own
           histogram.
+
+          **Total points** histograms use `recorded_total` per player-game
+          (same as lifetime / avg / median). Shared 50-point bins so the two
+          distributions line up.
 
   - tab: Deep cuts
     height: 320
@@ -762,6 +870,63 @@ rows:
               type: quantitative
               bin: { maxbins: 8 }
               title: Margin
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          layer:
+            - mark: { type: bar, color: "#2D9CFF" }
+            - mark: *bar_label
+              encoding:
+                text: { aggregate: count, format: "d" }
+
+  - tab: Deep cuts
+    height: 300
+    widgets:
+      - name: Erin total points
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: recorded_total per Erin player-game (same grain as lifetime / avg)
+        query: erin_recorded_totals
+        spec:
+          height: 220
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: recorded_total
+              type: quantitative
+              bin: { extent: [100, 550], step: 50 }
+              title: Points
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          layer:
+            - mark: { type: bar, color: "#FF2D92" }
+            - mark: *bar_label
+              encoding:
+                text: { aggregate: count, format: "d" }
+
+      - name: Jordan total points
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: recorded_total per Jordan player-game (same grain as lifetime / avg)
+        query: jordan_recorded_totals
+        spec:
+          height: 220
+          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: recorded_total
+              type: quantitative
+              bin: { extent: [100, 550], step: 50 }
+              title: Points
             y:
               aggregate: count
               type: quantitative

@@ -145,20 +145,40 @@
     function photoBlock(game) {
       const slot = document.getElementById("photo");
       slot.innerHTML = "";
-      if (game.photo) {
-        const img = document.createElement("img");
-        img.src = game.photo;
-        img.alt = game.sheet + " original scorecard photo";
-        slot.appendChild(img);
-        return;
+      const candidates = [
+        "photos/" + game.sheet + ".jpg",
+        "photos/" + game.sheet + ".jpeg",
+        "photos/" + game.sheet + ".png",
+        "photos/" + game.sheet + ".HEIC",
+        "photos/" + game.sheet + ".heic",
+        game.photo,
+        "samples/photos/" + game.sheet + ".jpg",
+      ].filter(Boolean);
+
+      function showPlaceholder() {
+        slot.innerHTML = "";
+        const p = document.createElement("div");
+        p.className = "placeholder";
+        p.innerHTML = `No local photo for <strong>${game.sheet}</strong>.<br /><br />
+          Copy Drive originals into <code>dashboard/scorecards/photos/${game.sheet}.jpg</code>
+          (or .HEIC) and re-run <code>python3 dashboard/scripts/export_scorecards.py</code>.
+          Folder: <a href="https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo">IMG_2885–2918</a>.`;
+        slot.appendChild(p);
       }
-      const p = document.createElement("div");
-      p.className = "placeholder";
-      p.innerHTML = `No local photo for <strong>${game.sheet}</strong>.<br /><br />
-        Copy Drive originals into <code>dashboard/scorecards/photos/${game.sheet}.jpg</code>
-        (or .HEIC) and re-run <code>python3 dashboard/scripts/export_scorecards.py</code>.
-        Folder: <a href="https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo">IMG_2885–2918</a>.`;
-      slot.appendChild(p);
+
+      function tryNext(urls) {
+        if (!urls.length) {
+          showPlaceholder();
+          return;
+        }
+        slot.innerHTML = "";
+        const img = document.createElement("img");
+        img.alt = game.sheet + " original scorecard photo";
+        img.onerror = function () { tryNext(urls.slice(1)); };
+        img.src = urls[0];
+        slot.appendChild(img);
+      }
+      tryNext(candidates);
     }
 
     const data = window.SCORECARD_DATA;

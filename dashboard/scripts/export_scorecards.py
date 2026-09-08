@@ -155,7 +155,9 @@ def load_trends(db_path: Path) -> dict[int, dict]:
 def resolve_photo(sheet: str) -> str | None:
     stems = [sheet, sheet.lower(), sheet.upper()]
     exts = (".jpg", ".jpeg", ".png", ".webp", ".HEIC", ".heic")
-    search_dirs = (PHOTOS_DIR, SAMPLE_PHOTOS)
+    # Prefer committed sample JPGs in games.js so clones work without Drive
+    # HEICs. viewer.html still probes photos/ first for local originals.
+    search_dirs = (SAMPLE_PHOTOS, PHOTOS_DIR)
     for directory in search_dirs:
         if not directory.exists():
             continue

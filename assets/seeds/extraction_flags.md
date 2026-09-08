@@ -10,8 +10,8 @@ Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IM
 - game 1, erin, upper section: category sum is 52 but written upper total is 42; grand total 191 = 42+149 (intentional arithmetic mismatch).
 - game 1, erin, recorded_total: 191 does not equal full category sum 201 (uses written upper 42).
 - game 2, erin, yahtzee_bonus: "200" written in bonus score box (actually lower-section subtotal); no bonus checkboxes filled → scored 0.
-- game 3, erin, upper_bonus: 35 written despite upper category sum 55 (<63 threshold).
-- game 3, erin, yahtzee_bonus: "100" appears in/near bonus score area; no checkboxes filled → scored 0; grand total 279 excludes it.
+- game 3, erin, upper_bonus: 35 written despite upper category sum 55 (<63 threshold). Seed scores 0 after Jordan review; recorded_total 244 (was 279).
+- game 3, erin, yahtzee_bonus: "100" appears in/near bonus score area; no checkboxes filled → scored 0; grand total 244 excludes it.
 - game 3, jordan, upper_bonus: messy scribbles (49/44 crossed out, 39 nearby); scored 0 to match math (49+145=194).
 
 ## IMG_2886
@@ -150,6 +150,9 @@ Recomputed recorded_totals: (1,erin)=201; (14,jordan)=209; (20,jordan)=168;
 Category-score corrections in the same pass: game 33 jordan rebuilt
 (duplicate `fours` / missing `fives` → fives=15); (35,erin,chance) 28→23;
 (68,jordan,yahtzee) 50→0; (101,jordan,fives) 24→25.
+
+Later Jordan review: (3,erin,upper_bonus) 35→0 (upper sum 55 < 63);
+recorded_total 279→244.
 
 Historical written-vs-sum notes (superseded by the recomputed totals):
 

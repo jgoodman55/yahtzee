@@ -121,7 +121,9 @@ simple → deep:
 3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
 4. **Deep cuts** — lifetime points, rates, upper dice-count averages
    (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
-   chance), win margins split by winner, commentary
+   chance), win margins and `recorded_total` distributions split by player,
+   commentary. KPI figures use the same pink / blue / white Vega-Lite marks
+   as Overview.
 5. **Pubs** — link to the standalone Leaflet map (not joined to games)
 
 Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,

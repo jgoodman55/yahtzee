@@ -2,6 +2,94 @@ name: raw_games
 type: duckdb.seed
 parameters:
   path: raw_games.csv
+# All score-rule boxes currently have zero leftovers after Jordan's
+# photo-review. raw_games_score_rules still lists any future violators
+# and hard-fails when violation_count != 0.
+custom_checks:
+  - name: full_house_is_0_or_25
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'full_house'
+        and cast(score as integer) not in (0, 25)
+    value: 0
+  - name: small_straight_is_0_or_30
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'small_straight'
+        and cast(score as integer) not in (0, 30)
+    value: 0
+  - name: large_straight_is_0_or_40
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'large_straight'
+        and cast(score as integer) not in (0, 40)
+    value: 0
+  - name: yahtzee_is_0_or_50
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'yahtzee'
+        and cast(score as integer) not in (0, 50)
+    value: 0
+  - name: chance_is_never_0
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'chance'
+        and cast(score as integer) = 0
+    value: 0
+  - name: upper_bonus_is_0_or_35
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'upper_bonus'
+        and cast(score as integer) not in (0, 35)
+    value: 0
+  - name: twos_multiple_of_2_in_0_to_10
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'twos'
+        and (cast(score as integer) % 2 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 10)
+    value: 0
+  - name: threes_multiple_of_3_in_0_to_15
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'threes'
+        and (cast(score as integer) % 3 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 15)
+    value: 0
+  - name: fours_multiple_of_4_in_0_to_20
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'fours'
+        and (cast(score as integer) % 4 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 20)
+    value: 0
+  - name: fives_multiple_of_5_in_0_to_25
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'fives'
+        and (cast(score as integer) % 5 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 25)
+    value: 0
+  - name: sixes_multiple_of_6_in_0_to_30
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'sixes'
+        and (cast(score as integer) % 6 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 30)
+    value: 0
+  - name: ones_multiple_of_1_in_0_to_5
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'ones'
+        and (cast(score as integer) % 1 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 5)
+    value: 0
 columns:
   - name: game_seq
     type: integer

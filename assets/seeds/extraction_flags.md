@@ -80,6 +80,7 @@ Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IM
 | IMG_2896 | 3 | jordan | fives | Handwriting ambiguous (could look like 40); upper total 99 requires 10. |
 | IMG_2897 | 1 | jordan | yahtzee / chance | Jordan photo-review: yahtzee 21→0, chance 0→21; recorded_total 199. |
 | IMG_2897 | 1 | jordan | large_straight | 40 heavily scribbled out; treated as 0. |
+| IMG_2897 | 3 | erin | ones | Jordan photo-review: 6→0; recorded_total 255. |
 | IMG_2898 | 1 | erin | yahtzee_bonus | Slash in first bonus checkbox but not added to totals; scored 0. |
 | IMG_2898 | 2 | erin | threes / fours | Jordan photo-review: threes 9→3, fours 10→16. recorded_total still 225. |
 | IMG_2898 | 3 | jordan | threes | Jordan photo-review: 4→9; recorded_total 265. |
@@ -173,7 +174,7 @@ chance→20, 263; (18,jordan) chance→20 / yahtzee→50, 224;
 (57,erin,fours) →12, 310; (68,erin) fours→4 / twos→6, 210;
 (69,jordan) fours→16 / fives→15, 254;
 (93,jordan) large_straight→0 / chance→24, 387.
-Leftover still under review: (39,erin,ones)=6.
+(39,erin,ones) 6→0, 255. Score-rule allowlist is empty.
 
 Historical written-vs-sum notes (superseded by the recomputed totals):
 

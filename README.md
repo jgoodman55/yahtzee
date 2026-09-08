@@ -246,10 +246,9 @@ genuinely needs an API key, and it's a separate manual step outside
 key).
 
 Impossible category scores (wrong Full House / straight / Yahtzee box,
-Chance 0, upper faces that are not `n * face`) fail `bruin run` unless
-they are already listed in `assets/seeds/known_score_rule_violations.csv`.
-`bruin run` writes the full leftover table to `raw_games_score_rules`.
-To print the same list without Bruin:
+Chance 0, upper faces that are not `n * face`) fail `bruin run`
+(`raw_games_score_rules.violation_count` must be 0). To print the same
+list without Bruin:
 
 ```bash
 python tests/test_raw_games_score_rules.py

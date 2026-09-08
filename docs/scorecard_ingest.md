@@ -36,17 +36,15 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 - Upper faces: `ones`–`sixes` must be `n * face` for `n` in 0..5
 - `upper_bonus` ∈ {0, 35}
 
-Fixed-box / clean upper-face rules hard-fail on the `raw_games` seed. Remaining leftovers are written to `raw_games_score_rules` and allowed only if they match `known_score_rule_violations.csv` — a **new** impossible score fails `OFFLINE_TEST=1 bruin run --workers 1`. List leftovers without Bruin:
+All of these rules hard-fail on the `raw_games` seed. `raw_games_score_rules`
+must have `violation_count = 0` (`known_score_rule_violations.csv` is empty
+after Jordan's photo-review). A new impossible score fails
+`OFFLINE_TEST=1 bruin run --workers 1`. List leftovers without Bruin:
 
 ```bash
 python tests/test_raw_games_score_rules.py
 # or: pytest tests/test_raw_games_score_rules.py
 ```
-
-Do not silently "fix" leftover rows. The only remaining leftover after
-Jordan's second photo-review pass is **g39 erin ones=6**. When it is
-cleared, update `raw_games.csv`, recompute that player-game's
-`recorded_total`, and delete the matching known-violations row.
 
 ## Pipeline
 

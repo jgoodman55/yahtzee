@@ -3,13 +3,9 @@ name: raw_games_score_rules
 type: duckdb.sql
 description: |
   Impossible Yahtzee scores in raw_games (spreadsheet typos / OCR).
-  One row per violating (game_seq, player, category). Jordan is still
-  reviewing leftovers (IMG_2917+); this table is the living list.
-
-  Hard-fail: `no_new_score_rule_violations` (count of rows not in
-  `known_score_rule_violations`) so a new bad value fails `bruin run`.
-  When leftovers are cleared, drop those seed rows and the leftover
-  count check becomes `violation_count = 0`.
+  One row per violating (game_seq, player, category). Allowlist is
+  empty after Jordan's photo-review; `no_score_rule_violations`
+  requires violation_count = 0.
 materialization:
   type: table
 depends:
@@ -37,12 +33,16 @@ columns:
     checks:
       - name: not_null
 custom_checks:
+  - name: no_score_rule_violations
+    description: |
+      Fail when any impossible category score remains in raw_games.
+      violation_count must be 0 after Jordan's photo-review.
+    query: select count(*) from raw_games_score_rules
+    value: 0
   - name: no_new_score_rule_violations
     description: |
-      Fail when a score-rule violation appears that is not already listed
-      in known_score_rule_violations. After Jordan clears a leftover,
-      delete that row from the known-violations seed (do not silently
-      "fix" other cells).
+      Fail when a score-rule violation is not in
+      known_score_rule_violations (allowlist is empty).
     query: |
       select count(*)
       from raw_games_score_rules v

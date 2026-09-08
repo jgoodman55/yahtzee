@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yahtzee scorecard</title>
+  <link rel="stylesheet" href="scorecards.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar">
+      <div>
+        <h1 id="title">Scorecard</h1>
+        <p class="meta" id="subtitle"></p>
+      </div>
+      <nav class="links">
+        <a id="prev" href="#">← Prev</a>
+        <a href="index.html">All games</a>
+        <a id="next" href="#">Next →</a>
+      </nav>
+    </div>
+
+    <div class="compare">
+      <section class="panel">
+        <h2>Original sheet photo</h2>
+        <div class="photo-slot" id="photo"></div>
+      </section>
+      <section class="panel">
+        <h2>Seed-rendered scorecard</h2>
+        <div class="card-scroll" id="card"></div>
+        <div class="legend">
+          <span><i class="swatch erin"></i>Erin #FF2D92</span>
+          <span><i class="swatch jordan"></i>Jordan #2D9CFF</span>
+          <span>Chance before Yahtzee (physical card order)</span>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script src="games.js"></script>
+  <script>
+    const UPPER = [
+      ["ones", "Aces"],
+      ["twos", "Twos"],
+      ["threes", "Threes"],
+      ["fours", "Fours"],
+      ["fives", "Fives"],
+      ["sixes", "Sixes"],
+      ["upper_bonus", "Bonus"],
+    ];
+    const LOWER = [
+      ["three_of_a_kind", "3 of a Kind"],
+      ["four_of_a_kind", "4 of a Kind"],
+      ["full_house", "Full House"],
+      ["small_straight", "Small Straight"],
+      ["large_straight", "Large Straight"],
+      ["chance", "Chance"],
+      ["yahtzee", "Yahtzee"],
+      ["yahtzee_bonus", "Yahtzee Bonus"],
+    ];
+
+    function num(v) {
+      return v === null || v === undefined ? "" : String(v);
+    }
+
+    function sum(scores, keys) {
+      return keys.reduce((acc, k) => acc + (Number(scores[k]) || 0), 0);
+    }
+
+    function cell(player, value, extra) {
+      const td = document.createElement("td");
+      td.className = player + (extra ? " " + extra : "");
+      td.textContent = num(value);
+      return td;
+    }
+
+    function renderCard(sheetGames, highlightSeq) {
+      const table = document.createElement("table");
+      table.className = "scorecard";
+      const colgroup = document.createElement("colgroup");
+      colgroup.innerHTML = "<col />";
+      sheetGames.forEach((g) => {
+        const mark = g.game_seq === highlightSeq ? " selected" : "";
+        colgroup.innerHTML += `<col class="erin${mark}" /><col class="jordan${mark}" />`;
+      });
+      table.appendChild(colgroup);
+
+      const thead = document.createElement("thead");
+      const r1 = document.createElement("tr");
+      r1.innerHTML = "<th class='cat'>Game</th>";
+      sheetGames.forEach((g) => {
+        const span = 2;
+        r1.innerHTML += `<th colspan="${span}">#${g.game_seq}${g.game_seq === highlightSeq ? " ▸" : ""}</th>`;
+      });
+      const r2 = document.createElement("tr");
+      r2.innerHTML = "<th class='cat'>Player</th>";
+      sheetGames.forEach(() => {
+        r2.innerHTML += "<th class='erin'>Erin</th><th class='jordan'>Jordan</th>";
+      });
+      thead.appendChild(r1);
+      thead.appendChild(r2);
+      table.appendChild(thead);
+
+      const body = document.createElement("tbody");
+      const addRow = (label, key, section) => {
+        const tr = document.createElement("tr");
+        if (section) tr.className = section;
+        const cat = document.createElement("td");
+        cat.className = "cat";
+        cat.textContent = label;
+        tr.appendChild(cat);
+        sheetGames.forEach((g) => {
+          const ev = key === "_upper"
+            ? sum(g.erin.scores, UPPER.map((x) => x[0]))
+            : key === "_lower"
+              ? sum(g.erin.scores, LOWER.map((x) => x[0]))
+              : key === "_grand"
+                ? g.erin.computed_total
+                : g.erin.scores[key];
+          const jv = key === "_upper"
+            ? sum(g.jordan.scores, UPPER.map((x) => x[0]))
+            : key === "_lower"
+              ? sum(g.jordan.scores, LOWER.map((x) => x[0]))
+              : key === "_grand"
+                ? g.jordan.computed_total
+                : g.jordan.scores[key];
+          tr.appendChild(cell("erin", ev));
+          tr.appendChild(cell("jordan", jv));
+        });
+        body.appendChild(tr);
+      };
+
+      addRow("Number Combos", null, "section");
+      body.lastChild.querySelectorAll("td:not(.cat)").forEach((td) => { td.textContent = ""; });
+      UPPER.forEach(([k, lab]) => addRow(lab, k));
+      addRow("Upper total", "_upper", "subtotal");
+      addRow("Special Combos", null, "section");
+      body.lastChild.querySelectorAll("td:not(.cat)").forEach((td) => { td.textContent = ""; });
+      LOWER.forEach(([k, lab]) => addRow(lab, k));
+      addRow("Lower total", "_lower", "subtotal");
+      addRow("Grand total", "_grand", "grand");
+      table.appendChild(body);
+      return table;
+    }
+
+    function photoBlock(game) {
+      const slot = document.getElementById("photo");
+      slot.innerHTML = "";
+      if (game.photo) {
+        const img = document.createElement("img");
+        img.src = game.photo;
+        img.alt = game.sheet + " original scorecard photo";
+        slot.appendChild(img);
+        return;
+      }
+      const p = document.createElement("div");
+      p.className = "placeholder";
+      p.innerHTML = `No local photo for <strong>${game.sheet}</strong>.<br /><br />
+        Copy Drive originals into <code>dashboard/scorecards/photos/${game.sheet}.jpg</code>
+        (or .HEIC) and re-run <code>python3 dashboard/scripts/export_scorecards.py</code>.
+        Folder: <a href="https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo">IMG_2885–2918</a>.`;
+      slot.appendChild(p);
+    }
+
+    const data = window.SCORECARD_DATA;
+    if (!data || !data.games || !data.games.length) {
+      document.getElementById("subtitle").textContent =
+        "games.js is missing — run python3 dashboard/scripts/export_scorecards.py";
+    } else {
+      const params = new URLSearchParams(location.search);
+      const wanted = Number(params.get("game") || data.games[0].game_seq);
+      const games = data.games;
+      const idx = Math.max(0, games.findIndex((g) => g.game_seq === wanted));
+      const game = games[idx];
+      const sheetGames = games.filter((g) => g.sheet === game.sheet);
+
+      document.title = `Game ${game.game_seq} · ${game.sheet}`;
+      document.getElementById("title").textContent = `Game ${game.game_seq}`;
+      const w = game.winner === "tie" ? "tie" : game.winner;
+      document.getElementById("subtitle").textContent =
+        `${game.sheet} · game ${game.game_on_sheet} of ${sheetGames.length} on this sheet · winner ${w} · margin ${game.margin} · Erin ${game.erin.recorded_total} / Jordan ${game.jordan.recorded_total}`;
+
+      const prev = games[idx - 1];
+      const next = games[idx + 1];
+      const prevA = document.getElementById("prev");
+      const nextA = document.getElementById("next");
+      if (prev) prevA.href = `viewer.html?game=${prev.game_seq}`;
+      else { prevA.removeAttribute("href"); prevA.style.opacity = "0.35"; }
+      if (next) nextA.href = `viewer.html?game=${next.game_seq}`;
+      else { nextA.removeAttribute("href"); nextA.style.opacity = "0.35"; }
+
+      photoBlock(game);
+      document.getElementById("card").appendChild(renderCard(sheetGames, game.game_seq));
+    }
+  </script>
+</body>
+</html>

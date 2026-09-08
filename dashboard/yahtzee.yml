@@ -72,7 +72,12 @@ x-bar-label: &bar_label
 
 queries:
   headline:
-    sql: select * from mart_headline_kpis
+    sql: |
+      select
+        h.*,
+        (select total_yahtzees from mart_player_kpis where player_key = 'erin') as erin_total_yahtzees,
+        (select total_yahtzees from mart_player_kpis where player_key = 'jordan') as jordan_total_yahtzees
+      from mart_headline_kpis h
   races:
     sql: |
       select
@@ -170,6 +175,26 @@ queries:
     sql: |
       select jordan_recorded_total as recorded_total
       from mart_game_trends
+  # DAC 0.15 table cells are plain text (no markdown / <a>). Vega-Lite href
+  # marks are the in-dashboard click path; the sidecar HTML is the comparison UX.
+  closest_scorecard_links:
+    sql: |
+      select
+        game_seq,
+        'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
+        'http://localhost:8765/scorecards/viewer.html?game=' || game_seq as url
+      from mart_game_trends
+      order by margin asc, game_seq
+      limit 8
+  blowout_scorecard_links:
+    sql: |
+      select
+        game_seq,
+        'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
+        'http://localhost:8765/scorecards/viewer.html?game=' || game_seq as url
+      from mart_game_trends
+      order by margin desc, game_seq
+      limit 8
 
 rows:
   - tab: Overview
@@ -185,7 +210,11 @@ rows:
           `int_win_loss` (sum of the 15 boxes).
 
           Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
-          player-game is `total_yahtzees >= 2` (bonus ≥ 100).
+          player-game is `total_yahtzees >= 2` (bonus ≥ 100). Overview also
+          shows **Erin / Jordan total yahtzees** from `mart_player_kpis`.
+
+          Game-level tables link to side-by-side scorecards (photo | seed card)
+          on the **Scorecards** tab — DAC 0.15 cannot make table cells clickable.
 
   - tab: Overview
     height: 120
@@ -268,6 +297,35 @@ rows:
           mark: *neutral_mark
           encoding:
             text: { field: total_yahtzees, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
+
+  - tab: Overview
+    height: 120
+    widgets:
+      - name: Erin total yahtzees
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Natural 50s plus yahtzee_bonus/100 for Erin
+        query: headline
+        spec:
+          mark: *erin_mark
+          encoding:
+            text: { field: erin_total_yahtzees, type: quantitative, format: ",.0f" }
+          height: 40
+          padding: 0
+
+      - name: Jordan total yahtzees
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Natural 50s plus yahtzee_bonus/100 for Jordan
+        query: headline
+        spec:
+          mark: *jordan_mark
+          encoding:
+            text: { field: jordan_total_yahtzees, type: quantitative, format: ",.0f" }
           height: 40
           padding: 0
 
@@ -371,7 +429,10 @@ rows:
         col: 12
         content: |
           X-axis is **`game_seq`**, not calendar date. Lines are cumulative so the
-          picture stays readable as the seed grows toward ~100 games.
+          picture stays readable as the seed grows toward ~100 games. Native DAC
+          line tooltips cannot open a URL — look up that `game_seq` on
+          **Scorecards** or
+          [viewer.html?game=N](http://localhost:8765/scorecards/viewer.html).
 
   - tab: Races
     height: 360
@@ -940,6 +1001,77 @@ rows:
 
   - tab: Deep cuts
     widgets:
+      - name: Open a game scorecard
+        type: text
+        col: 12
+        content: |
+          DAC 0.15 **tables do not render markdown or `<a>` cells**. The Scorecard
+          column is the URL pattern once the sidecar is up.
+
+          **Click a game** in the lists below (Vega-Lite `href`) or
+          **[browse every scorecard](http://localhost:8765/scorecards/index.html)**
+          (`python3 -m http.server 8765 --directory dashboard`). Each page is
+          original photo | seed-rendered card (Chance before Yahtzee).
+
+  - tab: Deep cuts
+    height: 240
+    widgets:
+      - name: Open closest games
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Click a row to open that game's photo + seed card
+        query: closest_scorecard_links
+        spec:
+          height: 200
+          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          mark:
+            type: text
+            align: left
+            baseline: middle
+            fontSize: 13
+            fontWeight: 600
+            color: "#2D9CFF"
+          encoding:
+            y:
+              field: label
+              type: nominal
+              sort: null
+              title: null
+              axis: { labelColor: "#A8B3C5", domain: false, ticks: false }
+            text: { field: label }
+            href: { field: url, type: nominal }
+
+      - name: Open biggest blowouts
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Click a row to open that game's photo + seed card
+        query: blowout_scorecard_links
+        spec:
+          height: 200
+          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          mark:
+            type: text
+            align: left
+            baseline: middle
+            fontSize: 13
+            fontWeight: 600
+            color: "#FF2D92"
+          encoding:
+            y:
+              field: label
+              type: nominal
+              sort: null
+              title: null
+              axis: { labelColor: "#A8B3C5", domain: false, ticks: false }
+            text: { field: label }
+            href: { field: url, type: nominal }
+
+  - tab: Deep cuts
+    widgets:
       - name: Closest games
         type: table
         col: 6
@@ -949,7 +1081,8 @@ rows:
             winner,
             margin,
             erin_computed_total as erin,
-            jordan_computed_total as jordan
+            jordan_computed_total as jordan,
+            '[Game ' || game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
           from mart_game_trends
           order by margin asc, game_seq
           limit 8
@@ -970,6 +1103,8 @@ rows:
             label: Jordan
             number: number
             align: right
+          - name: scorecard
+            label: Scorecard
 
       - name: Biggest blowouts
         type: table
@@ -980,7 +1115,8 @@ rows:
             winner,
             margin,
             erin_computed_total as erin,
-            jordan_computed_total as jordan
+            jordan_computed_total as jordan,
+            '[Game ' || game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
           from mart_game_trends
           order by margin desc, game_seq
           limit 8
@@ -1001,6 +1137,8 @@ rows:
             label: Jordan
             number: number
             align: right
+          - name: scorecard
+            label: Scorecard
 
   - tab: Deep cuts
     widgets:
@@ -1097,7 +1235,14 @@ rows:
         type: table
         col: 12
         sql: |
-          select game_seq, winner, margin_comment, yahtzee_comment, bonus_comment, streak_comment
+          select
+            game_seq,
+            winner,
+            margin_comment,
+            yahtzee_comment,
+            bonus_comment,
+            streak_comment,
+            '[Game ' || game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
           from mart_head_to_head
           order by game_seq desc
         columns:
@@ -1113,6 +1258,84 @@ rows:
             label: Bonus
           - name: streak_comment
             label: Streak
+          - name: scorecard
+            label: Scorecard
+
+  - tab: Scorecards
+    widgets:
+      - name: Photo vs seed
+        type: text
+        col: 12
+        content: |
+          Side-by-side comparison Jordan used to validate the seed: **original
+          sheet photo** | **digitized card** from `raw_games` (Chance before
+          Yahtzee; Erin `#FF2D92` / Jordan `#2D9CFF`).
+
+          DAC 0.15 can do Markdown links in **text** widgets, `image` URLs, and
+          Vega-Lite `href`. It cannot embed arbitrary HTML, and table cells are
+          not clickable. Same sidecar pattern as the pub map:
+
+          1. After `bruin run`: `python3 dashboard/scripts/export_scorecards.py`
+          2. `python3 -m http.server 8765 --directory dashboard`
+          3. **[Open the scorecard index](http://localhost:8765/scorecards/index.html)**
+             or a game, e.g. [Game 1](http://localhost:8765/scorecards/viewer.html?game=1),
+             [Game 47](http://localhost:8765/scorecards/viewer.html?game=47) (1-pt),
+             [Game 100](http://localhost:8765/scorecards/viewer.html?game=100) (blowout).
+
+          Full Drive HEICs stay out of git. Copy `IMG_####.jpg` / `.HEIC` into
+          `dashboard/scorecards/photos/` (see `docs/scorecard_ingest.md`) and
+          re-run the export. This repo ships a few sample photos + PNG composites.
+
+  - tab: Scorecards
+    widgets:
+      - name: Sample — Game 1 (IMG_2885)
+        type: image
+        col: 12
+        src: http://localhost:8765/scorecards/samples/game_1.png
+        alt: Game 1 original photo beside the seed-rendered scorecard
+
+  - tab: Scorecards
+    widgets:
+      - name: All games
+        type: table
+        col: 12
+        sql: |
+          select
+            t.game_seq,
+            c.sheet,
+            c.game_on_sheet,
+            t.winner,
+            t.margin,
+            t.erin_computed_total as erin,
+            t.jordan_computed_total as jordan,
+            '[Game ' || t.game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || t.game_seq || ')' as scorecard
+          from mart_game_trends t
+          left join sheet_game_crosswalk c
+            on c.game_seq = t.game_seq
+          order by t.game_seq
+        columns:
+          - name: game_seq
+            label: Game
+          - name: sheet
+            label: Sheet
+          - name: game_on_sheet
+            label: On sheet
+          - name: winner
+            label: Winner
+          - name: margin
+            label: Margin
+            number: number
+            align: right
+          - name: erin
+            label: Erin
+            number: number
+            align: right
+          - name: jordan
+            label: Jordan
+            number: number
+            align: right
+          - name: scorecard
+            label: Scorecard
 
   - tab: Pubs
     widgets:

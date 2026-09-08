@@ -46,6 +46,21 @@ python tests/test_raw_games_score_rules.py
 # or: pytest tests/test_raw_games_score_rules.py
 ```
 
+## Side-by-side scorecards (dashboard)
+
+After `bruin run`, refresh the photo | seed-card pages:
+
+```bash
+python3 dashboard/scripts/export_scorecards.py
+python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
+python3 -m http.server 8765 --directory dashboard
+# http://localhost:8765/scorecards/viewer.html?game=1
+```
+
+Drop Drive originals into `dashboard/scorecards/photos/` as `IMG_2885.HEIC`
+(or `.jpg`). Those files are gitignored. A few downscaled sample JPGs ship
+under `dashboard/scorecards/samples/photos/`. Details: `dashboard/scorecards.md`.
+
 ## Pipeline
 
 Seeds feed `stg_games` → `fact_games` (computed vs recorded totals) → `int_win_loss` / `int_commentary` → `mart_head_to_head`. After replacing `raw_games.csv`:

@@ -1,18 +1,2 @@
 game_seq,player,category,score,rule
-9,erin,fives,12,fives must be a multiple of 5 in 0..25
-9,erin,sixes,15,sixes must be a multiple of 6 in 0..30
-9,erin,yahtzee,20,yahtzee must be 0 or 50
-18,jordan,yahtzee,20,yahtzee must be 0 or 50
-33,erin,chance,0,chance must never be 0
-37,jordan,yahtzee,21,yahtzee must be 0 or 50
-37,jordan,chance,0,chance must never be 0
 39,erin,ones,6,ones must be a multiple of 1 in 0..5
-43,erin,fives,18,fives must be a multiple of 5 in 0..25
-43,erin,sixes,20,sixes must be a multiple of 6 in 0..30
-48,erin,fives,18,fives must be a multiple of 5 in 0..25
-48,erin,sixes,20,sixes must be a multiple of 6 in 0..30
-57,erin,fours,9,fours must be a multiple of 4 in 0..20
-68,erin,fours,6,fours must be a multiple of 4 in 0..20
-69,jordan,fours,15,fours must be a multiple of 4 in 0..20
-69,jordan,fives,16,fives must be a multiple of 5 in 0..25
-93,jordan,chance,0,chance must never be 0

@@ -43,7 +43,10 @@ python tests/test_raw_games_score_rules.py
 # or: pytest tests/test_raw_games_score_rules.py
 ```
 
-Do not silently "fix" leftover rows; Jordan is still reviewing IMG_2917+. When a leftover is cleared, update the category in `raw_games.csv`, recompute that player-game's `recorded_total`, and delete the matching known-violations row.
+Do not silently "fix" leftover rows. The only remaining leftover after
+Jordan's second photo-review pass is **g39 erin ones=6**. When it is
+cleared, update `raw_games.csv`, recompute that player-game's
+`recorded_total`, and delete the matching known-violations row.
 
 ## Pipeline
 

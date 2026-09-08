@@ -5,7 +5,7 @@ description: |
   raw_games_score_rules fails `bruin run` if a NEW violation appears or
   if one of these rows is cleared without deleting it here. Set the
   leftover list empty (and the audit check to violation_count = 0)
-  after Jordan finishes IMG_2917+.
+  after Jordan finishes IMG_2917+. Currently only g39 erin ones=6.
 parameters:
   path: known_score_rule_violations.csv
 columns:

@@ -23,10 +23,7 @@ Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IM
 ## IMG_2887
 - game 2, erin, chance / yahtzee: cells were swapped in the seed (yahtzee 26, chance 50). Jordan photo-review swapped them → yahtzee 50, chance 26; recorded_total still 322.
 - game 2, erin, upper total: written 101 vs category+bonus sum 101 with threes=6 (OK); if threes were 9 would be 104.
-- game 3, erin, fives: written 12 (not a multiple of 5).
-- game 3, erin, sixes: written 15 (not a multiple of 6).
-- game 3, erin, yahtzee: written 20 (nonstandard).
-- game 3, erin, chance: written 50.
+- game 3, erin, fives / sixes / yahtzee / chance: Jordan photo-review → fives 15, sixes 12, yahtzee 50, chance 20; recorded_total 263.
 
 ## IMG_2888
 - (none major; all three games complete and math-consistent)
@@ -75,21 +72,24 @@ Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IM
 | IMG_2894 | 3 | erin | chance | Heavy scribble/overwrite; read as 11 (needed for total 184). |
 | IMG_2894 | 3 | jordan | yahtzee_bonus | One bonus checkbox marked (arrow); scored 100. Lower section total 297 includes bonus. |
 | IMG_2894 | 1 | jordan | fours | Earlier scribble; final value 12 (upper total 106 = 0+6+9+12+20+24+35). |
+| IMG_2895 | 3 | erin | chance | Jordan photo-review: 0→30; recorded_total 370. |
 | IMG_2896 | 2 | erin | upper_bonus | "16" crossed out, replaced with 35. |
 | IMG_2896 | 2 | erin | yahtzee_bonus | Two bonus checkmarks → 200. Category sum 459 vs written grand total 456 (intentional mismatch; use written 456). |
 | IMG_2896 | 2 | erin | recorded_total | Written upper total 99 (101 crossed out) + written lower 357 = 456; category lower sums to 360. |
 | IMG_2896 | 3 | erin | upper_bonus | Checkmark present but upper total 59 < 63; scored 0. |
 | IMG_2896 | 3 | jordan | fives | Handwriting ambiguous (could look like 40); upper total 99 requires 10. |
-| IMG_2897 | 1 | jordan | yahtzee | Written as 21 (non-standard). Matches lower total 98 with large_straight=0. |
+| IMG_2897 | 1 | jordan | yahtzee / chance | Jordan photo-review: yahtzee 21→0, chance 0→21; recorded_total 199. |
 | IMG_2897 | 1 | jordan | large_straight | 40 heavily scribbled out; treated as 0. |
 | IMG_2898 | 1 | erin | yahtzee_bonus | Slash in first bonus checkbox but not added to totals; scored 0. |
 | IMG_2898 | 2 | erin | threes / fours | Jordan photo-review: threes 9→3, fours 10→16. recorded_total still 225. |
 | IMG_2898 | 3 | jordan | threes | Jordan photo-review: 4→9; recorded_total 265. |
+| IMG_2899 | 1 | erin | fives / sixes | Jordan photo-review: fives 18→20, sixes 20→18; recorded_total still 301. |
 | IMG_2899 | 1 | erin | four_of_a_kind | Low score 13 (unusual but clearly written); sum matches 301. |
 | IMG_2899 | 1 | jordan | four_of_a_kind | Read as 8; category sum 303 vs written grand total 302 (off by 1). |
 | IMG_2899 | 1 | jordan | yahtzee_bonus | One X in bonus box → 100. |
 | IMG_2899 | 3 | jordan | ones | Jordan photo-review: 2→3 (matches written upper 61); recorded_total 152. |
 | IMG_2900 | 2 | erin | recorded_total | Prior total crossed out in box; final grand total 264 written below. |
+| IMG_2900 | 3 | erin | fives / sixes | Jordan photo-review: fives 18→20, sixes 20→18; recorded_total still 250. |
 | IMG_2900 | 3 | erin | four_of_a_kind | Ambiguous handwriting; used 19 so lower section sums to 143 with three_of_a_kind=18. |
 | IMG_2901 | 3 | erin | large_straight | 40 has a vertical mark through it but lower total 112 requires 40. |
 
@@ -102,6 +102,8 @@ None — all 9 sheets (IMG_2894–IMG_2902) have 3 complete games.
 # part3 extraction flags
 
 Sheets: IMG_2903–IMG_2911 (9 sheets, 27 games × 2 players).
+
+- **IMG_2903** game 3 / erin / `fours`: Jordan photo-review → 12; recorded_total 310.
 
 - **IMG_2904** game 1 / erin / `four_of_a_kind`: Initial OCR read 25; sum only matches recorded_total 238 with 29. Using 29.
 - **IMG_2904** game 2 / jordan / `threes`: Messy/overwritten; inferred 9 from upper section total 58.
@@ -116,10 +118,10 @@ Sheets: IMG_2903–IMG_2911 (9 sheets, 27 games × 2 players).
 - **IMG_2906** game 2 / jordan / `yahtzee_bonus`: One X checkbox → 100.
 - **IMG_2906** game 3 / jordan / `player`: Header may look like I; treated as jordan.
 - **IMG_2906** game 3 / jordan / `ones`: Jordan photo-review → 1; recorded_total 228 (matches written grand total).
+- **IMG_2907** game 2 / erin / `fours` / `twos`: Jordan photo-review → fours 4, twos 6; recorded_total 210.
 - **IMG_2907** game 2 / jordan / `full_house`: Messy; read as 25.
 - **IMG_2907** game 3 / erin / `twos`: Jordan photo-review → 6; recorded_total 160 (matches written grand total).
-- **IMG_2907** game 3 / jordan / `fours`: Written 15 (not a multiple of 4); kept as written.
-- **IMG_2907** game 3 / jordan / `fives`: Re-read as 16 (attached OCR said 10); with yahtzee 50 matches upper 99 + lower 155 = 254.
+- **IMG_2907** game 3 / jordan / `fours` / `fives`: Jordan photo-review → fours 16, fives 15; recorded_total 254.
 - **IMG_2908** game 1 / jordan / `sixes`: 18 scribbled toward 15; upper total 57 confirms 18.
 - **IMG_2908** game 2 / erin / `four_of_a_kind`: Re-read as 26 (earlier OCR 20) to match recorded_total 156.
 - **IMG_2908** game 3 / erin / `ones`: Ambiguous 1 vs 3; using 1 (upper total context 46).
@@ -164,6 +166,15 @@ Photo-review corrections (recorded_total recomputed from category sums):
 (78,erin,small_straight) 20→30, 171; (82,jordan,yahtzee_bonus) 100→0, 299;
 (93,jordan,large_straight) 24→40, 403.
 
+Second photo-review pass: (9,erin) fives→15 / sixes→12 / yahtzee→50 /
+chance→20, 263; (18,jordan) chance→20 / yahtzee→50, 224;
+(33,erin,chance) →30, 370; (37,jordan) yahtzee→0 / chance→21, 199;
+(43,erin) fives→20 / sixes→18, 301; (48,erin) fives→20 / sixes→18, 250;
+(57,erin,fours) →12, 310; (68,erin) fours→4 / twos→6, 210;
+(69,jordan) fours→16 / fives→15, 254;
+(93,jordan) large_straight→0 / chance→24, 387.
+Leftover still under review: (39,erin,ones)=6.
+
 Historical written-vs-sum notes (superseded by the recomputed totals):
 
 - **IMG_2906** game 3 / jordan: written 228, category sum 227
@@ -201,9 +212,8 @@ Historical written-vs-sum notes (superseded by the recomputed totals):
 ## IMG_2915
 - game 2, erin, fours: written 8 (not a multiple of 4); fits upper total 59.
 - game 3, jordan, twos: written 8.
-- game 3, jordan, large_straight: 40 scribbled out with 24 written beside it. Jordan photo-review → 40; recorded_total 403.
+- game 3, jordan, large_straight / chance: Jordan photo-review → large_straight 0, chance 24; recorded_total 387.
 - game 3, jordan, yahtzee_bonus: one X → 100.
-- game 3, jordan, chance: still 0 (impossible under score rules — leftover for IMG_2917+ review).
 
 ## IMG_2916
 - game 2, erin, twos: 8 appears written over a 6.
@@ -226,7 +236,6 @@ Historical written-vs-sum notes (superseded by the recomputed totals):
 
 ## IMG_2890 game 3 (added)
 - Previously skipped (no written grand totals). Jordan confirmed totals **E 173 / J 174**.
-- Categories summed to those totals; Jordan yahtzee=20 chance=50 (nonstandard); Erin four_of_a_kind 27; totals E173/J224.
+- Categories summed to those totals; Erin four_of_a_kind 27; totals E173/J224.
 - Inserted as game_on_sheet 3 → continuous game_seq between prior IMG_2890 games and IMG_2891.
-
-- Corrected Jordan recorded_total to **224** (yahtzee 20 + chance 50).
+- Jordan photo-review: yahtzee 20→50, chance 50→20; recorded_total still 224.

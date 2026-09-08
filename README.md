@@ -239,9 +239,20 @@ OFFLINE_TEST=1 bruin run
 ```
 
 This is enough to validate the whole pipeline structure, the spot-check
-logic, and the commentary model end to end — the OCR ingestion script is the
-only piece that genuinely needs an API key, and it's a separate manual step
-outside `bruin run` (see the OCR section above and the README note on
-getting a key).
+logic, the score-rule audit (`raw_games_score_rules`), and the commentary
+model end to end — the OCR ingestion script is the only piece that
+genuinely needs an API key, and it's a separate manual step outside
+`bruin run` (see the OCR section above and the README note on getting a
+key).
+
+Impossible category scores (wrong Full House / straight / Yahtzee box,
+Chance 0, upper faces that are not `n * face`) fail `bruin run` unless
+they are already listed in `assets/seeds/known_score_rule_violations.csv`.
+`bruin run` writes the full leftover table to `raw_games_score_rules`.
+To print the same list without Bruin:
+
+```bash
+python tests/test_raw_games_score_rules.py
+```
 
 

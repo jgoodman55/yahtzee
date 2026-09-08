@@ -1,0 +1,31 @@
+name: known_score_rule_violations
+type: duckdb.seed
+description: |
+  Photo-review leftovers that still violate raw_games score rules.
+  raw_games_score_rules fails `bruin run` if a NEW violation appears or
+  if one of these rows is cleared without deleting it here. Set the
+  leftover list empty (and the audit check to violation_count = 0)
+  after Jordan finishes IMG_2917+.
+parameters:
+  path: known_score_rule_violations.csv
+columns:
+  - name: game_seq
+    type: integer
+    checks:
+      - name: not_null
+  - name: player
+    type: string
+    checks:
+      - name: not_null
+  - name: category
+    type: string
+    checks:
+      - name: not_null
+  - name: score
+    type: integer
+    checks:
+      - name: not_null
+  - name: rule
+    type: string
+    checks:
+      - name: not_null

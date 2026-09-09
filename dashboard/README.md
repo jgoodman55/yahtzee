@@ -1,14 +1,15 @@
 # Yahtzee DAC dashboard
 
-One DAC app, five tabs that go simple → deep. Dark theme (`yahtzee-dark`):
+One DAC app, six tabs that go simple → deep. Dark theme (`yahtzee-dark`):
 Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 
 | Tab | What’s on it |
 |---|---|
-| **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
+| **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), Erin/Jordan/combined yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
 | **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
 | **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
-| **Deep cuts** | Lifetime points, rates, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), win margins and `recorded_total` distributions split by player, closest/blowouts, commentary. KPI figures use the same pink / blue / white Vega-Lite marks as Overview. |
+| **Deep cuts** | Lifetime points, rates, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), win margins and `recorded_total` distributions split by player, closest/blowouts, commentary, clickable scorecard links. KPI figures use the same pink / blue / white Vega-Lite marks as Overview. |
+| **Scorecards** | Sidecar link + sample composite + catalog. Photo \| seed card (Chance before Yahtzee). See [`scorecards.md`](scorecards.md). |
 | **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,

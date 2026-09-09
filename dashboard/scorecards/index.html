@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yahtzee scorecards</title>
+  <link rel="stylesheet" href="scorecards.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="bar">
+      <div>
+        <h1>Scorecards</h1>
+        <p class="note">
+          Side-by-side: original sheet photo | seed-rendered card
+          (Chance before Yahtzee; Erin pink / Jordan blue).
+          Serve this folder with the dashboard sidecar:
+          <code>python3 -m http.server 8765 --directory dashboard</code>
+        </p>
+      </div>
+    </div>
+    <input class="search" id="q" type="search" placeholder="Filter by game, sheet, winner…" />
+    <table class="catalog">
+      <thead>
+        <tr>
+          <th>Game</th>
+          <th>Sheet</th>
+          <th>On sheet</th>
+          <th>Winner</th>
+          <th>Margin</th>
+          <th>Erin</th>
+          <th>Jordan</th>
+          <th>Photo</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+  <script src="games.js"></script>
+  <script>
+    const body = document.getElementById("rows");
+    const games = (window.SCORECARD_DATA && window.SCORECARD_DATA.games) || [];
+
+    function render(filter) {
+      const q = (filter || "").trim().toLowerCase();
+      body.innerHTML = "";
+      games.forEach((g) => {
+        const hay = [g.game_seq, g.sheet, g.winner, g.game_on_sheet].join(" ").toLowerCase();
+        if (q && !hay.includes(q)) return;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td><a class="game" href="viewer.html?game=${g.game_seq}">Game ${g.game_seq}</a></td>
+          <td>${g.sheet}</td>
+          <td>${g.game_on_sheet}</td>
+          <td>${g.winner}</td>
+          <td>${g.margin}</td>
+          <td>${g.erin.recorded_total}</td>
+          <td>${g.jordan.recorded_total}</td>
+          <td>${g.photo ? "yes" : "—"}</td>`;
+        body.appendChild(tr);
+      });
+    }
+    render("");
+    document.getElementById("q").addEventListener("input", (e) => render(e.target.value));
+  </script>
+</body>
+</html>

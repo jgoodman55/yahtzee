@@ -20,4 +20,12 @@ Earlier dark-redesign captures:
 - `pub_map_anchor_bar_popup.jpg` — Anchor Bar popup (3 visits)
 - `pub_map_crown_tavern_popup.jpg` — Crown Tavern popup (2 visits)
 
+Scorecard drill-down (Overview yahtzees + photo|seed sidecar):
+
+- `overview_yahtzee_kpis.png` — Overview with Erin / Jordan total yahtzees (pink / blue)
+- `deep_cuts_scorecard_links.png` — Deep cuts clickable closest / blowout scorecard lists
+- `scorecards_tab.png` — Scorecards tab (sidecar links + sample composite)
+- `scorecard_game_1_side_by_side.png` — Game 1 photo | seed card (IMG_2885)
+- `scorecard_game_47_side_by_side.png` — Game 47 (1-pt) photo | seed card (IMG_2900)
+
 Older light-theme captures (pre-redesign) may still be in this folder.

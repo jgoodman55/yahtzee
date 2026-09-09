@@ -6,3 +6,8 @@ logs/*.log
 __pycache__/
 *.py[cod]
 logs/queries
+
+# Full-resolution scorecard photos from Drive (HEIC ~3MB each).
+# Committed samples live in dashboard/scorecards/samples/.
+dashboard/scorecards/photos/*
+!dashboard/scorecards/photos/.gitkeep

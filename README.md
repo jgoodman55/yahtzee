@@ -23,6 +23,8 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 - `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs. One visit-log
   row per visit (`visit_count` on `mart_pub_locations` is the row count per
   merchant, summed on proximity-dedup). Not joined to games.
+- `sheet_game_crosswalk.csv` — `game_seq` → Drive sheet `IMG_####` +
+  `game_on_sheet` (feeds the Scorecards sidecar).
 
 **Staging → dims/facts → intermediate → marts**
 - `stg_games`, `stg_players` — typed/cleaned staging views (`stg_games`
@@ -114,17 +116,21 @@ Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
 electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Tabs go
 simple → deep:
 
-1. **Overview** — games, wins, high scores (`recorded_total`), yahtzees,
-   upper bonuses, multi-yahtzee player-games, streaks. Big numbers: Erin
-   pink (`#FF2D92`), Jordan blue (`#2D9CFF`), combined totals white.
+1. **Overview** — games, wins, high scores (`recorded_total`), yahtzees
+   (Erin / Jordan / combined), upper bonuses, multi-yahtzee player-games,
+   streaks. Big numbers: Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`),
+   combined totals white.
 2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
 3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
 4. **Deep cuts** — lifetime points, rates, upper dice-count averages
    (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
    chance), win margins and `recorded_total` distributions split by player,
-   commentary. KPI figures use the same pink / blue / white Vega-Lite marks
-   as Overview.
-5. **Pubs** — link to the standalone Leaflet map (not joined to games)
+   closest/blowouts/commentary with scorecard links. KPI figures use the same
+   pink / blue / white Vega-Lite marks as Overview.
+5. **Scorecards** — path to side-by-side original photo + seed-rendered card
+   (Chance before Yahtzee). DAC 0.15 cannot click table cells; the sidecar
+   HTML on port 8765 is the comparison UX (see `dashboard/scorecards.md`).
+6. **Pubs** — link to the standalone Leaflet map (not joined to games)
 
 Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`. Serve with
@@ -196,10 +202,12 @@ dac validate --dir dashboard
 dac check --dir dashboard
 dac serve --dir dashboard --template yahtzee-dark --open
 
-# Interactive pub map (not inside DAC — open beside it)
+# Interactive pub map + scorecards (not inside DAC — open beside it)
 python3 dashboard/scripts/export_pub_map.py
+python3 dashboard/scripts/export_scorecards.py
 python3 -m http.server 8765 --directory dashboard
 # http://localhost:8765/pub_map.html
+# http://localhost:8765/scorecards/viewer.html?game=1
 ```
 
 The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,

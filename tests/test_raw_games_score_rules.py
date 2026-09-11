@@ -2,8 +2,8 @@
 
 Mirrors assets/audit/raw_games_score_rules.sql so leftover OCR/typos can
 be listed without a DuckDB run. `OFFLINE_TEST=1 bruin run --workers 1`
-hard-fails when violation_count != 0. This script is the same list
-offline:
+fails on violations that are not in known_score_rule_violations.csv.
+This script is the same list offline:
 
     python tests/test_raw_games_score_rules.py
     pytest tests/test_raw_games_score_rules.py

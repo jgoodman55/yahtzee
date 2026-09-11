@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 (102 games from 34 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus two new sheets IMG_2919→IMG_2920 (108 games from 36 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -142,7 +142,7 @@ Sheets: IMG_2903–IMG_2911 (9 sheets, 27 games × 2 players).
 
 The notes below record what was written on the cards. The seed now uses
 `recorded_total = sum(score)` for every `(game_seq, player)` so
-`fact_games.totals_match` is true for all 204 player-games.
+`fact_games.totals_match` is true for all 216 player-games.
 
 Recomputed recorded_totals: (1,erin)=201; (14,jordan)=209; (20,jordan)=168;
 (23,erin)=239; (23,jordan)=192; (25,jordan)=241; (35,erin)=454;
@@ -174,7 +174,12 @@ chance→20, 263; (18,jordan) chance→20 / yahtzee→50, 224;
 (57,erin,fours) →12, 310; (68,erin) fours→4 / twos→6, 210;
 (69,jordan) fours→16 / fives→15, 254;
 (93,jordan) large_straight→0 / chance→24, 387.
-(39,erin,ones) 6→0, 255. Score-rule allowlist is empty.
+(39,erin,ones) 6→0, 255.
+
+New sheets IMG_2919–IMG_2920 (games 103–108): one leftover on the
+allowlist — (108,jordan,fours)=10 (written; not a multiple of 4).
+Erin game 108 SS/LS were written swapped (40/30) with an arrow;
+digitized as the intended 30/40 (sum unchanged).
 
 Historical written-vs-sum notes (superseded by the recomputed totals):
 
@@ -240,3 +245,34 @@ Historical written-vs-sum notes (superseded by the recomputed totals):
 - Categories summed to those totals; Erin four_of_a_kind 27; totals E173/J224.
 - Inserted as game_on_sheet 3 → continuous game_seq between prior IMG_2890 games and IMG_2891.
 - Jordan photo-review: yahtzee 20→50, chance 50→20; recorded_total still 224.
+
+
+## part5_flags.md
+
+# part5 extraction flags — IMG_2919 / IMG_2920 (games 103–108)
+
+Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
+(first attached card) and `IMG_2920` (second). `recorded_total` is
+`sum(score)` for every player-game.
+
+## IMG_2919 (`game_seq` 103–105)
+
+- game 1: category sums match written grands **E 187 / J 248**.
+- game 2, erin, recorded_total: written grand 201 (upper 61 + written lower 140) vs category sum **207** (lower cats 7+17+25+30+0+17+50=146). Seed uses 207.
+- game 2, erin, large_straight: 0 (clear); yahtzee 50.
+- game 3, erin: category sum matches written grand **184**. four_of_a_kind 6 is low but clearly written.
+- game 3, jordan, upper_bonus: looks like 25 at arm's length; high-res read is **35** (upper faces 64 ≥ 63; written upper 99 = 64+35).
+- game 3, jordan, recorded_total: written grand 192 (upper 99 + written lower 93) vs category sum **206** (12+7+0+30+40+18+0=107). Chance 18 and yahtzee 0 (loopy 0) are clear. Seed uses 206.
+- game 3, jordan, four_of_a_kind: 7 (unusual but clearly written).
+
+## IMG_2920 (`game_seq` 106–108)
+
+- game 1, erin, yahtzee_bonus: two X marks in the first two bonus boxes → **200**. Lower 405 and grand **505** include it (100 upper + 405 lower).
+- game 1: category sums match written grands **E 505 / J 227**.
+- game 2: category sums match written grands **E 240 / J 264**.
+- game 3, erin, small_straight / large_straight: written **40 / 30** with a handwritten arrow swapping the boxes. Jordan: she switched them — digitize the intended scores **SS=30, LS=40**. Sum unchanged (70). Flagged here only; not a score-rule leftover after correction.
+- game 3, erin, ones: read as **2** (upper faces 72 + bonus 35 = 107 vs written upper 108).
+- game 3, erin, four_of_a_kind: **20** (written lower 213 would need 26). Lower cats 27+20+25+30+40+15+50=207.
+- game 3, erin, recorded_total: written grand 321 (108+213) vs category sum **314**. Seed uses 314.
+- game 3, jordan, fours: written **10** (not a multiple of 4). Upper faces 56 vs written upper 62 (62 would need fours=16). Kept as written 10 — the only new score-rule leftover; allowlisted.
+- game 3, jordan, recorded_total: written grand 277 (62+215) vs category sum **271** (56+215). Seed uses 271.

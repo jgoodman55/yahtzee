@@ -3,9 +3,10 @@ name: raw_games_score_rules
 type: duckdb.sql
 description: |
   Impossible Yahtzee scores in raw_games (spreadsheet typos / OCR).
-  One row per violating (game_seq, player, category). Allowlist is
-  empty after Jordan's photo-review; `no_score_rule_violations`
-  requires violation_count = 0.
+  One row per violating (game_seq, player, category). Allowlist holds
+  leftovers still on the card (IMG_2920 game 3 Jordan fours=10).
+  Hard-fail: `no_new_score_rule_violations` so a new bad value fails
+  `bruin run`. Do not silently "fix" allowlisted cells.
 materialization:
   type: table
 depends:
@@ -33,16 +34,10 @@ columns:
     checks:
       - name: not_null
 custom_checks:
-  - name: no_score_rule_violations
-    description: |
-      Fail when any impossible category score remains in raw_games.
-      violation_count must be 0 after Jordan's photo-review.
-    query: select count(*) from raw_games_score_rules
-    value: 0
   - name: no_new_score_rule_violations
     description: |
       Fail when a score-rule violation is not in
-      known_score_rule_violations (allowlist is empty).
+      known_score_rule_violations (documented leftovers only).
     query: |
       select count(*)
       from raw_games_score_rules v

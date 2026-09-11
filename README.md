@@ -166,7 +166,7 @@ links out to this page. Default tiles are free OSM (no API key). See
 6. Animation script
 7. Wire everything into `pipeline.yml`, validate, run
 
-See `/assets` for the Bruin pipeline (102 photographed games in
+See `/assets` for the Bruin pipeline (108 photographed games in
 `raw_games.csv`; `recorded_total` was recomputed from category sums after
 Jordan's review, and `fact_games.totals_match` remains the spot-check),
 `/ingestion` for the OCR helper, `/docs/scorecard_ingest.md`
@@ -225,15 +225,15 @@ directly:
 duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
-`assets/seeds/raw_games.csv` already holds the 102 games from Drive sheets
-`IMG_2885`–`IMG_2918`. Re-run after appending more sheets (via
+`assets/seeds/raw_games.csv` already holds the 108 games from sheets
+`IMG_2885`–`IMG_2920`. Re-run after appending more sheets (via
 `ingestion/scan_scorecard.py` or by hand). See `docs/scorecard_ingest.md`.
 
 **Migrating an older two-file seed:** if you still have a separate
 `raw_game_totals.csv` (`game_seq,player,recorded_total`), join it onto
 `raw_games` on `(game_seq, player)` so every category row gets a
 `recorded_total` column, then drop `raw_game_totals.csv` /
-`stg_game_totals`. The 102-game seed now sets `recorded_total` to
+`stg_game_totals`. The seed now sets `recorded_total` to
 `sum(score)` after Jordan's category review; `fact_games.totals_match`
 is still the spot-check if those ever diverge again.
 
@@ -256,8 +256,8 @@ genuinely needs an API key, and it's a separate manual step outside
 key).
 
 Impossible category scores (wrong Full House / straight / Yahtzee box,
-Chance 0, upper faces that are not `n * face`) fail `bruin run`
-(`raw_games_score_rules.violation_count` must be 0). To print the same
+Chance 0, upper faces that are not `n * face`) fail `bruin run` unless
+they are listed in `known_score_rule_violations.csv`. To print the same
 list without Bruin:
 
 ```bash

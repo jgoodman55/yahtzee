@@ -267,8 +267,8 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 
 ## IMG_2920 (`game_seq` 106–108)
 
-- game 1, erin, yahtzee_bonus: two X marks in the first two bonus boxes → **200**. Lower 405 and grand **505** include it (100 upper + 405 lower).
-- game 1: category sums match written grands **E 505 / J 227**.
+- game 1, erin, yahtzee_bonus: marks in the bonus boxes were read as two extras (200). Jordan: there was **no double Yahtzee bonus game** → scored **0**. Category sum **305** (was 505).
+- game 1: Jordan category sum matches written grand **227**. Erin recorded_total is the category sum **305** (written grand was 505 with the mistaken +200).
 - game 2: category sums match written grands **E 240 / J 264**.
 - game 3, erin, small_straight / large_straight: written **40 / 30** with a handwritten arrow swapping the boxes. Jordan: she switched them — digitize the intended scores **SS=30, LS=40**. Sum unchanged (70). Flagged here only; not a score-rule leftover after correction.
 - game 3, erin, ones: written with a slash through the digit. Jordan: store **3** (upper 3+8+12+12+20+18=73 + bonus 35 = 108, matches written upper).

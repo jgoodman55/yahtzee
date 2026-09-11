@@ -2,9 +2,8 @@ name: known_score_rule_violations
 type: duckdb.seed
 description: |
   Photo-review leftovers that still violate raw_games score rules.
-  Empty after Jordan's review (g39 erin ones=6 cleared). The audit
-  hard-fails when violation_count != 0. Re-add a row here only if a
-  leftover must be temporarily allowlisted again.
+  Currently empty. The audit hard-fails on any violation that is not
+  listed here. Add a row when a leftover must stay as written.
 parameters:
   path: known_score_rule_violations.csv
 columns:

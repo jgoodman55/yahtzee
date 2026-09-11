@@ -2,9 +2,8 @@ name: raw_games
 type: duckdb.seed
 parameters:
   path: raw_games.csv
-# All score-rule boxes currently have zero leftovers after Jordan's
-# photo-review. raw_games_score_rules still lists any future violators
-# and hard-fails when violation_count != 0.
+# Fixed-box / upper-face rules hard-fail here. Documented leftovers
+# (if any) live in known_score_rule_violations / raw_games_score_rules.
 custom_checks:
   - name: full_house_is_0_or_25
     query: |

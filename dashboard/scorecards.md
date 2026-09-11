@@ -45,7 +45,7 @@ dashboard Markdown / Vega-Lite links work, or open the HTML directly
 
 Full HEIC sheets are large and stay out of git (`dashboard/scorecards/photos/`).
 
-1. Download `IMG_2885`–`IMG_2918` from
+1. Download `IMG_2885`–`IMG_2920` from
    https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
 2. Drop `IMG_####.HEIC` or `.jpg` into `dashboard/scorecards/photos/`
 3. Re-run `export_scorecards.py`

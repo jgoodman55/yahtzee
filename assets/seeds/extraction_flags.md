@@ -272,7 +272,7 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 - game 2: category sums match written grands **E 240 / J 264**.
 - game 3, erin, small_straight / large_straight: written **40 / 30** with a handwritten arrow swapping the boxes. Jordan: she switched them — digitize the intended scores **SS=30, LS=40**. Sum unchanged (70). Flagged here only; not a score-rule leftover after correction.
 - game 3, erin, ones: written with a slash through the digit. Jordan: store **3** (upper 3+8+12+12+20+18=73 + bonus 35 = 108, matches written upper).
-- game 3, erin, four_of_a_kind: **20** (written lower 213 would need 26). Lower cats 27+20+25+30+40+15+50=207.
-- game 3, erin, recorded_total: written grand 321 (108+213) vs category sum **315**. Seed uses 315.
+- game 3, erin, four_of_a_kind: Jordan: **26** (earlier OCR 20). Lower cats 27+26+25+30+40+15+50=213.
+- game 3, erin, recorded_total: category sum **321** matches written grand (108+213).
 - game 3, jordan, fours: written **10** (not a multiple of 4). Upper faces 56 vs written upper 62 (62 would need fours=16). Kept as written 10 — the only new score-rule leftover; allowlisted.
 - game 3, jordan, recorded_total: written grand 277 (62+215) vs category sum **271** (56+215). Seed uses 271.

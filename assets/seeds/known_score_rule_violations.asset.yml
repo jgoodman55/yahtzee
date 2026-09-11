@@ -2,9 +2,8 @@ name: known_score_rule_violations
 type: duckdb.seed
 description: |
   Photo-review leftovers that still violate raw_games score rules.
-  Currently (108, jordan, fours)=10 as written on IMG_2920 game 3
-  (not a multiple of 4). The audit hard-fails on any violation that
-  is not listed here. Delete a row when that leftover is cleared.
+  Currently empty. The audit hard-fails on any violation that is not
+  listed here. Add a row when a leftover must stay as written.
 parameters:
   path: known_score_rule_violations.csv
 columns:

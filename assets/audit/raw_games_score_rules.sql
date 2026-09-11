@@ -4,7 +4,7 @@ type: duckdb.sql
 description: |
   Impossible Yahtzee scores in raw_games (spreadsheet typos / OCR).
   One row per violating (game_seq, player, category). Allowlist holds
-  leftovers still on the card (IMG_2920 game 3 Jordan fours=10).
+  leftovers still on the card (currently empty).
   Hard-fail: `no_new_score_rule_violations` so a new bad value fails
   `bruin run`. Do not silently "fix" allowlisted cells.
 materialization:

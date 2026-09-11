@@ -176,10 +176,10 @@ chance→20, 263; (18,jordan) chance→20 / yahtzee→50, 224;
 (93,jordan) large_straight→0 / chance→24, 387.
 (39,erin,ones) 6→0, 255.
 
-New sheets IMG_2919–IMG_2920 (games 103–108): one leftover on the
-allowlist — (108,jordan,fours)=10 (written; not a multiple of 4).
-Erin game 108 SS/LS were written swapped (40/30) with an arrow;
-digitized as the intended 30/40 (sum unchanged).
+New sheets IMG_2919–IMG_2920 (games 103–108): score-rule leftovers
+empty after Jordan photo-review. Erin game 108 SS/LS were written
+swapped (40/30) with an arrow; digitized as the intended 30/40
+(sum unchanged).
 
 Historical written-vs-sum notes (superseded by the recomputed totals):
 
@@ -275,5 +275,5 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 - game 3, erin, ones: written with a slash through the digit. Jordan: store **3** (upper 3+8+12+12+20+18=73 + bonus 35 = 108, matches written upper).
 - game 3, erin, four_of_a_kind: Jordan: **26** (earlier OCR 20). Lower cats 27+26+25+30+40+15+50=213.
 - game 3, erin, recorded_total: category sum **321** matches written grand (108+213).
-- game 3, jordan, fours: written **10** (not a multiple of 4). Upper faces 56 vs written upper 62 (62 would need fours=16). Kept as written 10 — the only new score-rule leftover; allowlisted.
-- game 3, jordan, recorded_total: written grand 277 (62+215) vs category sum **271** (56+215). Seed uses 271.
+- game 3, jordan, fours: Jordan photo-review → **16** (was 10). Upper faces 2+4+6+16+10+24=62; matches written upper 62. Bonus still 0 (62 < 63).
+- game 3, jordan, recorded_total: category sum **277** matches written grand (62+215).

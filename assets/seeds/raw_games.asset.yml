@@ -2,9 +2,8 @@ name: raw_games
 type: duckdb.seed
 parameters:
   path: raw_games.csv
-# Fixed-box / upper-face rules with zero leftover violators hard-fail
-# here. fours=10 on (108, jordan) is listed by raw_games_score_rules
-# / known_score_rule_violations instead of failing this seed.
+# Fixed-box / upper-face rules hard-fail here. Documented leftovers
+# (if any) live in known_score_rule_violations / raw_games_score_rules.
 custom_checks:
   - name: full_house_is_0_or_25
     query: |
@@ -57,6 +56,14 @@ custom_checks:
         and (cast(score as integer) % 3 <> 0
              or cast(score as integer) < 0
              or cast(score as integer) > 15)
+    value: 0
+  - name: fours_multiple_of_4_in_0_to_20
+    query: |
+      select count(*) from raw_games
+      where lower(trim(category)) = 'fours'
+        and (cast(score as integer) % 4 <> 0
+             or cast(score as integer) < 0
+             or cast(score as integer) > 20)
     value: 0
   - name: fives_multiple_of_5_in_0_to_25
     query: |

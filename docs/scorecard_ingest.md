@@ -37,7 +37,7 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 - `upper_bonus` ∈ {0, 35}
 
 Most of these rules hard-fail on the `raw_games` seed. Leftovers stay in
-`known_score_rule_violations.csv` (currently Jordan game 108 `fours=10`).
+`known_score_rule_violations.csv` (currently empty).
 `raw_games_score_rules` fails `OFFLINE_TEST=1 bruin run --workers 1` when a
 violation is not on that allowlist. List leftovers without Bruin:
 

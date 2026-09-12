@@ -50,8 +50,8 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   use `recorded_total`.
 - `int_strategy_features` → `mart_strategy_swing` / `mart_strategy_rescue` /
   `mart_yz_matchup` — player-blind Strategy tab (exclusive-feature holder
-  win rates, miss × consolation rescue matrix, Yahtzee none/one/both).
-  Cohort definitions: `assets/marts/strategy.md`.
+  win rates, miss × consolation rescue matrix, exclusive Yahtzee
+  holder-won vs upset). Cohort definitions: `assets/marts/strategy.md`.
 - `mart_pub_locations` — geocoded, deduped pub list (seed → Nominatim →
   Google Places → unresolved) — standalone, not joined to games.
 
@@ -127,8 +127,9 @@ simple → deep:
 2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
 3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
 4. **Strategy** — player-blind exclusive-feature swing bars, rescue matrix
-   (miss × consolation), Yahtzee none/one/both stacked by winner. Oak/chance
-   are not on this tab. See `assets/marts/strategy.md`.
+   (miss × consolation), exclusive Yahtzee holder-won vs upset (Erin
+   alone / Jordan alone). Oak/chance are not on this tab. See
+   `assets/marts/strategy.md`.
 5. **Deep cuts** — lifetime points, rates, upper dice-count averages
    (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
    chance), win margins and `recorded_total` distributions split by player,

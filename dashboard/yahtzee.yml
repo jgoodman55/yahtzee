@@ -231,26 +231,36 @@ queries:
   yz_matchup:
     sql: |
       select
-        matchup_ord,
-        matchup_label,
-        winner as player,
+        holder_ord,
+        holder,
+        holder_label,
+        outcome_ord,
+        outcome,
         n,
-        n_bucket,
+        n_holder,
         holder_wins,
-        holder_win_rate
+        holder_losses,
+        holder_win_rate,
+        label,
+        stack_key
       from mart_yz_matchup
-      where winner in ('Erin', 'Jordan')
-      order by matchup_ord, winner
+      order by holder_ord, outcome_ord
   yz_holder:
     sql: |
       select
-        n_bucket,
-        holder_wins,
-        holder_win_rate,
-        round(100.0 * holder_win_rate)::integer || '% (' || holder_wins || '/' || n_bucket || ')' as label
+        sum(n) filter (where outcome = 'Holder won')::integer as holder_wins,
+        sum(n)::integer as n_bucket,
+        sum(n) filter (where outcome = 'Holder won')::double
+          / nullif(sum(n), 0) as holder_win_rate,
+        round(
+          100.0 * sum(n) filter (where outcome = 'Holder won') / nullif(sum(n), 0)
+        )::integer
+          || '% ('
+          || sum(n) filter (where outcome = 'Holder won')::integer
+          || '/'
+          || sum(n)::integer
+          || ')' as label
       from mart_yz_matchup
-      where yz_matchup = 'one'
-      limit 1
   ls_yz_rescue:
     sql: |
       select
@@ -890,30 +900,33 @@ rows:
         type: text
         col: 12
         content: |
-          Games bucketed by how many players scored **Yahtzee = 50**
-          (none / one / both). Stack is **who won the game**, not who
-          had the Yahtzee. Seed split is ~32 / 56 / 20. When only one
-          player has it, that holder wins ~84%.
+          **Exactly one** player scored Yahtzee = 50. Bars are **who held
+          it** (Erin alone vs Jordan alone). Stack is **holder won** vs
+          **upset** (holder lost) — not winner-name stacks that ignore
+          who had the Yahtzee. Combined exclusive holder is ~84%
+          (47/56). None / both games are off this chart.
 
   - tab: Strategy
     height: 360
     widgets:
-      - name: Yahtzee matchup
+      - name: Exclusive Yahtzee — holder won vs upset
         type: chart
         chart: vega-lite
         col: 9
-        description: Stacked by winner within none / one / both Yahtzee buckets
+        description: Exclusive Yahtzee=50. Stack is holder won vs upset, not winner name.
         query: yz_matchup
         spec:
           height: 280
-          padding: { top: 24, left: 8, right: 8, bottom: 8 }
+          padding: { top: 28, left: 8, right: 8, bottom: 8 }
           config: *vl_dark
           encoding:
             x:
-              field: matchup_label
+              field: holder_label
               type: nominal
-              sort: [None, One, Both]
-              title: Players with Yahtzee
+              sort:
+                - Erin alone has Yahtzee
+                - Jordan alone has Yahtzee
+              title: Who has Yahtzee = 50
               axis: { labelAngle: 0 }
             y:
               field: n
@@ -921,7 +934,13 @@ rows:
               title: Games
               stack: zero
               scale: { domainMin: 0 }
-            color: *player_color
+            color:
+              field: stack_key
+              type: nominal
+              scale:
+                domain: [Erin won, Jordan won, Upset]
+                range: ["#FF2D92", "#2D9CFF", "#6D7889"]
+              legend: { title: null, orient: bottom }
           layer:
             - mark: { type: bar }
             - mark:
@@ -934,26 +953,29 @@ rows:
                 text: { field: n, type: quantitative, format: "d" }
             - mark:
                 type: text
-                dy: -10
-                fontSize: 11
+                dy: -12
+                fontSize: 12
                 fontWeight: 600
-                color: "#A8B3C5"
+                color: "#F3F6FA"
               transform:
                 - aggregate:
+                    - op: min
+                      field: label
+                      as: holder_label_pct
                     - op: sum
                       field: n
                       as: total
-                  groupby: [matchup_label]
+                  groupby: [holder_label]
               encoding:
                 y: { field: total, type: quantitative }
-                text: { field: total, type: quantitative, format: "d" }
-                color: { value: "#A8B3C5" }
+                text: { field: holder_label_pct, type: nominal }
+                color: { value: "#F3F6FA" }
 
-      - name: One-Yahtzee holder wins
+      - name: Combined exclusive holder
         type: chart
         chart: vega-lite
         col: 3
-        description: In the One bucket, did the Yahtzee-holder win?
+        description: Erin-only + Jordan-only Yahtzee=50 holder wins
         query: yz_holder
         spec:
           mark: *neutral_mark

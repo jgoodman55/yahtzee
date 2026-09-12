@@ -7,70 +7,82 @@ depends:
   - int_strategy_features
 @bruin */
 
--- Yahtzee matchup buckets for the stacked-bar Strategy chart.
+-- Exclusive Yahtzee holder outcomes for the Strategy stacked bar.
 --
--- Bucket = how many players scored the natural Yahtzee box (50):
---   none / one / both. Seed expectation ≈ 32 / 56 / 20.
--- Grain: matchup_bucket × winner (Erin / Jordan). Stack by winner,
--- not a pie. holder_* is only meaningful on the 'one' bucket — that
--- is the exclusive Yahtzee = 50 swing (~84%).
+-- Cohort: games where exactly one of Erin/Jordan scored Yahtzee = 50
+-- (yz_matchup = 'one'). None / both are excluded from this mart.
+-- Grain: holder × outcome (Holder won / Upset).
+-- Rate: that holder's win rate. Combined exclusive holder is 47/56 ≈ 84%.
+--
+-- Seed grounding (n=108, 0 ties) — verify after rebuild:
+--   Erin alone   23W / 8L  of 31  ≈ 74%
+--   Jordan alone 24W / 1L  of 25  ≈ 96%
+--   combined     47 / 56         ≈ 84%
 
-with bucket as (
+with exclusive as (
     select
-        yz_matchup,
-        case yz_matchup
-            when 'none' then 1
-            when 'one' then 2
-            else 3
-        end as matchup_ord,
-        case yz_matchup
-            when 'none' then 'None'
-            when 'one' then 'One'
-            else 'Both'
-        end as matchup_label,
-        winner,
         case
-            when yz_matchup = 'one'
-                 and (
-                     (erin_has_yahtzee and winner = 'erin')
-                     or (jordan_has_yahtzee and winner = 'jordan')
-                 )
-                then 1
-            else 0
-        end as holder_win
+            when erin_has_yahtzee then 'Erin'
+            else 'Jordan'
+        end as holder,
+        case
+            when (erin_has_yahtzee and winner = 'erin')
+              or (jordan_has_yahtzee and winner = 'jordan')
+                then 'Holder won'
+            else 'Upset'
+        end as outcome
     from int_strategy_features
+    where yz_matchup = 'one'
 ),
-totals as (
+holder_defs as (
+    select 1 as holder_ord, 'Erin' as holder, 'Erin alone has Yahtzee' as holder_label
+    union all
+    select 2, 'Jordan', 'Jordan alone has Yahtzee'
+),
+outcome_defs as (
+    select 1 as outcome_ord, 'Holder won' as outcome
+    union all
+    select 2, 'Upset'
+),
+agg as (
     select
-        yz_matchup,
-        count(*)::integer as n_bucket,
-        sum(holder_win)::integer as holder_wins
-    from bucket
-    group by yz_matchup
+        holder,
+        outcome,
+        count(*)::integer as n
+    from exclusive
+    group by holder, outcome
+),
+holder_tot as (
+    select
+        holder,
+        sum(n)::integer as n_holder,
+        sum(case when outcome = 'Holder won' then n else 0 end)::integer as holder_wins
+    from agg
+    group by holder
 )
 select
-    b.matchup_ord,
-    b.yz_matchup,
-    b.matchup_label,
-    case b.winner
-        when 'erin' then 'Erin'
-        when 'jordan' then 'Jordan'
-        else 'Tie'
-    end as winner,
-    count(*)::integer as n,
-    t.n_bucket,
+    h.holder_ord,
+    h.holder,
+    h.holder_label,
+    o.outcome_ord,
+    o.outcome,
+    coalesce(a.n, 0)::integer as n,
+    t.n_holder,
     t.holder_wins,
+    (t.n_holder - t.holder_wins)::integer as holder_losses,
+    round(t.holder_wins::double / nullif(t.n_holder, 0), 3) as holder_win_rate,
+    round(100.0 * t.holder_wins / nullif(t.n_holder, 0))::integer
+        || '% (' || t.holder_wins || '/' || t.n_holder || ')' as label,
     case
-        when b.yz_matchup = 'one'
-            then round(t.holder_wins::double / nullif(t.n_bucket, 0), 3)
-    end as holder_win_rate
-from bucket b
-inner join totals t using (yz_matchup)
-group by
-    b.matchup_ord,
-    b.yz_matchup,
-    b.matchup_label,
-    b.winner,
-    t.n_bucket,
-    t.holder_wins
-order by b.matchup_ord, b.winner
+        when o.outcome = 'Upset' then 'Upset'
+        when h.holder = 'Erin' then 'Erin won'
+        else 'Jordan won'
+    end as stack_key
+from holder_defs h
+cross join outcome_defs o
+left join agg a
+    on a.holder = h.holder
+   and a.outcome = o.outcome
+inner join holder_tot t
+    on t.holder = h.holder
+order by h.holder_ord, o.outcome_ord

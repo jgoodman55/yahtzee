@@ -51,29 +51,32 @@ def test_rescue_ls_yz_grounding():
     assert (wins, n) == (12, 22)
 
 
-def test_yz_matchup_buckets():
+def test_yz_matchup_exclusive_holders():
     con = _connect()
     rows = {
-        r[0]: r[1]
+        r[0]: (r[1], r[2], r[3])
         for r in con.execute(
-            "select yz_matchup, n_bucket from mart_yz_matchup group by 1, 2"
+            """
+            select holder, holder_wins, holder_losses, n_holder
+            from mart_yz_matchup
+            group by 1, 2, 3, 4
+            """
         ).fetchall()
     }
-    assert rows == {"none": 32, "one": 56, "both": 20}
-    holder, n = con.execute(
+    assert rows["Erin"] == (23, 8, 31)
+    assert rows["Jordan"] == (24, 1, 25)
+    wins, n = con.execute(
         """
-        select holder_wins, n_bucket
+        select sum(n) filter (where outcome = 'Holder won'), sum(n)
         from mart_yz_matchup
-        where yz_matchup = 'one'
-        limit 1
         """
     ).fetchone()
-    assert (holder, n) == (47, 56)
+    assert (wins, n) == (47, 56)
 
 
 if __name__ == "__main__":
     test_swing_grounding()
     test_rescue_ls_yz_grounding()
-    test_yz_matchup_buckets()
+    test_yz_matchup_exclusive_holders()
     print("strategy mart grounding ok")
     sys.exit(0)

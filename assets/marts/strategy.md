@@ -45,6 +45,15 @@ do not quote that as the rescue rate.
 
 ## `mart_yz_matchup`
 
-Buckets of games by how many players scored Yahtzee=50: **none / one /
-both** (seed ≈ 32 / 56 / 20). Stacked by **winner** (Erin vs Jordan).
-`holder_win_rate` is filled only on the `one` bucket (~84%).
+**Exclusive Yahtzee only** — games where exactly one player scored
+Yahtzee = 50. None / both are out of this mart.
+
+Grain: holder × outcome. Two bars (Erin alone / Jordan alone), each
+stacked **Holder won** vs **Upset** (holder lost). Combined exclusive
+holder rate is the swing-factor Yahtzee = 50 row (47/56 ≈ 84%).
+
+| Holder | Seed (n=108, 0 ties) |
+|---|---|
+| Erin alone | 23W / 8L of 31 ≈ 74% |
+| Jordan alone | 24W / 1L of 25 ≈ 96% |
+| Combined | 47 / 56 ≈ 84% |

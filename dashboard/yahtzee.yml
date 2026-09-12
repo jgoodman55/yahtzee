@@ -195,6 +195,70 @@ queries:
       from mart_game_trends
       order by margin desc, game_seq
       limit 8
+  # Strategy tab — player-blind exclusive-feature rates. Cohort comments
+  # live in assets/marts/strategy.md and the mart SQL headers.
+  strategy_swing:
+    sql: |
+      select
+        feature,
+        feature_ord,
+        n,
+        holder_win_rate,
+        case when is_low_n then 'low_n' else 'ok' end as tone,
+        label
+      from mart_strategy_swing
+      order by feature_ord
+  strategy_rescue:
+    sql: |
+      select
+        miss,
+        miss_ord,
+        consolation,
+        cons_ord,
+        n,
+        focal_win_rate,
+        case
+          when n = 0 then 'empty'
+          when is_low_n then 'low_n'
+          else 'ok'
+        end as tone,
+        label
+      from mart_strategy_rescue
+      order by miss_ord, cons_ord
+  yz_matchup:
+    sql: |
+      select
+        matchup_ord,
+        matchup_label,
+        winner as player,
+        n,
+        n_bucket,
+        holder_wins,
+        holder_win_rate
+      from mart_yz_matchup
+      where winner in ('Erin', 'Jordan')
+      order by matchup_ord, winner
+  yz_holder:
+    sql: |
+      select
+        n_bucket,
+        holder_wins,
+        holder_win_rate,
+        round(100.0 * holder_win_rate)::integer || '% (' || holder_wins || '/' || n_bucket || ')' as label
+      from mart_yz_matchup
+      where yz_matchup = 'one'
+      limit 1
+  ls_yz_rescue:
+    sql: |
+      select
+        sum(focal_wins)::integer as wins,
+        sum(n)::integer as n,
+        sum(focal_wins)::double / nullif(sum(n), 0) as rate,
+        round(100.0 * sum(focal_wins) / nullif(sum(n), 0))::integer
+          || '% (' || sum(focal_wins)::integer || '/' || sum(n)::integer || ')' as label
+      from mart_strategy_rescue
+      where miss = 'Large straight = 0'
+        and consolation in ('Has Yahtzee', 'Has both')
 
 rows:
   - tab: Overview
@@ -599,6 +663,293 @@ rows:
             label: Avg
             number: number
             align: right
+
+  - tab: Strategy
+    widgets:
+      - name: How to read strategy
+        type: text
+        col: 12
+        content: |
+          **Player-blind** rates: when exactly one of Erin or Jordan has a
+          feature, how often does **that holder** win? Yahtzee and the upper
+          bonus dominate. Missing a large straight hurts hard. A Yahtzee
+          barely rescues a missed LS (exclusive LS=0 + Yahtzee is ~55%).
+
+          Oak and chance are weak signals here — they stay on Deep cuts, not
+          this tab. Cohort definitions: [`assets/marts/strategy.md`](../assets/marts/strategy.md).
+
+  - tab: Strategy
+    height: 120
+    widgets:
+      - name: Exclusive Yahtzee holder
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Exactly one player scored Yahtzee = 50
+        query: yz_holder
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: label, type: nominal }
+          height: 40
+          padding: 0
+
+      - name: Exclusive upper bonus holder
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Exactly one player scored the 35 upper bonus
+        query: strategy_swing
+        spec:
+          transform:
+            - filter: "datum.feature === 'Upper bonus (35)'"
+          mark: *neutral_mark
+          encoding:
+            text: { field: label, type: nominal }
+          height: 40
+          padding: 0
+
+      - name: LS=0 + Yahtzee rescue
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Exclusive combo of missed LS and a natural Yahtzee
+        query: ls_yz_rescue
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: label, type: nominal }
+          height: 40
+          padding: 0
+
+  - tab: Strategy
+    height: 360
+    widgets:
+      - name: Swing factors
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Holder win rate when exactly one player has the feature. Grey = n < 10.
+        query: strategy_swing
+        spec:
+          height: 280
+          padding: { top: 8, left: 8, right: 80, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            y:
+              field: feature
+              type: nominal
+              sort: { field: feature_ord }
+              title: null
+            x:
+              field: holder_win_rate
+              type: quantitative
+              title: Holder win rate
+              axis: { format: ".0%" }
+              scale: { domain: [0, 1] }
+          layer:
+            - mark: { type: bar, cornerRadiusEnd: 2 }
+              encoding:
+                color:
+                  field: tone
+                  type: nominal
+                  scale:
+                    domain: [ok, low_n]
+                    range: ["#A78BFA", "#6D7889"]
+                  legend: null
+            - mark:
+                type: text
+                align: left
+                dx: 6
+                fontSize: 11
+                fontWeight: 600
+                color: "#F3F6FA"
+              encoding:
+                text: { field: label }
+
+  - tab: Strategy
+    widgets:
+      - name: Rescue matrix notes
+        type: text
+        col: 12
+        content: |
+          **Rescue cohort** — exclusive combo, not exclusive-miss-then-split.
+          A game is in a cell when exactly one player has **both** that miss
+          and that consolation. Consolations do not overlap (Yahtzee-only /
+          upper-bonus-only / both / neither). Grey cells are n < 10.
+
+          Combined **LS=0 + any Yahtzee** (Has Yahtzee + Has both) is the
+          12/22 ≈ 55% grounding figure. The exclusive-miss cut of the same
+          question is 8/18 — do not quote that.
+
+  - tab: Strategy
+    height: 360
+    widgets:
+      - name: Rescue matrix
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Focal-player win rate for exclusive miss × consolation combos
+        query: strategy_rescue
+        spec:
+          height: 260
+          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: consolation
+              type: nominal
+              sort:
+                - Has Yahtzee
+                - Has upper bonus
+                - Has both
+                - Has neither
+              title: Consolation still on the card
+              axis: { labelAngle: 0 }
+            y:
+              field: miss
+              type: nominal
+              sort: { field: miss_ord }
+              title: What the focal player missed
+          layer:
+            - mark: { type: rect, stroke: "#2A3344", strokeWidth: 1 }
+              encoding:
+                color:
+                  condition:
+                    - test: "datum.tone === 'empty'"
+                      value: "#12171F"
+                    - test: "datum.tone === 'low_n'"
+                      value: "#3A4252"
+                  field: focal_win_rate
+                  type: quantitative
+                  scale:
+                    domain: [0, 1]
+                    range: ["#1B2433", "#34D399"]
+                  legend:
+                    title: Win %
+                    format: ".0%"
+                    orient: bottom
+                    labelColor: "#F3F6FA"
+            - mark:
+                type: text
+                fontSize: 11
+                fontWeight: 600
+                color: "#F3F6FA"
+              encoding:
+                text: { field: label }
+
+  - tab: Strategy
+    widgets:
+      - name: Rescue rates
+        type: table
+        col: 12
+        sql: |
+          select
+            miss,
+            consolation,
+            n,
+            focal_wins,
+            focal_win_rate,
+            label
+          from mart_strategy_rescue
+          order by miss_ord, cons_ord
+        columns:
+          - name: miss
+            label: Missed
+          - name: consolation
+            label: Still has
+          - name: n
+            label: n
+            number: number
+            align: right
+          - name: focal_wins
+            label: Wins
+            number: number
+            align: right
+          - name: focal_win_rate
+            label: Win %
+            number: ".0%"
+            align: right
+          - name: label
+            label: Rate
+
+  - tab: Strategy
+    widgets:
+      - name: Yahtzee matchup notes
+        type: text
+        col: 12
+        content: |
+          Games bucketed by how many players scored **Yahtzee = 50**
+          (none / one / both). Stack is **who won the game**, not who
+          had the Yahtzee. Seed split is ~32 / 56 / 20. When only one
+          player has it, that holder wins ~84%.
+
+  - tab: Strategy
+    height: 360
+    widgets:
+      - name: Yahtzee matchup
+        type: chart
+        chart: vega-lite
+        col: 9
+        description: Stacked by winner within none / one / both Yahtzee buckets
+        query: yz_matchup
+        spec:
+          height: 280
+          padding: { top: 24, left: 8, right: 8, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: matchup_label
+              type: nominal
+              sort: [None, One, Both]
+              title: Players with Yahtzee
+              axis: { labelAngle: 0 }
+            y:
+              field: n
+              type: quantitative
+              title: Games
+              stack: zero
+              scale: { domainMin: 0 }
+            color: *player_color
+          layer:
+            - mark: { type: bar }
+            - mark:
+                type: text
+                color: "#F3F6FA"
+                fontSize: 11
+                fontWeight: 600
+                baseline: middle
+              encoding:
+                text: { field: n, type: quantitative, format: "d" }
+            - mark:
+                type: text
+                dy: -10
+                fontSize: 11
+                fontWeight: 600
+                color: "#A8B3C5"
+              transform:
+                - aggregate:
+                    - op: sum
+                      field: n
+                      as: total
+                  groupby: [matchup_label]
+              encoding:
+                y: { field: total, type: quantitative }
+                text: { field: total, type: quantitative, format: "d" }
+                color: { value: "#A8B3C5" }
+
+      - name: One-Yahtzee holder wins
+        type: chart
+        chart: vega-lite
+        col: 3
+        description: In the One bucket, did the Yahtzee-holder win?
+        query: yz_holder
+        spec:
+          mark: *neutral_mark
+          encoding:
+            text: { field: label, type: nominal }
+          height: 40
+          padding: 0
 
   - tab: Deep cuts
     height: 120

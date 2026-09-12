@@ -27,7 +27,7 @@ through `duckdb-default` (same file, writable, one asset at a time).
 
 Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/). Strategy tab
 captures: `strategy_swing_factors.png`, `strategy_rescue_matrix.png`,
-`strategy_yz_matchup_stacked.png`.
+`strategy_yz_holder_won_vs_upset.png`.
 
 ## Prerequisites
 

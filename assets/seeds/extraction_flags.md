@@ -222,6 +222,8 @@ Historical written-vs-sum notes (superseded by the recomputed totals):
 - game 3, jordan, yahtzee_bonus: one X → 100.
 
 ## IMG_2916
+- game 2, jordan, chance: Jordan photo|seed validation → **11** (was 12).
+- game 2, jordan, recorded_total: category sum **222** (was 223). Game 95 is no longer a 223–223 tie (Erin stays 223).
 - game 2, erin, twos: 8 appears written over a 6.
 - game 3, erin, yahtzee: 50 with messy flourish on the 5.
 - game 3, jordan, recorded_total: 260 in the total box; margin note "-20" / "203" below (likely unrelated correction for another column) — used 260.
@@ -263,7 +265,8 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 - game 3, erin: category sum matches written grand **184**. four_of_a_kind 6 is low but clearly written.
 - game 3, jordan, upper_bonus: looks like 25 at arm's length; high-res read is **35** (upper faces 64 ≥ 63; written upper 99 = 64+35).
 - game 3, jordan, three_of_a_kind: Jordan first-image audit → **0** (was 12).
-- game 3, jordan, recorded_total: written grand 192 (upper 99 + written lower 93) vs category sum **194** (0+7+0+30+40+18+0=95). Chance 18 and yahtzee 0 (loopy 0) are clear. Seed uses 194.
+- game 3, jordan, chance: Jordan photo|seed validation → **16** (was 18).
+- game 3, jordan, recorded_total: written grand 192 (upper 99 + written lower 93) now matches category sum **192** (0+7+0+30+40+16+0=93). Seed uses 192.
 - game 3, jordan, four_of_a_kind: 7 (unusual but clearly written).
 
 ## IMG_2920 (`game_seq` 106–108)

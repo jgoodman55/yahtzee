@@ -1,6 +1,6 @@
 # Yahtzee DAC dashboard
 
-One DAC app, six tabs that go simple → deep. Dark theme (`yahtzee-dark`):
+One DAC app, seven tabs that go simple → deep. Dark theme (`yahtzee-dark`):
 Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 
 | Tab | What’s on it |
@@ -8,12 +8,14 @@ Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 | **Overview** | Headline KPIs: games, wins, high scores (`recorded_total`), Erin/Jordan/combined yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
 | **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
 | **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
+| **Strategy** | Player-blind exclusive-feature swing bars, miss × consolation rescue matrix, exclusive Yahtzee holder-won vs upset (Erin alone / Jordan alone). Oak/chance stay off this tab. Cohort notes: [`../assets/marts/strategy.md`](../assets/marts/strategy.md). |
 | **Deep cuts** | Lifetime points, rates, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), win margins and `recorded_total` distributions split by player, closest/blowouts, commentary, clickable scorecard links. KPI figures use the same pink / blue / white Vega-Lite marks as Overview. |
 | **Scorecards** | Sidecar link + sample composite + catalog. Photo \| seed card (Chance before Yahtzee). See [`scorecards.md`](scorecards.md). |
 | **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
-`mart_game_trends`, `mart_category_stats`, plus `mart_head_to_head` /
+`mart_game_trends`, `mart_category_stats`, `mart_strategy_swing` /
+`mart_strategy_rescue` / `mart_yz_matchup`, plus `mart_head_to_head` /
 `mart_pub_locations`).
 
 DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (OSM
@@ -23,7 +25,9 @@ Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
 through `duckdb-default` (same file, writable, one asset at a time).
 
-Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/).
+Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/). Strategy tab
+captures: `strategy_swing_factors.png`, `strategy_rescue_matrix.png`,
+`strategy_yz_holder_won_vs_upset.png`.
 
 ## Prerequisites
 

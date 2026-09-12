@@ -1,5 +1,11 @@
 # Dashboard screenshots
 
+Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
+
+- `strategy_swing_factors.png` — Strategy KPIs + exclusive-feature swing bars (Yahtzee bonus at top; SS=0 grey)
+- `strategy_rescue_matrix.png` — Rescue heatmap (miss × consolation exclusive combo)
+- `strategy_yz_holder_won_vs_upset.png` — Exclusive Yahtzee: Erin alone vs Jordan alone, stacked holder won vs upset
+
 102-game captures from `dac serve --template yahtzee-dark` after Overview KPI colors landed on main:
 
 - `overview_kpis.png` — Overview (102 games; Erin pink, Jordan blue, combined white)

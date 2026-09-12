@@ -203,9 +203,12 @@ queries:
         feature,
         feature_ord,
         n,
+        holder_wins,
         holder_win_rate,
         case when is_low_n then 'low_n' else 'ok' end as tone,
-        label
+        label,
+        round(100.0 * holder_win_rate)::integer
+          || '% (' || holder_wins || '/' || n || ')' as kpi_label
       from mart_strategy_swing
       order by feature_ord
   strategy_rescue:
@@ -705,7 +708,7 @@ rows:
             - filter: "datum.feature === 'Upper bonus (35)'"
           mark: *neutral_mark
           encoding:
-            text: { field: label, type: nominal }
+            text: { field: kpi_label, type: nominal }
           height: 40
           padding: 0
 
@@ -739,7 +742,16 @@ rows:
             y:
               field: feature
               type: nominal
-              sort: { field: feature_ord }
+              # Explicit list so Yahtzee bonus sits at the top (y-axis
+              # domain[0] is the bottom).
+              sort:
+                - Small straight = 0
+                - Full house = 0
+                - Large straight = 0
+                - Large straight = 40
+                - Yahtzee = 50
+                - Upper bonus (35)
+                - Yahtzee bonus > 0
               title: null
             x:
               field: holder_win_rate
@@ -776,7 +788,8 @@ rows:
           **Rescue cohort** — exclusive combo, not exclusive-miss-then-split.
           A game is in a cell when exactly one player has **both** that miss
           and that consolation. Consolations do not overlap (Yahtzee-only /
-          upper-bonus-only / both / neither). Grey cells are n < 10.
+          upper-bonus-only / both / neither). Empty cells are n = 0; n < 10
+          is noisy — trust the label.
 
           Combined **LS=0 + any Yahtzee** (Has Yahtzee + Has both) is the
           12/22 ≈ 55% grounding figure. The exclusive-miss cut of the same
@@ -792,7 +805,7 @@ rows:
         description: Focal-player win rate for exclusive miss × consolation combos
         query: strategy_rescue
         spec:
-          height: 260
+          height: 300
           padding: { top: 8, left: 8, right: 8, bottom: 8 }
           config: *vl_dark
           encoding:
@@ -818,8 +831,6 @@ rows:
                   condition:
                     - test: "datum.tone === 'empty'"
                       value: "#12171F"
-                    - test: "datum.tone === 'low_n'"
-                      value: "#3A4252"
                   field: focal_win_rate
                   type: quantitative
                   scale:

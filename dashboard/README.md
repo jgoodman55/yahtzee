@@ -25,7 +25,9 @@ Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes
 through `duckdb-default` (same file, writable, one asset at a time).
 
-Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/).
+Walkthrough screenshots: [`docs/screenshots/`](docs/screenshots/). Strategy tab
+captures: `strategy_swing_factors.png`, `strategy_rescue_matrix.png`,
+`strategy_yz_matchup_stacked.png`.
 
 ## Prerequisites
 

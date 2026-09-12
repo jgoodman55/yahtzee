@@ -742,16 +742,16 @@ rows:
             y:
               field: feature
               type: nominal
-              # Explicit list so Yahtzee bonus sits at the top (y-axis
-              # domain[0] is the bottom).
+              # Explicit list, top → bottom (DAC/Vega-Lite puts
+              # sort[0] at the top of the y-axis).
               sort:
-                - Small straight = 0
-                - Full house = 0
-                - Large straight = 0
-                - Large straight = 40
-                - Yahtzee = 50
-                - Upper bonus (35)
                 - Yahtzee bonus > 0
+                - Upper bonus (35)
+                - Yahtzee = 50
+                - Large straight = 40
+                - Large straight = 0
+                - Full house = 0
+                - Small straight = 0
               title: null
             x:
               field: holder_win_rate

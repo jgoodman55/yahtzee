@@ -222,6 +222,8 @@ Historical written-vs-sum notes (superseded by the recomputed totals):
 - game 3, jordan, yahtzee_bonus: one X → 100.
 
 ## IMG_2916
+- game 2, jordan, chance: Jordan photo|seed validation → **11** (was 12).
+- game 2, jordan, recorded_total: category sum **222** (was 223). Game 95 is no longer a 223–223 tie (Erin stays 223).
 - game 2, erin, twos: 8 appears written over a 6.
 - game 3, erin, yahtzee: 50 with messy flourish on the 5.
 - game 3, jordan, recorded_total: 260 in the total box; margin note "-20" / "203" below (likely unrelated correction for another column) — used 260.

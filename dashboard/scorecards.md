@@ -16,8 +16,8 @@ markdown, no `href` on cells):
 | `image` widget (`src` URL) | Yes | Static URL; no Jinja on `src` |
 | Filters (`select` / `text`) | Yes | Dashboard-wide — would clutter Overview |
 | Table cell markdown / `<a>` | No | Cells are formatted text only |
-| Vega-Lite `href` on a text mark | Yes (used here) | Clickable “Game N” lists on Deep cuts. Opens **same tab** — Vega-Lite has no `target` channel, and DAC 0.15 does not honor `usermeta.embedOptions.loader.target` for a new tab. Shift/ctrl-click or the Scorecards tab / :8765 viewer keeps the dashboard open. |
-| Image widget click / `href` | No | `src` + `alt` only. Cannot open a scorecard in a new tab from an image widget. |
+| Vega-Lite `href` on a text mark | Yes (used here) | Clickable “Game N” lists on Deep cuts. Vega-Lite has no `target` encoding; we set `usermeta.embedOptions.loader.target: _blank`. On DAC 0.17 that opens the :8765 viewer in a **new tab**. Image widgets cannot do this. |
+| Image widget click / `href` | No | `src` + `alt` only. Cannot open a scorecard (new tab or same tab) from an image widget. |
 | Arbitrary HTML / iframe in a widget | No | Same limit as the pub map |
 | Sidecar static HTML next to `dac serve` | **Yes** | This page — port 8765 |
 

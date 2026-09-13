@@ -1449,10 +1449,11 @@ rows:
           (`python3 -m http.server 8765 --directory dashboard`). Each page is
           original photo | seed-rendered card (Chance before Yahtzee).
 
-          Image widgets are display-only (`src` / `alt` — no click URL). Vega-Lite
-          `href` has no `target` channel; a same-tab open is the DAC 0.15 click
-          path. Shift/ctrl-click (or the Scorecards tab / :8765 viewer) keeps
-          the dashboard open.
+          Image widgets are display-only (`src` / `alt` — no click URL). The
+          lists use Vega-Lite `href` plus `usermeta.embedOptions.loader.target:
+          _blank` so the :8765 viewer opens in a **new tab** when the DAC
+          viewer honors it (verified on DAC 0.17). If a click stays in-tab,
+          Shift/ctrl-click or the Scorecards tab still works.
 
   - tab: Deep cuts
     height: 240
@@ -1461,7 +1462,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the :8765 viewer (same tab in DAC 0.15).
+        description: Colored by winner. Click opens the :8765 viewer in a new tab when DAC honors embed target=_blank.
         query: closest_scorecard_links
         spec:
           height: 200
@@ -1499,7 +1500,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the :8765 viewer (same tab in DAC 0.15).
+        description: Colored by winner. Click opens the :8765 viewer in a new tab when DAC honors embed target=_blank.
         query: blowout_scorecard_links
         spec:
           height: 200

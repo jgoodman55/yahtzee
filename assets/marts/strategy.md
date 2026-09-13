@@ -49,8 +49,10 @@ do not quote that as the rescue rate.
 Yahtzee = 50. None / both are out of this mart.
 
 Grain: holder × outcome. Two bars (Erin alone / Jordan alone), each
-stacked **Holder won** vs **Upset** (holder lost). Combined exclusive
-holder rate is the swing-factor Yahtzee = 50 row (47/56 ≈ 84%).
+stacked **Holder won** vs **Upset** (holder lost). The Strategy chart
+Y-axis is that holder's outcome **share (0–100%)**; labels keep raw W/L.
+Combined exclusive holder rate is the swing-factor Yahtzee = 50 row
+(47/56 ≈ 84%) — not a separate dashboard visual.
 
 | Holder | Seed (n=108, 0 ties) |
 |---|---|

@@ -92,40 +92,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.0998305,
-          51.5038242
-        ]
-      },
-      "properties": {
-        "name": "MC and Sons Southwark",
-        "merchant_name_raw": "MC AND SONS",
-        "source": "seed",
-        "visit_count": 5,
-        "merged_from": "MC AND SONS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1195286,
-          51.4862183
-        ]
-      },
-      "properties": {
-        "name": "MC and Sons Vauxhall",
-        "merchant_name_raw": "MC AND SONS VAUXHALL",
-        "source": "seed",
-        "visit_count": 5,
-        "merged_from": "MC AND SONS VAUXHALL"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.1090829,
           51.532915
         ]
@@ -170,6 +136,40 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 4,
         "merged_from": "DUKE OF WELLINGTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0998305,
+          51.5038242
+        ]
+      },
+      "properties": {
+        "name": "MC and Sons Southwark",
+        "merchant_name_raw": "MC AND SONS",
+        "source": "seed",
+        "visit_count": 4,
+        "merged_from": "MC AND SONS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1195286,
+          51.4862183
+        ]
+      },
+      "properties": {
+        "name": "MC and Sons Vauxhall",
+        "merchant_name_raw": "MC AND SONS VAUXHALL",
+        "source": "seed",
+        "visit_count": 4,
+        "merged_from": "MC AND SONS VAUXHALL"
       }
     },
     {

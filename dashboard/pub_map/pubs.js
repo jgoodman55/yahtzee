@@ -245,6 +245,23 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1230148,
+          51.485713
+        ]
+      },
+      "properties": {
+        "name": "Vauxhall Marketplace",
+        "merchant_name_raw": "VAUXHALL MARKETPLACE",
+        "source": "seed",
+        "visit_count": 3,
+        "merged_from": "VAUXHALL MARKETPLACE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1948694,
           51.5068785
         ]
@@ -791,6 +808,6 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 46
+    "confirmed_pub_count": 47
   }
 };

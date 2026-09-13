@@ -57,7 +57,9 @@ Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s.
 ANCHOR BANKSIDE maps to the existing Anchor Bar seed (alias row, same
 coords). Visit rows are **one per Chase sale** from
 `Chase7977_Activity_20260830.csv` (127 included sales), plus the existing
-Crown Tavern (2), THE RED LION LDN, and DOG N BONE PH LONDON sample rows.
+Crown Tavern (2), THE RED LION LDN, and DOG N BONE PH LONDON sample rows,
+and 3 Jordan-specified Vauxhall Marketplace visits (one pin at 7 S Lambeth
+Pl; statement strings like `TST-Unit … Vauxhall MP` / `TST-MarketPlace - Vaux`).
 The original three sample ANCHOR BAR rows were replaced by the 17 Chase
 Bankside sales so visit_count is not mixed demo+statement. Unresolved
 merchants stay in the visit log without invented coordinates.

@@ -4,7 +4,7 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 
 - `strategy_swing_factors.png` — Strategy KPIs + exclusive-feature swing bars (Yahtzee bonus at top; SS=0 grey)
 - `strategy_rescue_matrix.png` — Rescue heatmap (miss × consolation exclusive combo)
-- `strategy_yz_holder_won_vs_upset.png` — Exclusive Yahtzee: Erin alone vs Jordan alone, stacked holder won vs upset
+- `strategy_yz_holder_won_vs_upset.png` — Exclusive Yahtzee: Erin alone vs Jordan alone, stacked holder won vs upset on a 0–100% Y-axis (no combined-holder KPI)
 
 102-game captures from `dac serve --template yahtzee-dark` after Overview KPI colors landed on main:
 
@@ -14,7 +14,7 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 - `races_cumulative_wins.png` — same Races capture (alias)
 - `zeros_conversion.png` — Zeros tab (per-game zeros + miss rates with bar labels)
 - `deep_cuts.png` — Deep cuts charts (upper dice-count + lower sum-box averages; Erin/Jordan win-margin and recorded_total histograms)
-- `deep_cuts_kpi_colors.png` — Deep cuts KPI figures (Erin pink, Jordan blue, ties white)
+- `deep_cuts_kpi_colors.png` — Deep cuts KPI figures (lifetime points row; Avg + Median row; Erin pink, Jordan blue, ties white; values centered)
 - `deep_cuts_points_histograms.png` — Deep cuts win-margin + recorded_total histograms
 - `pubs_tab_leaflet_link.png` — Pubs tab (Leaflet link + venue table)
 - `leaflet_pub_map_anchor_bar.png` — standalone Leaflet map, Anchor Bar popup (3 visits)
@@ -29,7 +29,8 @@ Earlier dark-redesign captures:
 Scorecard drill-down (Overview yahtzees + photo|seed sidecar):
 
 - `overview_yahtzee_kpis.png` — Overview with Erin / Jordan total yahtzees (pink / blue)
-- `deep_cuts_scorecard_links.png` — Deep cuts clickable closest / blowout scorecard lists
+- `deep_cuts_scorecard_links.png` — Deep cuts clickable closest / blowout scorecard lists (colored by winner)
+- `deep_cuts_commentary.png` — Deep cuts commentary table with Erin score / Jordan score after Winner
 - `scorecards_tab.png` — Scorecards tab (sidecar links + sample composite)
 - `scorecard_game_1_side_by_side.png` — Game 1 photo | seed card (IMG_2885)
 - `scorecard_game_47_side_by_side.png` — Game 47 (1-pt) photo | seed card (IMG_2900)

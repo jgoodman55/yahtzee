@@ -133,8 +133,9 @@ simple → deep:
 5. **Deep cuts** — lifetime points, rates, upper dice-count averages
    (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
    chance), win margins and `recorded_total` distributions split by player,
-   closest/blowouts/commentary with scorecard links. KPI figures use the same
-   pink / blue / white Vega-Lite marks as Overview.
+   closest/blowouts (colored by winner) and commentary (Erin/Jordan
+   `recorded_total` after Winner). KPI figures use the same pink / blue /
+   white Vega-Lite marks as Overview, centered in the widget.
 6. **Scorecards** — path to side-by-side original photo + seed-rendered card
    (Chance before Yahtzee). DAC 0.15 cannot click table cells; the sidecar
    HTML on port 8765 is the comparison UX (see `dashboard/scorecards.md`).

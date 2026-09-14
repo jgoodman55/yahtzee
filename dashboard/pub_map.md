@@ -60,8 +60,9 @@ coords). Visit rows are **one per Chase sale** from
 Crown Tavern (2), THE RED LION LDN, and DOG N BONE PH LONDON sample rows,
 and 3 Jordan-specified Vauxhall Marketplace visits (one pin at 7 S Lambeth
 Pl; statement strings like `TST-Unit … Vauxhall MP` / `TST-MarketPlace - Vaux`).
-MC and Sons visit rows are **txn_count − 1** per venue (4 Southwark + 4
-Vauxhall), as Jordan specified — not the raw 5+5 Chase sales.
+MC and Sons visit rows are **6 Southwark** (`MC AND SONS`) + **2 Vauxhall**
+(`MC AND SONS VAUXHALL`), as Jordan specified — both seed pins kept. This
+overrides the earlier txn_count − 1 / 4+4 correction.
 The original three sample ANCHOR BAR rows were replaced by the 17 Chase
 Bankside sales so visit_count is not mixed demo+statement. Unresolved
 merchants stay in the visit log without invented coordinates.

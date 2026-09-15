@@ -22,7 +22,7 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 Earlier dark-redesign captures:
 
 - `pubs_tab.png` — Pubs tab
-- `pub_map_london_visit_bubbles.jpg` — Leaflet + OSM map; bubbles sized by visits
+- `pub_map_london_visit_bubbles.jpg` — Leaflet + CartoDB Positron map; bubbles sized by unique-day visits
 - `pub_map_anchor_bar_popup.jpg` — Anchor Bar popup (3 visits)
 - `pub_map_crown_tavern_popup.jpg` — Crown Tavern popup (2 visits)
 

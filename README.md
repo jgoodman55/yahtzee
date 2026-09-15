@@ -21,8 +21,10 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   `narrow_margin`, `tie`, `streak`, `no_bonus_either`, `bonus_split`,
   `multi_yahtzee`, `zero_yahtzee`, `totals_mismatch`).
 - `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs. One visit-log
-  row per visit (`visit_count` on `mart_pub_locations` is the row count per
-  merchant, summed on proximity-dedup). Not joined to games.
+  row per unique calendar day at a venue (`visit_count` on `mart_pub_locations`
+  is that unique-day count per merchant, summed on proximity-dedup). Not
+  joined to games. Rebuild Chase days with
+  `assets/python/build_pub_visits.py --chase Chase7977_Activity_20260830.csv`.
 - `sheet_game_crosswalk.csv` — `game_seq` → Drive sheet `IMG_####` +
   `game_on_sheet` (feeds the Scorecards sidecar).
 

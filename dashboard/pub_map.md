@@ -20,16 +20,17 @@ from Metabase are converted to **tables**).
 | Standalone Leaflet page next to DAC | **Yes** | `dashboard/pub_map.html` — this is the primary map. |
 
 This is **not Apple MapKit** (that needs an Apple token and still cannot live
-inside DAC). Leaflet + OSM is the closest practical equivalent: pan/zoom,
-visit-sized bubbles, name + visit popups.
+inside DAC). Leaflet + a light CartoDB Positron basemap is the closest
+practical equivalent: pan/zoom, visit-sized bubbles, name + visit popups.
 
 ## Interactive map (primary)
 
 `dashboard/pub_map.html` loads confirmed rows from `mart_pub_locations`
 (`pub_map/pubs.js`, regenerated from DuckDB). Circle radius scales with
 `visit_count`. Default center is London. Default basemap is free
-[OpenStreetMap](https://www.openstreetmap.org/copyright) raster tiles —
-**no API key and no signup**.
+[CartoDB Positron](https://carto.com/attributions) light tiles (OSM data) —
+**no API key and no signup**. Overlapping bubbles use a lower fill opacity
+so stacked pins stay readable.
 
 ### Optional nicer tiles (not required)
 
@@ -40,6 +41,8 @@ does **not** need this for the default path. Do not commit a key.
 
 ```bash
 # from repo root, after marts are built
+# optional: rebuild unique-day visits from the Chase export (not in git)
+# python3 assets/python/build_pub_visits.py --chase Chase7977_Activity_20260830.csv
 python3 dashboard/scripts/export_pub_map.py
 # optional: python3 dashboard/scripts/export_pub_map.py --db /path/to/yahtzee.duckdb
 ```
@@ -48,29 +51,36 @@ Writes `dashboard/pub_map/pubs.geojson` and `dashboard/pub_map/pubs.js`.
 `pubs.js` is what the HTML loads so the map also works as a local `file://`
 page (no CORS fetch).
 
-`visit_count` is the number of `raw_pub_visits` rows per merchant (summed
-when proximity-dedup collapses venues). It is not a game-to-pub join.
+`visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
+row per merchant × Transaction Date (summed when proximity-dedup collapses
+venues). Same-day Chase sales at the same location are one visit. It is not
+a game-to-pub join.
 
 Chase statement merchants classified `likely_pub=yes` (Jordan 2026-09-14)
 are in `seed_pubs.csv` / `raw_pub_visits.csv`. Excluded: Thomas Cubitt,
 Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s.
 ANCHOR BANKSIDE maps to the existing Anchor Bar seed (alias row, same
-coords). Visit rows are **one per Chase sale** from
-`Chase7977_Activity_20260830.csv` (127 included sales), plus the existing
-Crown Tavern (2), THE RED LION LDN, and DOG N BONE PH LONDON sample rows,
-and 3 Jordan-specified Vauxhall Marketplace visits (one pin at 7 S Lambeth
-Pl; statement strings like `TST-Unit … Vauxhall MP` / `TST-MarketPlace - Vaux`).
-MC and Sons visit rows are **6 Southwark** (`MC AND SONS`) + **2 Vauxhall**
-(`MC AND SONS VAUXHALL`), as Jordan specified — both seed pins kept. This
-overrides the earlier txn_count − 1 / 4+4 correction.
-The original three sample ANCHOR BAR rows were replaced by the 17 Chase
-Bankside sales so visit_count is not mixed demo+statement. Unresolved
-merchants stay in the visit log without invented coordinates.
+coords). Rebuild visit rows with `assets/python/build_pub_visits.py --chase
+Chase7977_Activity_20260830.csv` (unique days from `Sale` rows; the Chase
+file is not committed). Kept sample rows: Crown Tavern (2), THE RED LION
+LDN, and DOG N BONE PH LONDON. The original three sample ANCHOR BAR rows
+were replaced by Chase Bankside days so visit_count is statement-based, not
+mixed demo+Chase.
+
+**MC and Sons** (both seed pins kept): Southwark (`MC AND SONS`) statement
+days 2026-08-09, 2026-07-25, 2026-07-18 → **3** visits; Vauxhall
+(`MC AND SONS VAUXHALL`) days 2026-08-20, 2026-08-19, 2026-07-30 → **3**
+visits.
+
+**Vauxhall Marketplace** (one pin at 7 S Lambeth Pl; statement strings like
+`TST-Unit … Vauxhall MP` / `TST-MarketPlace - Vaux`) is **3** unique days
+(2026-08-24, 2026-08-20, 2026-08-06). Unresolved merchants stay in the
+visit log without invented coordinates.
 
 ### Open / serve
 
 ```bash
-# 1) Double-click / open in a browser (file://). OSM tiles still load.
+# 1) Double-click / open in a browser (file://). Carto Positron tiles still load.
 open dashboard/pub_map.html   # macOS; or just open the file
 
 # 2) Tiny static server (needed for the DAC Markdown link on :8765)

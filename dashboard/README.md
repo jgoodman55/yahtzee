@@ -18,8 +18,9 @@ Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_strategy_rescue` / `mart_yz_matchup`, plus `mart_head_to_head` /
 `mart_pub_locations`).
 
-DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (OSM
-tiles, no API key). See `pub_map.md` for regenerate / serve / `dac build`.
+DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (CartoDB
+Positron light tiles, no API key). See `pub_map.md` for regenerate / serve /
+`dac build`.
 
 Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes

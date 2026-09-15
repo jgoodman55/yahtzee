@@ -14,25 +14,8 @@
         "name": "Anchor Bar",
         "merchant_name_raw": "ANCHOR BANKSIDE",
         "source": "seed",
-        "visit_count": 17,
+        "visit_count": 8,
         "merged_from": "ANCHOR BANKSIDE"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1209019,
-          51.4886893
-        ]
-      },
-      "properties": {
-        "name": "The Black Dog",
-        "merchant_name_raw": "THE BLACK DOG VAUX",
-        "source": "seed",
-        "visit_count": 9,
-        "merged_from": "THE BLACK DOG VAUX"
       }
     },
     {
@@ -48,7 +31,7 @@
         "name": "The Derby",
         "merchant_name_raw": "THE DERBY",
         "source": "seed",
-        "visit_count": 9,
+        "visit_count": 7,
         "merged_from": "THE DERBY, THE HANOVER ARMS"
       }
     },
@@ -57,33 +40,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.085144,
-          51.5416461
+          -0.1209019,
+          51.4886893
         ]
       },
       "properties": {
-        "name": "De Beauvoir Arms",
-        "merchant_name_raw": "DE BEAUVOIR ARMS",
-        "source": "seed",
-        "visit_count": 8,
-        "merged_from": "DE BEAUVOIR ARMS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.0998305,
-          51.5038242
-        ]
-      },
-      "properties": {
-        "name": "MC and Sons Southwark",
-        "merchant_name_raw": "MC AND SONS",
+        "name": "The Black Dog",
+        "merchant_name_raw": "THE BLACK DOG VAUX",
         "source": "seed",
         "visit_count": 6,
-        "merged_from": "MC AND SONS"
+        "merged_from": "THE BLACK DOG VAUX"
       }
     },
     {
@@ -99,76 +65,8 @@
         "name": "Gordon's Wine Bar",
         "merchant_name_raw": "GORDON'S WINE BAR",
         "source": "seed",
-        "visit_count": 5,
+        "visit_count": 4,
         "merged_from": "GORDON'S WINE BAR"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1090829,
-          51.532915
-        ]
-      },
-      "properties": {
-        "name": "The Three Johns",
-        "merchant_name_raw": "THREE JOHNS",
-        "source": "seed",
-        "visit_count": 5,
-        "merged_from": "THREE JOHNS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.0842105,
-          51.5095114
-        ]
-      },
-      "properties": {
-        "name": "Walrus and the Carpenter",
-        "merchant_name_raw": "WALRUS AND CARPENTER",
-        "source": "seed",
-        "visit_count": 5,
-        "merged_from": "WALRUS AND CARPENTER"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1533448,
-          51.4930969
-        ]
-      },
-      "properties": {
-        "name": "Duke of Wellington",
-        "merchant_name_raw": "DUKE OF WELLINGTON",
-        "source": "seed",
-        "visit_count": 4,
-        "merged_from": "DUKE OF WELLINGTON"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1191791,
-          51.5172518
-        ]
-      },
-      "properties": {
-        "name": "The Ship",
-        "merchant_name_raw": "THE SHIP",
-        "source": "seed",
-        "visit_count": 4,
-        "merged_from": "THE SHIP"
       }
     },
     {
@@ -193,16 +91,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1833474,
-          51.490632
+          -0.0998305,
+          51.5038242
         ]
       },
       "properties": {
-        "name": "Drayton Arms",
-        "merchant_name_raw": "DRAYTON ARMS",
+        "name": "MC and Sons Southwark",
+        "merchant_name_raw": "MC AND SONS",
         "source": "seed",
         "visit_count": 3,
-        "merged_from": "DRAYTON ARMS"
+        "merged_from": "MC AND SONS"
       }
     },
     {
@@ -210,16 +108,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1144482,
-          51.4891639
+          -0.1195286,
+          51.4862183
         ]
       },
       "properties": {
-        "name": "The Duchy Arms",
-        "merchant_name_raw": "THE DUCHY",
+        "name": "MC and Sons Vauxhall",
+        "merchant_name_raw": "MC AND SONS VAUXHALL",
         "source": "seed",
         "visit_count": 3,
-        "merged_from": "THE DUCHY"
+        "merged_from": "MC AND SONS VAUXHALL"
       }
     },
     {
@@ -244,16 +142,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1948694,
-          51.5068785
+          -0.0842105,
+          51.5095114
         ]
       },
       "properties": {
-        "name": "Churchill Arms",
-        "merchant_name_raw": "CHURCHILL ARMS KENSINGTON",
+        "name": "Walrus and the Carpenter",
+        "merchant_name_raw": "WALRUS AND CARPENTER",
         "source": "seed",
-        "visit_count": 2,
-        "merged_from": "CHURCHILL ARMS KENSINGTON"
+        "visit_count": 3,
+        "merged_from": "WALRUS AND CARPENTER"
       }
     },
     {
@@ -261,67 +159,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1195286,
-          51.4862183
+          -0.085144,
+          51.5416461
         ]
       },
       "properties": {
-        "name": "MC and Sons Vauxhall",
-        "merchant_name_raw": "MC AND SONS VAUXHALL",
+        "name": "De Beauvoir Arms",
+        "merchant_name_raw": "DE BEAUVOIR ARMS",
         "source": "seed",
         "visit_count": 2,
-        "merged_from": "MC AND SONS VAUXHALL"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1134801,
-          51.4619831
-        ]
-      },
-      "properties": {
-        "name": "Supercute Taproom",
-        "merchant_name_raw": "SUPERCUTE TAPROOM",
-        "source": "seed",
-        "visit_count": 2,
-        "merged_from": "SUPERCUTE TAPROOM"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1221916,
-          51.4919181
-        ]
-      },
-      "properties": {
-        "name": "Tamesis Dock",
-        "merchant_name_raw": "TAMESIS DOCK",
-        "source": "seed",
-        "visit_count": 2,
-        "merged_from": "TAMESIS DOCK"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.122896,
-          51.4771539
-        ]
-      },
-      "properties": {
-        "name": "The Canton Arms",
-        "merchant_name_raw": "THE CANTON ARMS",
-        "source": "seed",
-        "visit_count": 2,
-        "merged_from": "THE CANTON ARMS"
+        "merged_from": "DE BEAUVOIR ARMS"
       }
     },
     {
@@ -346,16 +193,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1737169,
-          51.5702319
+          -0.1090829,
+          51.532915
         ]
       },
       "properties": {
-        "name": "The Spaniards Inn",
-        "merchant_name_raw": "SPANIARDS",
+        "name": "The Three Johns",
+        "merchant_name_raw": "THREE JOHNS",
         "source": "seed",
         "visit_count": 2,
-        "merged_from": "SPANIARDS"
+        "merged_from": "THREE JOHNS"
       }
     },
     {
@@ -431,6 +278,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1948694,
+          51.5068785
+        ]
+      },
+      "properties": {
+        "name": "Churchill Arms",
+        "merchant_name_raw": "CHURCHILL ARMS KENSINGTON",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "CHURCHILL ARMS KENSINGTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.091059,
           51.491504
         ]
@@ -441,6 +305,40 @@
         "source": "seed",
         "visit_count": 1,
         "merged_from": "DIOGENES THE DOG L"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1833474,
+          51.490632
+        ]
+      },
+      "properties": {
+        "name": "Drayton Arms",
+        "merchant_name_raw": "DRAYTON ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "DRAYTON ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1533448,
+          51.4930969
+        ]
+      },
+      "properties": {
+        "name": "Duke of Wellington",
+        "merchant_name_raw": "DUKE OF WELLINGTON",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "DUKE OF WELLINGTON"
       }
     },
     {
@@ -584,6 +482,40 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1134801,
+          51.4619831
+        ]
+      },
+      "properties": {
+        "name": "Supercute Taproom",
+        "merchant_name_raw": "SUPERCUTE TAPROOM",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "SUPERCUTE TAPROOM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1221916,
+          51.4919181
+        ]
+      },
+      "properties": {
+        "name": "Tamesis Dock",
+        "merchant_name_raw": "TAMESIS DOCK",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "TAMESIS DOCK"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1555113,
           51.4939827
         ]
@@ -635,6 +567,23 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.122896,
+          51.4771539
+        ]
+      },
+      "properties": {
+        "name": "The Canton Arms",
+        "merchant_name_raw": "THE CANTON ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE CANTON ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.163173,
           51.49072
         ]
@@ -662,6 +611,23 @@
         "source": "seed",
         "visit_count": 1,
         "merged_from": "THE DEVONSHIRE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1144482,
+          51.4891639
+        ]
+      },
+      "properties": {
+        "name": "The Duchy Arms",
+        "merchant_name_raw": "THE DUCHY",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE DUCHY"
       }
     },
     {
@@ -713,6 +679,40 @@
         "source": "seed",
         "visit_count": 1,
         "merged_from": "THE SCOTTISH STORES"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1191791,
+          51.5172518
+        ]
+      },
+      "properties": {
+        "name": "The Ship",
+        "merchant_name_raw": "THE SHIP",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE SHIP"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1737169,
+          51.5702319
+        ]
+      },
+      "properties": {
+        "name": "The Spaniards Inn",
+        "merchant_name_raw": "SPANIARDS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "SPANIARDS"
       }
     },
     {

@@ -10,7 +10,8 @@ materialization:
 @bruin"""
 
 # Resolves each merchant name in raw_pub_visits to a confirmed pub location
-# (visit_count is the number of visit-log rows per merchant), in priority order:
+# (visit_count is unique calendar days per merchant: one visit-log row per
+# Transaction Date at that venue, then summed on proximity-dedup), in priority order:
 #   1. seed_pubs.csv        (manual, free, highest trust)
 #   2. OpenStreetMap Nominatim (free, no key)
 #   3. Google Places Text Search (needs GOOGLE_PLACES_API_KEY, small free tier)

@@ -20,17 +20,18 @@ from Metabase are converted to **tables**).
 | Standalone Leaflet page next to DAC | **Yes** | `dashboard/pub_map.html` — this is the primary map. |
 
 This is **not Apple MapKit** (that needs an Apple token and still cannot live
-inside DAC). Leaflet + a light CartoDB Positron basemap is the closest
-practical equivalent: pan/zoom, visit-sized bubbles, name + visit popups.
+inside DAC). Leaflet + a light Esri gray canvas is the closest practical
+equivalent: pan/zoom, visit-sized bubbles, name + visit popups.
 
 ## Interactive map (primary)
 
 `dashboard/pub_map.html` loads confirmed rows from `mart_pub_locations`
 (`pub_map/pubs.js`, regenerated from DuckDB). Circle radius scales with
-`visit_count`. Default center is London. Default basemap is free
-[CartoDB Positron](https://carto.com/attributions) light tiles (OSM data) —
-**no API key and no signup**. Overlapping bubbles use a lower fill opacity
-so stacked pins stay readable.
+`visit_count`. Default center is London. Default basemap is
+[Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
+**no API key and no signup**. (CartoDB Positron is the usual keyless light
+style, but those tiles now watermark without a Carto key.) Overlapping
+bubbles use a lower fill opacity so stacked pins stay readable.
 
 ### Optional nicer tiles (not required)
 
@@ -80,7 +81,7 @@ visit log without invented coordinates.
 ### Open / serve
 
 ```bash
-# 1) Double-click / open in a browser (file://). Carto Positron tiles still load.
+# 1) Double-click / open in a browser (file://). Esri light-gray tiles still load.
 open dashboard/pub_map.html   # macOS; or just open the file
 
 # 2) Tiny static server (needed for the DAC Markdown link on :8765)

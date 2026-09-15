@@ -128,7 +128,7 @@
     <header class="card">
       <h1>Yahtzee pub map</h1>
       <p>Confirmed venues from <code>mart_pub_locations</code> only — not joined to games. Bubbles scale by unique-day visit count.</p>
-      <p class="basemap-note">Leaflet + CartoDB Positron light tiles (no API key). Optional MapTiler via <code>?maptiler=KEY</code>. DAC 0.15 cannot embed MapKit or Leaflet.</p>
+      <p class="basemap-note">Leaflet + Esri World Light Gray canvas (no API key). Optional MapTiler via <code>?maptiler=KEY</code>. DAC 0.15 cannot embed MapKit or Leaflet.</p>
     </header>
     <section class="card list" id="pub-list" hidden>
       <h2>Venues</h2>
@@ -169,29 +169,35 @@
         return MIN_RADIUS + t * (MAX_RADIUS - MIN_RADIUS);
       }
 
-      function tileLayer() {
-        // Default: CartoDB Positron (light, no API key). OSM streets are too busy.
-        // Optional MapTiler streets: append ?maptiler=YOUR_KEY to the URL.
+      function addBasemap(map) {
+        // Default: Esri World Light Gray (quiet canvas, no API key).
+        // CartoDB Positron used to be keyless; those tiles now watermark
+        // "API KEY REQUIRED". Optional MapTiler: ?maptiler=YOUR_KEY
         var params = new URLSearchParams(window.location.search);
         var maptiler = params.get("maptiler") || params.get("MAPTILER_KEY");
         if (maptiler) {
-          return L.tileLayer(
+          L.tileLayer(
             "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=" + encodeURIComponent(maptiler),
             {
               attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
               maxZoom: 19
             }
-          );
+          ).addTo(map);
+          return;
         }
-        return L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 20
-          }
-        );
+        var esriAttr =
+          'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, DeLorme, NAVTEQ';
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+          { attribution: esriAttr, maxZoom: 16 }
+        ).addTo(map);
+        map.createPane("basemapLabels");
+        map.getPane("basemapLabels").style.zIndex = 250;
+        map.getPane("basemapLabels").style.pointerEvents = "none";
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+          { maxZoom: 16, pane: "basemapLabels" }
+        ).addTo(map);
       }
 
       var data = collection();
@@ -205,7 +211,7 @@
         zoom: 12,
         zoomControl: true
       });
-      tileLayer().addTo(map);
+      addBasemap(map);
 
       var markers = [];
       var bounds = [];

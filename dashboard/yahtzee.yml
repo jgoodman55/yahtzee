@@ -1730,7 +1730,7 @@ rows:
           Venues are a **separate grain** from games — there is no game-to-pub join.
 
           **[Open the interactive Leaflet map](http://localhost:8765/pub_map.html)**
-          (visit-sized bubbles, light Carto tiles, click a pin for name + visits).
+          (visit-sized bubbles, light-gray canvas tiles, click a pin for name + visits).
 
           DAC cannot embed Leaflet or MapKit. Serve the map beside this dashboard:
 

@@ -13,10 +13,163 @@ window.PUB_MAP_DATA = {
       },
       "properties": {
         "name": "Anchor Bar",
-        "merchant_name_raw": "ANCHOR BAR",
+        "merchant_name_raw": "ANCHOR BANKSIDE",
+        "source": "seed",
+        "visit_count": 8,
+        "merged_from": "ANCHOR BANKSIDE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1209019,
+          51.4886893
+        ]
+      },
+      "properties": {
+        "name": "The Black Dog",
+        "merchant_name_raw": "THE BLACK DOG VAUX",
+        "source": "seed",
+        "visit_count": 6,
+        "merged_from": "THE BLACK DOG VAUX"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1132925,
+          51.4811678
+        ]
+      },
+      "properties": {
+        "name": "The Derby",
+        "merchant_name_raw": "THE DERBY",
+        "source": "seed",
+        "visit_count": 6,
+        "merged_from": "THE DERBY"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1233137,
+          51.5079244
+        ]
+      },
+      "properties": {
+        "name": "Gordon's Wine Bar",
+        "merchant_name_raw": "GORDON'S WINE BAR",
+        "source": "seed",
+        "visit_count": 4,
+        "merged_from": "GORDON'S WINE BAR"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0842105,
+          51.5095114
+        ]
+      },
+      "properties": {
+        "name": "The Walrus & Carpenter",
+        "merchant_name_raw": "WALRUS",
+        "source": "seed",
+        "visit_count": 4,
+        "merged_from": "WALRUS, WALRUS AND CARPENTER"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0886568,
+          51.5062565
+        ]
+      },
+      "properties": {
+        "name": "Barrowboy and Banker",
+        "merchant_name_raw": "BARROW BOY AND BANKER SE1",
         "source": "seed",
         "visit_count": 3,
-        "merged_from": "ANCHOR BAR"
+        "merged_from": "BARROW BOY AND BANKER SE1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0998305,
+          51.5038242
+        ]
+      },
+      "properties": {
+        "name": "MC and Sons Southwark",
+        "merchant_name_raw": "MC AND SONS",
+        "source": "seed",
+        "visit_count": 3,
+        "merged_from": "MC AND SONS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1195286,
+          51.4862183
+        ]
+      },
+      "properties": {
+        "name": "MC and Sons Vauxhall",
+        "merchant_name_raw": "MC AND SONS VAUXHALL",
+        "source": "seed",
+        "visit_count": 3,
+        "merged_from": "MC AND SONS VAUXHALL"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1230148,
+          51.485713
+        ]
+      },
+      "properties": {
+        "name": "Vauxhall Marketplace",
+        "merchant_name_raw": "VAUXHALL MARKETPLACE",
+        "source": "seed",
+        "visit_count": 3,
+        "merged_from": "VAUXHALL MARKETPLACE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.085144,
+          51.5416461
+        ]
+      },
+      "properties": {
+        "name": "De Beauvoir Arms",
+        "merchant_name_raw": "DE BEAUVOIR ARMS",
+        "source": "seed",
+        "visit_count": 2,
+        "merged_from": "DE BEAUVOIR ARMS"
       }
     },
     {
@@ -35,6 +188,652 @@ window.PUB_MAP_DATA = {
         "visit_count": 2,
         "merged_from": "CROWN TAVERN EC1"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0862828,
+          51.5100863
+        ]
+      },
+      "properties": {
+        "name": "The Monument",
+        "merchant_name_raw": "MONUMENT",
+        "source": "seed",
+        "visit_count": 2,
+        "merged_from": "MONUMENT"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1090829,
+          51.532915
+        ]
+      },
+      "properties": {
+        "name": "The Three Johns",
+        "merchant_name_raw": "THREE JOHNS",
+        "source": "seed",
+        "visit_count": 2,
+        "merged_from": "THREE JOHNS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1769294,
+          51.4901293
+        ]
+      },
+      "properties": {
+        "name": "Anglesea Arms",
+        "merchant_name_raw": "ANGLESEA ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "ANGLESEA ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1441267,
+          51.4980235
+        ]
+      },
+      "properties": {
+        "name": "Bag O'Nails",
+        "merchant_name_raw": "BAG O'NAILS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "BAG O'NAILS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0902409,
+          51.5054026
+        ]
+      },
+      "properties": {
+        "name": "Bedales",
+        "merchant_name_raw": "BEDALES ENTERPRIS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "BEDALES ENTERPRIS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1729707,
+          51.4859699
+        ]
+      },
+      "properties": {
+        "name": "Cadogan Arms",
+        "merchant_name_raw": "CADOGAN ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "CADOGAN ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1948694,
+          51.5068785
+        ]
+      },
+      "properties": {
+        "name": "Churchill Arms",
+        "merchant_name_raw": "CHURCHILL ARMS KENSINGTON",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "CHURCHILL ARMS KENSINGTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.091059,
+          51.491504
+        ]
+      },
+      "properties": {
+        "name": "Diogenes the Dog",
+        "merchant_name_raw": "DIOGENES THE DOG L",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "DIOGENES THE DOG L"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1833474,
+          51.490632
+        ]
+      },
+      "properties": {
+        "name": "Drayton Arms",
+        "merchant_name_raw": "DRAYTON ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "DRAYTON ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1533448,
+          51.4930969
+        ]
+      },
+      "properties": {
+        "name": "Duke of Wellington",
+        "merchant_name_raw": "DUKE OF WELLINGTON",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "DUKE OF WELLINGTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1182178,
+          51.4809874
+        ]
+      },
+      "properties": {
+        "name": "Fentiman Arms",
+        "merchant_name_raw": "FENTIMAN ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "FENTIMAN ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1365995,
+          51.5132722
+        ]
+      },
+      "properties": {
+        "name": "John Snow",
+        "merchant_name_raw": "JOHN SNOW",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "JOHN SNOW"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.098174,
+          51.4984274
+        ]
+      },
+      "properties": {
+        "name": "Mercato Metropolitano",
+        "merchant_name_raw": "GERMAN KRAFT MM",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "GERMAN KRAFT MM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0826189,
+          51.5116889
+        ]
+      },
+      "properties": {
+        "name": "Nancy Spains",
+        "merchant_name_raw": "NANCY SPAINS MONUMENT",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "NANCY SPAINS MONUMENT"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.073223,
+          51.4984945
+        ]
+      },
+      "properties": {
+        "name": "Pedro's Wine Bar",
+        "merchant_name_raw": "PEDRO'S WINE BAR",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "PEDRO'S WINE BAR"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1067419,
+          51.5372759
+        ]
+      },
+      "properties": {
+        "name": "Pig and Butcher",
+        "merchant_name_raw": "PIG AND BUTCHER",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "PIG AND BUTCHER"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0771444,
+          51.5005941
+        ]
+      },
+      "properties": {
+        "name": "Southwark Brewing",
+        "merchant_name_raw": "SOUTHWARK BREW",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "SOUTHWARK BREW"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1821606,
+          51.4940964
+        ]
+      },
+      "properties": {
+        "name": "Stanhope Arms",
+        "merchant_name_raw": "STANHOPE ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "STANHOPE ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1134801,
+          51.4619831
+        ]
+      },
+      "properties": {
+        "name": "Supercute Taproom",
+        "merchant_name_raw": "SUPERCUTE TAPROOM",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "SUPERCUTE TAPROOM"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1221916,
+          51.4919181
+        ]
+      },
+      "properties": {
+        "name": "Tamesis Dock",
+        "merchant_name_raw": "TAMESIS DOCK",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "TAMESIS DOCK"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1555113,
+          51.4939827
+        ]
+      },
+      "properties": {
+        "name": "The Antelope",
+        "merchant_name_raw": "ANTELOPE SW1",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "ANTELOPE SW1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2557041,
+          51.7515552
+        ]
+      },
+      "properties": {
+        "name": "The Bear Inn",
+        "merchant_name_raw": "BEAR INN OXFORD",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "BEAR INN OXFORD"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1183509,
+          51.4848284
+        ]
+      },
+      "properties": {
+        "name": "The Beehive",
+        "merchant_name_raw": "BEEHIVE",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "BEEHIVE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.122896,
+          51.4771539
+        ]
+      },
+      "properties": {
+        "name": "The Canton Arms",
+        "merchant_name_raw": "THE CANTON ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE CANTON ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.163173,
+          51.49072
+        ]
+      },
+      "properties": {
+        "name": "The Chalk Freehouse",
+        "merchant_name_raw": "THE CHALK FREE HOUSE L",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE CHALK FREE HOUSE L"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2583282,
+          51.7522047
+        ]
+      },
+      "properties": {
+        "name": "The Crown",
+        "merchant_name_raw": "CROWN 052892",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "CROWN 052892"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1353307,
+          51.5106407
+        ]
+      },
+      "properties": {
+        "name": "The Devonshire",
+        "merchant_name_raw": "THE DEVONSHIRE",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE DEVONSHIRE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1144482,
+          51.4891639
+        ]
+      },
+      "properties": {
+        "name": "The Duchy Arms",
+        "merchant_name_raw": "THE DUCHY",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE DUCHY"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1030312,
+          51.4528429
+        ]
+      },
+      "properties": {
+        "name": "The Florence",
+        "merchant_name_raw": "FLORENCE BRIXTON",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "FLORENCE BRIXTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1130873,
+          51.4813791
+        ]
+      },
+      "properties": {
+        "name": "The Hanover Arms",
+        "merchant_name_raw": "THE HANOVER ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE HANOVER ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1255387,
+          51.5112657
+        ]
+      },
+      "properties": {
+        "name": "The Round House",
+        "merchant_name_raw": "ROUND HOUSE COVENT GARDEN",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "ROUND HOUSE COVENT GARDEN"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1208228,
+          51.5310789
+        ]
+      },
+      "properties": {
+        "name": "The Scottish Stores",
+        "merchant_name_raw": "THE SCOTTISH STORES",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE SCOTTISH STORES"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1191791,
+          51.5172518
+        ]
+      },
+      "properties": {
+        "name": "The Ship",
+        "merchant_name_raw": "THE SHIP",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE SHIP"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1737169,
+          51.5702319
+        ]
+      },
+      "properties": {
+        "name": "The Spaniards Inn",
+        "merchant_name_raw": "SPANIARDS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "SPANIARDS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1196679,
+          51.5021332
+        ]
+      },
+      "properties": {
+        "name": "The Thirsty Farrier",
+        "merchant_name_raw": "THE THIRSTY FARRIER S",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE THIRSTY FARRIER S"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0768883,
+          51.5028873
+        ]
+      },
+      "properties": {
+        "name": "Tower Bridge Arms",
+        "merchant_name_raw": "TOWER BRIDGE ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "TOWER BRIDGE ARMS"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.067218,
+          51.4659902
+        ]
+      },
+      "properties": {
+        "name": "White Horse Peckham",
+        "merchant_name_raw": "WHITE HORSE",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "WHITE HORSE"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.175945,
+          51.493427
+        ]
+      },
+      "properties": {
+        "name": "Zetland Arms",
+        "merchant_name_raw": "ZETLAND ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "ZETLAND ARMS"
+      }
     }
   ],
   "metadata": {
@@ -43,6 +842,6 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 2
+    "confirmed_pub_count": 49
   }
 };

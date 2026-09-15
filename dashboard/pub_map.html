@@ -107,10 +107,10 @@
       color: var(--muted);
     }
     .dot {
-      border: 2px solid #fff;
-      background: var(--amber);
+      border: 1.5px solid rgba(255, 248, 237, 0.55);
+      background: rgba(217, 119, 6, 0.4);
       border-radius: 50%;
-      box-shadow: 0 0 0 1px rgba(180, 83, 9, 0.35);
+      box-shadow: 0 0 0 1px rgba(180, 83, 9, 0.22);
     }
     .leaflet-popup-content { margin: 10px 12px; }
     .popup-title { font-weight: 700; margin: 0 0 4px; }
@@ -127,8 +127,8 @@
   <div class="chrome">
     <header class="card">
       <h1>Yahtzee pub map</h1>
-      <p>Confirmed venues from <code>mart_pub_locations</code> only — not joined to games. Bubbles scale by visit count.</p>
-      <p class="basemap-note">Leaflet + OpenStreetMap tiles (no API key). This is the closest practical stand-in for Apple Maps; DAC 0.15 cannot embed MapKit or Leaflet.</p>
+      <p>Confirmed venues from <code>mart_pub_locations</code> only — not joined to games. Bubbles scale by unique-day visit count.</p>
+      <p class="basemap-note">Leaflet + Esri World Light Gray canvas (no API key). Optional MapTiler via <code>?maptiler=KEY</code>. DAC 0.15 cannot embed MapKit or Leaflet.</p>
     </header>
     <section class="card list" id="pub-list" hidden>
       <h2>Venues</h2>
@@ -169,24 +169,35 @@
         return MIN_RADIUS + t * (MAX_RADIUS - MIN_RADIUS);
       }
 
-      function tileLayer() {
-        // Default: free OSM raster tiles, no signup / no secrets.
-        // Optional nicer tiles: append ?maptiler=YOUR_KEY to the URL.
+      function addBasemap(map) {
+        // Default: Esri World Light Gray (quiet canvas, no API key).
+        // CartoDB Positron used to be keyless; those tiles now watermark
+        // "API KEY REQUIRED". Optional MapTiler: ?maptiler=YOUR_KEY
         var params = new URLSearchParams(window.location.search);
         var maptiler = params.get("maptiler") || params.get("MAPTILER_KEY");
         if (maptiler) {
-          return L.tileLayer(
+          L.tileLayer(
             "https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=" + encodeURIComponent(maptiler),
             {
               attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
               maxZoom: 19
             }
-          );
+          ).addTo(map);
+          return;
         }
-        return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          maxZoom: 19
-        });
+        var esriAttr =
+          'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, DeLorme, NAVTEQ';
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+          { attribution: esriAttr, maxZoom: 16 }
+        ).addTo(map);
+        map.createPane("basemapLabels");
+        map.getPane("basemapLabels").style.zIndex = 250;
+        map.getPane("basemapLabels").style.pointerEvents = "none";
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}",
+          { maxZoom: 16, pane: "basemapLabels" }
+        ).addTo(map);
       }
 
       var data = collection();
@@ -200,7 +211,7 @@
         zoom: 12,
         zoomControl: true
       });
-      tileLayer().addTo(map);
+      addBasemap(map);
 
       var markers = [];
       var bounds = [];
@@ -214,10 +225,11 @@
         var visits = visitsOf(feature);
         var marker = L.circleMarker([lat, lng], {
           radius: radiusFor(visits, maxVisits),
-          color: "#fff",
-          weight: 2,
+          color: "#fff8ed",
+          weight: 1.25,
+          opacity: 0.55,
           fillColor: "#d97706",
-          fillOpacity: 0.82
+          fillOpacity: 0.4
         });
         var visitLabel = visits === 1 ? "1 visit" : visits + " visits";
         marker.bindPopup(

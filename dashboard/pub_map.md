@@ -26,8 +26,11 @@ equivalent: pan/zoom, visit-sized bubbles, name + visit popups.
 ## Interactive map (primary)
 
 `dashboard/pub_map.html` loads confirmed rows from `mart_pub_locations`
-(`pub_map/pubs.js`, regenerated from DuckDB). Circle radius scales with
-`visit_count`. Default center is London. Default basemap is
+(`pub_map/pubs.js`, regenerated from DuckDB). Circle radius still encodes
+`visit_count`, but with a tight square-root curve
+(`r = 4 + 9 * sqrt(visits / maxVisits)`, capped at 13px) so a London
+overview is not dominated by the busiest pins (~8 unique days). Default
+center is London. Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
 **no API key and no signup**. (CartoDB Positron is the usual keyless light
 style, but those tiles now watermark without a Carto key.) Overlapping

@@ -147,8 +147,10 @@
   <script>
     (function () {
       var LONDON = [51.5074, -0.1278];
-      var MIN_RADIUS = 10;
-      var MAX_RADIUS = 30;
+      // Pixel radius at city zoom: 1-visit pins stay tiny; busiest pin
+      // (~8 unique days) caps at MAX_RADIUS so the overview isn't blobs.
+      var MIN_RADIUS = 4;
+      var MAX_RADIUS = 13;
 
       function collection() {
         if (window.PUB_MAP_DATA && window.PUB_MAP_DATA.features) {
@@ -162,11 +164,10 @@
       }
 
       function radiusFor(visits, maxVisits) {
-        if (!maxVisits || maxVisits <= 1) {
-          return 16;
-        }
-        var t = Math.sqrt(visits / maxVisits);
-        return MIN_RADIUS + t * (MAX_RADIUS - MIN_RADIUS);
+        var n = Math.max(Number(visits) || 0, 0);
+        var cap = Math.max(Number(maxVisits) || 1, 1);
+        var r = MIN_RADIUS + (MAX_RADIUS - MIN_RADIUS) * Math.sqrt(n / cap);
+        return Math.min(MAX_RADIUS, r);
       }
 
       function addBasemap(map) {

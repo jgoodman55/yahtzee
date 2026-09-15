@@ -10,7 +10,8 @@ likely_pub=yes merchants on 2026-09-14; this mapping follows that include
 list plus later address/naming overrides and the Vauxhall Marketplace
 addendum. Excluded: Thomas Cubitt, Hung Drawn & Quartered, Bar Crispin,
 Guinness Open Gate Brewery, Hector's, The Buccaneer (didn't play there),
-FCB Paddington (coffee, not a pub).
+Walrus / Walrus & Carpenter (didn't play there), FCB Paddington (coffee,
+not a pub).
 
   python3 assets/python/build_pub_visits.py \\
       --chase /path/to/Chase7977_Activity_20260830.csv
@@ -54,6 +55,8 @@ EXCLUDED_SUBSTR = (
     "HECTOR'S",
     "HECTORS",
     "THE BUCCANEER",
+    "WALRUS AND CARPENTER",
+    "WALRUS",
     "FCB PADDINGTON",
 )
 
@@ -98,7 +101,7 @@ def load_merchant_keys() -> list[str]:
             if name and name != "ANCHOR BAR":
                 keys.append(name)
     keys.extend(EXTRA_INCLUDED)
-    # Longest first so MC AND SONS VAUXHALL / WALRUS AND CARPENTER win.
+    # Longest first so MC AND SONS VAUXHALL wins over MC AND SONS.
     return sorted(dict.fromkeys(keys), key=lambda k: -len(k))
 
 
@@ -198,8 +201,6 @@ def main() -> None:
         "CROWN 052892",
         "MONUMENT",
         "BEEHIVE",
-        "WALRUS",
-        "WALRUS AND CARPENTER",
     ):
         days = sorted(by_merchant.get(merchant, set()))
         n = visit_row_count(merchant, by_merchant.get(merchant, set()))

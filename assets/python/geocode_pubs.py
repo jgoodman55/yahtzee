@@ -26,7 +26,8 @@ materialization:
 # ~50m of each other are treated as the same physical pub and collapsed to
 # one row, keeping the seed's name/coords as authoritative when a seed match
 # is involved. Distinct seed pubs with different pub_name values are never
-# collapsed (The Derby and Hanover Arms are neighbors ~30m apart).
+# collapsed. The Derby and Hanover Arms are the identity exception that
+# motivated that rule (~30m neighbors on Kennington Park Road).
 #
 # Set OFFLINE_TEST=1 to skip live Nominatim/Google calls entirely (seed
 # matches only, everything else marked unresolved) — useful for testing the
@@ -148,13 +149,27 @@ def resolve_merchant(merchant: str, seed_df: pd.DataFrame) -> dict:
     }
 
 
+# Identity exception: these seed pub_name values must never share a pin,
+# even when their coordinates fall inside DEDUPE_RADIUS_DEGREES.
+KEEP_DISTINCT_SEED_PUB_NAMES = frozenset({"The Derby", "The Hanover Arms"})
+
+
 def _keep_seed_pubs_distinct(canonical, new_row) -> bool:
-    """Neighboring but separately seeded pubs must stay on the map."""
+    """Neighboring but separately seeded pubs must stay on the map.
+
+    Same-name seed aliases (Anchor Bar / ANCHOR BANKSIDE) still merge.
+    Different seed pub_name values never merge — including the Derby /
+    Hanover Arms pair on Kennington Park Road.
+    """
     if canonical.get("source") != "seed" or new_row.get("source") != "seed":
         return False
     left = str(canonical.get("pub_name") or "").strip()
     right = str(new_row.get("pub_name") or "").strip()
-    return bool(left) and bool(right) and left != right
+    if not left or not right:
+        return False
+    if frozenset({left, right}) == KEEP_DISTINCT_SEED_PUB_NAMES:
+        return True
+    return left != right
 
 
 def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:

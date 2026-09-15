@@ -14,13 +14,12 @@ CADOGAN ARMS,Cadogan Arms,51.4859699,-0.1729707,"298 Old Church Street / World's
 THE SHIP,The Ship,51.5172518,-0.1191791,"Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)"
 DIOGENES THE DOG L,Diogenes the Dog,51.491504,-0.091059,"96 Rodney Road, Walworth — Chase DIOGENES THE DOG L"
 THE DERBY,The Derby,51.4811678,-0.1132925,"Jordan 2026-09-15: 336 Kennington Park Rd, London SE11 4PP — neighbor of Hanover Arms; kept as a separate pin"
-WALRUS AND CARPENTER,The Walrus & Carpenter,51.5095114,-0.0842105,"Jordan 2026-09-15: one pin with WALRUS at 45 Monument St, London EC3R 8BU"
 BARROW BOY AND BANKER SE1,Barrowboy and Banker,51.5062565,-0.0886568,6-8 Borough High Street SE1 9QQ
 THE DUCHY,The Duchy Arms,51.4891639,-0.1144482,"Jordan 2026-09-15: The Duchy Arms — 63 Sancroft St, London SE11 5UG"
 DRAYTON ARMS,Drayton Arms,51.490632,-0.1833474,153 Old Brompton Road
 CHURCHILL ARMS KENSINGTON,Churchill Arms,51.5068785,-0.1948694,119 Kensington Church Street
 ANTELOPE SW1,The Antelope,51.4939827,-0.1555113,22-24 Eaton Terrace SW1
-SPANIARDS,The Spaniards Inn,51.5702319,-0.1737169,"Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (Nominatim returns the inn-named bus stop at the building)"
+SPANIARDS,The Spaniards Inn,51.5698601,-0.1740839,"Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (OSM amenity=pub; not the inn-named bus stop ~50m NE)"
 BEDALES ENTERPRIS,Bedales,51.5054026,-0.0902409,"5 Bedale Street, Borough Market — Chase BEDALES ENTERPRIS"
 DUKE OF WELLINGTON,Duke of Wellington,51.4930969,-0.1533448,"Jordan 2026-09-15: 63 Eaton Terrace, London SW1W 8TR"
 PEDRO'S WINE BAR,Pedro's Wine Bar,51.4984945,-0.073223,Unit 128 Druid Street SE1 2HH (Nominatim labels the arch The Bottle Shop)
@@ -33,7 +32,6 @@ BEAR INN OXFORD,The Bear Inn,51.7515552,-1.2557041,"6 Alfred Street, Oxford — 
 CROWN 052892,The Crown,51.7522047,-1.2583282,"Jordan 2026-09-15: The Crown — 59a Cornmarket St, Oxford OX1 3HB (Chase CROWN 052892; 1 unique day / 4 same-day sales)"
 FENTIMAN ARMS,Fentiman Arms,51.4809874,-0.1182178,"64 Fentiman Road, Oval"
 THE THIRSTY FARRIER S,The Thirsty Farrier,51.5021332,-0.1196679,Seasonal Southbank pop-up — Queen's Walk SE1 7PB (not a permanent pub building)
-WALRUS,The Walrus & Carpenter,51.5095114,-0.0842105,"Jordan 2026-09-15: merged onto Walrus & Carpenter — 45 Monument St, London EC3R 8BU"
 ROUND HOUSE COVENT GARDEN,The Round House,51.5112657,-0.1255387,"1 Garrick Street, Covent Garden"
 ANGLESEA ARMS,Anglesea Arms,51.4901293,-0.1769294,"Jordan 2026-09-15: 15 Selwood Terrace, South Kensington, London SW7 3QG (OSM labels the same pub 15 Neville Terrace)"
 THE HANOVER ARMS,The Hanover Arms,51.4813791,-0.1130873,"Jordan 2026-09-15: 326 Kennington Park Rd, London SE11 4PP — neighbor of The Derby; kept as a separate pin"

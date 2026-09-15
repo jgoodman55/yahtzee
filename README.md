@@ -110,7 +110,9 @@ this to run unattended as part of a repeatable pipeline.
    pub. This is what actually catches "Anchor Bar" and "Anchor Bankside
    (South" being the same building — string similarity alone is fooled
    too easily by chain naming and abbreviations; matching on the resolved
-   coordinates is more reliable than fuzzy-matching the raw text.
+   coordinates is more reliable than fuzzy-matching the raw text. Distinct
+   seed pubs with different `pub_name` values (The Derby and Hanover Arms)
+   are not collapsed even when they sit inside that radius.
 
 Set `OFFLINE_TEST=1` to skip both live geocoding APIs entirely (seed
 matches only) — useful for testing the rest of the pipeline with no

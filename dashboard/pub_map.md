@@ -59,7 +59,11 @@ a game-to-pub join.
 
 Chase statement merchants classified `likely_pub=yes` (Jordan 2026-09-14)
 are in `seed_pubs.csv` / `raw_pub_visits.csv`. Excluded: Thomas Cubitt,
-Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s.
+Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s,
+The Buccaneer (didn’t play there), FCB Paddington (coffee, not a pub).
+The Derby and Hanover Arms stay as separate pins (~30m neighbors). Walrus
+and Walrus & Carpenter share one pin at 45 Monument Street. Beehive is
+exactly 1 visit (Jordan override).
 ANCHOR BANKSIDE maps to the existing Anchor Bar seed (alias row, same
 coords). Rebuild visit rows with `assets/python/build_pub_visits.py --chase
 Chase7977_Activity_20260830.csv` (unique days from `Sale` rows; the Chase

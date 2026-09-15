@@ -24,23 +24,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1132925,
-          51.4811678
-        ]
-      },
-      "properties": {
-        "name": "The Derby",
-        "merchant_name_raw": "THE DERBY",
-        "source": "seed",
-        "visit_count": 7,
-        "merged_from": "THE DERBY, THE HANOVER ARMS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.1209019,
           51.4886893
         ]
@@ -58,6 +41,23 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1132925,
+          51.4811678
+        ]
+      },
+      "properties": {
+        "name": "The Derby",
+        "merchant_name_raw": "THE DERBY",
+        "source": "seed",
+        "visit_count": 6,
+        "merged_from": "THE DERBY"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1233137,
           51.5079244
         ]
@@ -68,6 +68,23 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 4,
         "merged_from": "GORDON'S WINE BAR"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0842105,
+          51.5095114
+        ]
+      },
+      "properties": {
+        "name": "The Walrus & Carpenter",
+        "merchant_name_raw": "WALRUS",
+        "source": "seed",
+        "visit_count": 4,
+        "merged_from": "WALRUS, WALRUS AND CARPENTER"
       }
     },
     {
@@ -143,23 +160,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.0842105,
-          51.5095114
-        ]
-      },
-      "properties": {
-        "name": "Walrus and the Carpenter",
-        "merchant_name_raw": "WALRUS AND CARPENTER",
-        "source": "seed",
-        "visit_count": 3,
-        "merged_from": "WALRUS AND CARPENTER"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.085144,
           51.5416461
         ]
@@ -187,6 +187,23 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 2,
         "merged_from": "CROWN TAVERN EC1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.0862828,
+          51.5100863
+        ]
+      },
+      "properties": {
+        "name": "The Monument",
+        "merchant_name_raw": "MONUMENT",
+        "source": "seed",
+        "visit_count": 2,
+        "merged_from": "MONUMENT"
       }
     },
     {
@@ -364,23 +381,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.098174,
-          51.4984274
-        ]
-      },
-      "properties": {
-        "name": "German Kraft",
-        "merchant_name_raw": "GERMAN KRAFT MM",
-        "source": "seed",
-        "visit_count": 1,
-        "merged_from": "GERMAN KRAFT MM"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.1365995,
           51.5132722
         ]
@@ -391,6 +391,23 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 1,
         "merged_from": "JOHN SNOW"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.098174,
+          51.4984274
+        ]
+      },
+      "properties": {
+        "name": "Mercato Metropolitano",
+        "merchant_name_raw": "GERMAN KRAFT MM",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "GERMAN KRAFT MM"
       }
     },
     {
@@ -551,16 +568,16 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          0.0127524,
-          51.5341411
+          -0.1183509,
+          51.4848284
         ]
       },
       "properties": {
-        "name": "The Buccaneer",
-        "merchant_name_raw": "THE BUCCANEER",
+        "name": "The Beehive",
+        "merchant_name_raw": "BEEHIVE",
         "source": "seed",
         "visit_count": 1,
-        "merged_from": "THE BUCCANEER"
+        "merged_from": "BEEHIVE"
       }
     },
     {
@@ -595,6 +612,23 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 1,
         "merged_from": "THE CHALK FREE HOUSE L"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.2583282,
+          51.7522047
+        ]
+      },
+      "properties": {
+        "name": "The Crown",
+        "merchant_name_raw": "CROWN 052892",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "CROWN 052892"
       }
     },
     {
@@ -646,6 +680,23 @@ window.PUB_MAP_DATA = {
         "source": "seed",
         "visit_count": 1,
         "merged_from": "FLORENCE BRIXTON"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1130873,
+          51.4813791
+        ]
+      },
+      "properties": {
+        "name": "The Hanover Arms",
+        "merchant_name_raw": "THE HANOVER ARMS",
+        "source": "seed",
+        "visit_count": 1,
+        "merged_from": "THE HANOVER ARMS"
       }
     },
     {
@@ -738,23 +789,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1143845,
-          51.4999904
-        ]
-      },
-      "properties": {
-        "name": "The Walrus",
-        "merchant_name_raw": "WALRUS",
-        "source": "seed",
-        "visit_count": 1,
-        "merged_from": "WALRUS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.0768883,
           51.5028873
         ]
@@ -808,6 +842,6 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 47
+    "confirmed_pub_count": 49
   }
 };

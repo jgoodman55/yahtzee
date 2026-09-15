@@ -25,7 +25,8 @@ materialization:
 # has *coordinates* (from any of the three sources above), venues within
 # ~50m of each other are treated as the same physical pub and collapsed to
 # one row, keeping the seed's name/coords as authoritative when a seed match
-# is involved.
+# is involved. Distinct seed pubs with different pub_name values are never
+# collapsed (The Derby and Hanover Arms are neighbors ~30m apart).
 #
 # Set OFFLINE_TEST=1 to skip live Nominatim/Google calls entirely (seed
 # matches only, everything else marked unresolved) — useful for testing the
@@ -38,7 +39,6 @@ import time
 
 import pandas as pd
 import requests
-from bruin import query
 
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
@@ -148,10 +148,23 @@ def resolve_merchant(merchant: str, seed_df: pd.DataFrame) -> dict:
     }
 
 
+def _keep_seed_pubs_distinct(canonical, new_row) -> bool:
+    """Neighboring but separately seeded pubs must stay on the map."""
+    if canonical.get("source") != "seed" or new_row.get("source") != "seed":
+        return False
+    left = str(canonical.get("pub_name") or "").strip()
+    right = str(new_row.get("pub_name") or "").strip()
+    return bool(left) and bool(right) and left != right
+
+
 def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
     """Collapses rows whose coordinates are within DEDUPE_RADIUS_DEGREES of
     each other into a single pub, preferring a seed-sourced row's name/coords
-    as the canonical one when a seed match is in the cluster."""
+    as the canonical one when a seed match is in the cluster.
+
+    Two seed rows with different pub_name values are never merged, so
+    neighbors like The Derby and Hanover Arms stay distinct.
+    """
     locatable = df[df["lat"].notna()].copy()
     unresolved = df[df["lat"].isna()].copy()
     if locatable.empty:
@@ -170,7 +183,8 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
         match = next(
             (c for c in clusters
              if abs(c["lat"] - lat) < DEDUPE_RADIUS_DEGREES
-             and abs(c["lng"] - lng) < DEDUPE_RADIUS_DEGREES),
+             and abs(c["lng"] - lng) < DEDUPE_RADIUS_DEGREES
+             and not _keep_seed_pubs_distinct(c["canonical_row"], row)),
             None,
         )
         visit_count = int(row.get("visit_count") or 1)
@@ -196,6 +210,8 @@ def dedupe_by_proximity(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def materialize():
+    from bruin import query
+
     visits = query(
         "select merchant_name_raw, count(*)::integer as visit_count "
         "from raw_pub_visits group by 1"

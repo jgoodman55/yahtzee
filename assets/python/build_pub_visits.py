@@ -7,8 +7,10 @@ Chase sales on the same calendar day at the same pin count as one visit.
 
 The Chase CSV is not committed (personal statement). Jordan classified
 likely_pub=yes merchants on 2026-09-14; this mapping follows that include
-list plus the Vauxhall Marketplace addendum. Excluded: Thomas Cubitt, Hung
-Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector's.
+list plus later address/naming overrides and the Vauxhall Marketplace
+addendum. Excluded: Thomas Cubitt, Hung Drawn & Quartered, Bar Crispin,
+Guinness Open Gate Brewery, Hector's, The Buccaneer (didn't play there),
+FCB Paddington (coffee, not a pub).
 
   python3 assets/python/build_pub_visits.py \\
       --chase /path/to/Chase7977_Activity_20260830.csv
@@ -51,7 +53,14 @@ EXCLUDED_SUBSTR = (
     "GUINNESS OPEN GATE",
     "HECTOR'S",
     "HECTORS",
+    "THE BUCCANEER",
+    "FCB PADDINGTON",
 )
+
+# Jordan visit-count overrides applied after unique-day counts.
+VISIT_COUNT_OVERRIDES = {
+    "BEEHIVE": 1,  # 2026-09-15: exactly 1 visit (Chase has 2 unique days)
+}
 
 PROCESSOR_PREFIXES = (
     r"^SQ\s*\*",
@@ -138,14 +147,21 @@ def merchant_order() -> list[str]:
     return order
 
 
+def visit_row_count(merchant: str, days: set) -> int:
+    if merchant in VISIT_COUNT_OVERRIDES:
+        return VISIT_COUNT_OVERRIDES[merchant]
+    return len(days)
+
+
 def write_visits(by_merchant: dict[str, set]) -> list[str]:
     rows = ["merchant_name_raw", *KEPT_SAMPLE_ROWS]
     for merchant in merchant_order():
-        n = len(by_merchant.get(merchant, set()))
+        n = visit_row_count(merchant, by_merchant.get(merchant, set()))
         rows.extend([merchant] * n)
     unexpected = sorted(set(by_merchant) - set(merchant_order()))
     for merchant in unexpected:
-        rows.extend([merchant] * len(by_merchant[merchant]))
+        n = visit_row_count(merchant, by_merchant[merchant])
+        rows.extend([merchant] * n)
     OUT_VISITS.write_text("\n".join(rows) + "\n", encoding="utf-8")
     return rows
 
@@ -166,9 +182,11 @@ def main() -> None:
     by_merchant = unique_days_by_merchant(args.chase, keys)
     write_visits(by_merchant)
 
-    chase_days = sum(len(days) for days in by_merchant.values())
+    chase_days = sum(
+        visit_row_count(merchant, days) for merchant, days in by_merchant.items()
+    )
     print(f"Wrote {OUT_VISITS.relative_to(REPO_ROOT)}")
-    print(f"  unique venue-days from Chase: {chase_days}")
+    print(f"  unique venue-days from Chase (after overrides): {chase_days}")
     print(f"  kept sample rows: {len(KEPT_SAMPLE_ROWS)}")
     print(f"  total visit-log rows: {chase_days + len(KEPT_SAMPLE_ROWS)}")
     for merchant in (
@@ -177,9 +195,18 @@ def main() -> None:
         "VAUXHALL MARKETPLACE",
         "ANCHOR BANKSIDE",
         "THE BLACK DOG VAUX",
+        "CROWN 052892",
+        "MONUMENT",
+        "BEEHIVE",
+        "WALRUS",
+        "WALRUS AND CARPENTER",
     ):
         days = sorted(by_merchant.get(merchant, set()))
-        print(f"  {merchant}: {len(days)} unique day(s) { [str(d) for d in days] }")
+        n = visit_row_count(merchant, by_merchant.get(merchant, set()))
+        note = ""
+        if merchant in VISIT_COUNT_OVERRIDES:
+            note = f" (override {VISIT_COUNT_OVERRIDES[merchant]}; Chase days {len(days)})"
+        print(f"  {merchant}: {n} visit row(s){note} {[str(d) for d in days]}")
 
 
 if __name__ == "__main__":

@@ -75,23 +75,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.0842105,
-          51.5095114
-        ]
-      },
-      "properties": {
-        "name": "The Walrus & Carpenter",
-        "merchant_name_raw": "WALRUS AND CARPENTER",
-        "source": "seed",
-        "visit_count": 4,
-        "merged_from": "WALRUS AND CARPENTER, WALRUS"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.0886568,
           51.5062565
         ]
@@ -842,6 +825,6 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 49
+    "confirmed_pub_count": 48
   }
 };

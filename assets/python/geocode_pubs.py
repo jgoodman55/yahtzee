@@ -157,7 +157,7 @@ KEEP_DISTINCT_SEED_PUB_NAMES = frozenset({"The Derby", "The Hanover Arms"})
 def _keep_seed_pubs_distinct(canonical, new_row) -> bool:
     """Neighboring but separately seeded pubs must stay on the map.
 
-    Same-name seed aliases (Walrus / Walrus & Carpenter) still merge.
+    Same-name seed aliases (Anchor Bar / ANCHOR BANKSIDE) still merge.
     Different seed pub_name values never merge — including the Derby /
     Hanover Arms pair on Kennington Park Road.
     """

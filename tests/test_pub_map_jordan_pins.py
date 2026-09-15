@@ -17,7 +17,16 @@ VISITS = REPO / "assets" / "seeds" / "raw_pub_visits.csv"
 GEOJSON = REPO / "dashboard" / "pub_map" / "pubs.geojson"
 MAP_HTML = REPO / "dashboard" / "pub_map.html"
 
-REMOVED = ("THE BUCCANEER", "FCB PADDINGTON", "The Buccaneer", "FCB Paddington")
+REMOVED = (
+    "THE BUCCANEER",
+    "FCB PADDINGTON",
+    "The Buccaneer",
+    "FCB Paddington",
+    "WALRUS",
+    "WALRUS AND CARPENTER",
+    "The Walrus & Carpenter",
+    "The Walrus",
+)
 
 
 def load_seed() -> dict[str, dict]:
@@ -51,8 +60,6 @@ def test_seed_jordan_addresses_and_names():
         "THE HANOVER ARMS": ("The Hanover Arms", "326 Kennington Park Rd"),
         "DUKE OF WELLINGTON": ("Duke of Wellington", "63 Eaton Terrace"),
         "THE DUCHY": ("The Duchy Arms", "63 Sancroft St"),
-        "WALRUS": ("The Walrus & Carpenter", "45 Monument St"),
-        "WALRUS AND CARPENTER": ("The Walrus & Carpenter", "45 Monument St"),
         "SPANIARDS": ("The Spaniards Inn", "Spaniards Rd"),
         "ANGLESEA ARMS": ("Anglesea Arms", "15 Selwood Terrace"),
         "GERMAN KRAFT MM": ("Mercato Metropolitano", "42 Newington Causeway"),
@@ -83,24 +90,18 @@ def test_derby_and_hanover_are_separate_pins():
     assert h_feat["properties"]["visit_count"] == 1
 
 
-def test_walrus_aliases_share_one_pin():
+def test_walrus_and_walrus_carpenter_are_gone():
     seed = load_seed()
     visits = load_visits()
     grouped = by_name(load_features())
-    assert seed["WALRUS"]["pub_name"] == seed["WALRUS AND CARPENTER"]["pub_name"]
-    assert (seed["WALRUS"]["lat"], seed["WALRUS"]["lng"]) == (
-        seed["WALRUS AND CARPENTER"]["lat"],
-        seed["WALRUS AND CARPENTER"]["lng"],
-    )
-    walrus = grouped["The Walrus & Carpenter"]
-    assert len(walrus) == 1
-    merged = walrus[0]["properties"].get("merged_from") or ""
-    assert "WALRUS" in merged
-    assert "WALRUS AND CARPENTER" in merged
-    assert walrus[0]["properties"]["visit_count"] == visits["WALRUS"] + visits[
-        "WALRUS AND CARPENTER"
-    ]
-    assert walrus[0]["properties"]["visit_count"] == 4
+    blob = GEOJSON.read_text(encoding="utf-8")
+    for merchant in ("WALRUS", "WALRUS AND CARPENTER"):
+        assert merchant not in seed
+        assert visits[merchant] == 0
+    assert "The Walrus & Carpenter" not in grouped
+    assert "The Walrus" not in grouped
+    assert "WALRUS" not in blob
+    assert "Walrus" not in blob
 
 
 def test_removals_are_gone():
@@ -164,9 +165,9 @@ def test_map_keeps_transparent_bubbles_and_esri_basemap():
 
 def test_confirmed_pin_count():
     features = load_features()
-    assert len(features) == 49
+    assert len(features) == 48
     names = [f["properties"]["name"] for f in features]
-    assert names.count("The Walrus & Carpenter") == 1
+    assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
     assert "German Kraft" not in names
 
@@ -175,7 +176,7 @@ if __name__ == "__main__":
     for fn in (
         test_seed_jordan_addresses_and_names,
         test_derby_and_hanover_are_separate_pins,
-        test_walrus_aliases_share_one_pin,
+        test_walrus_and_walrus_carpenter_are_gone,
         test_removals_are_gone,
         test_added_crown_monument_beehive,
         test_mc_and_marketplace_are_day_deduped,

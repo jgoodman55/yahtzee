@@ -60,19 +60,19 @@ def test_same_named_seed_aliases_still_merge():
     df = pd.DataFrame(
         [
             {
-                "merchant_name_raw": "WALRUS AND CARPENTER",
-                "pub_name": "The Walrus & Carpenter",
-                "lat": 51.5095114,
-                "lng": -0.0842105,
+                "merchant_name_raw": "ANCHOR BANKSIDE",
+                "pub_name": "Anchor Bar",
+                "lat": 51.5073,
+                "lng": -0.0931,
                 "source": "seed",
                 "is_confirmed_pub": True,
-                "visit_count": 3,
+                "visit_count": 8,
             },
             {
-                "merchant_name_raw": "WALRUS",
-                "pub_name": "The Walrus & Carpenter",
-                "lat": 51.5095114,
-                "lng": -0.0842105,
+                "merchant_name_raw": "ANCHOR BAR",
+                "pub_name": "Anchor Bar",
+                "lat": 51.5073,
+                "lng": -0.0931,
                 "source": "seed",
                 "is_confirmed_pub": True,
                 "visit_count": 1,
@@ -81,10 +81,10 @@ def test_same_named_seed_aliases_still_merge():
     )
     out = geo.dedupe_by_proximity(df)
     assert len(out) == 1
-    assert int(out.iloc[0]["visit_count"]) == 4
+    assert int(out.iloc[0]["visit_count"]) == 9
     merged = str(out.iloc[0]["merged_from"])
-    assert "WALRUS AND CARPENTER" in merged
-    assert "WALRUS" in merged
+    assert "ANCHOR BANKSIDE" in merged
+    assert "ANCHOR BAR" in merged
 
 
 if __name__ == "__main__":

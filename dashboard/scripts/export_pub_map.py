@@ -6,6 +6,9 @@ Reads the pipeline DuckDB file (yahtzee.duckdb at the repo root) and writes:
   dashboard/pub_map/pubs.geojson   GeoJSON FeatureCollection
   dashboard/pub_map/pubs.js        same data as window.PUB_MAP_DATA (file:// safe)
 
+Popup notes come from seed_pubs.csv (joined here). Borough is not exported —
+the map assigns it client-side from lat/lng + vendored ONS GeoJSON.
+
 Run after `bruin run` whenever seed_pubs / raw_pub_visits / geocoding change:
 
   python3 dashboard/scripts/export_pub_map.py
@@ -17,12 +20,14 @@ Requires: pip install duckdb
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO_ROOT / "yahtzee.duckdb"
 OUT_DIR = REPO_ROOT / "dashboard" / "pub_map"
+SEED_PUBS = REPO_ROOT / "assets" / "seeds" / "seed_pubs.csv"
 LONDON_CENTER = (-0.1278, 51.5074)
 
 
@@ -95,6 +100,40 @@ def load_confirmed_pubs(con) -> list[dict]:
     return pubs
 
 
+def load_seed_notes() -> tuple[dict[str, str], dict[str, str]]:
+    """Address/note text from seed_pubs — not a mart column.
+
+    Borough assignment is client-side (lat/lng + vendored ONS GeoJSON), so
+    this export stays a thin mart dump plus the seed note for popups.
+    """
+    notes_by_merchant: dict[str, str] = {}
+    notes_by_name: dict[str, str] = {}
+    if not SEED_PUBS.exists():
+        return notes_by_merchant, notes_by_name
+    with SEED_PUBS.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            note = (row.get("note") or "").strip()
+            if not note:
+                continue
+            merchant = (row.get("merchant_name_raw") or "").strip()
+            name = (row.get("pub_name") or "").strip()
+            if merchant:
+                notes_by_merchant[merchant] = note
+            if name:
+                notes_by_name.setdefault(name, note)
+    return notes_by_merchant, notes_by_name
+
+
+def attach_seed_notes(pubs: list[dict]) -> None:
+    by_merchant, by_name = load_seed_notes()
+    for pub in pubs:
+        note = by_merchant.get(pub.get("merchant_name_raw") or "") or by_name.get(
+            pub.get("name") or ""
+        )
+        if note:
+            pub["note"] = note
+
+
 def to_feature_collection(pubs: list[dict]) -> dict:
     features = []
     for pub in pubs:
@@ -104,6 +143,8 @@ def to_feature_collection(pubs: list[dict]) -> dict:
             "source": pub["source"],
             "visit_count": pub["visit_count"],
         }
+        if pub.get("note"):
+            props["note"] = pub["note"]
         if pub.get("merged_from"):
             props["merged_from"] = pub["merged_from"]
         features.append(
@@ -159,6 +200,7 @@ def main() -> None:
     finally:
         con.close()
 
+    attach_seed_notes(pubs)
     collection = to_feature_collection(pubs)
     geojson_path, js_path = write_outputs(collection)
     print(

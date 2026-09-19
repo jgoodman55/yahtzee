@@ -49,10 +49,10 @@ OFFLINE_TEST=1 bruin run --workers 1        # builds marts into yahtzee.duckdb
 ## Commands
 
 ```shell
-dac validate --dir .
-dac validate --dir . --with-database
-dac check --dir .
-dac serve --dir . --template yahtzee-dark --open
+dac validate --dir dashboard
+dac validate --dir dashboard --with-database
+dac check --dir dashboard
+dac serve --dir dashboard --template yahtzee-dark --open
 ```
 
 `--template yahtzee-dark` loads `themes/yahtzee-dark.yml` (extends `bruin-dark`,

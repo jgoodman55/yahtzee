@@ -14,3 +14,7 @@ columns:
     type: float
   - name: note
     type: string
+  - name: photo_url
+    type: string
+  - name: photo_attribution
+    type: string

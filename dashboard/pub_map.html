@@ -206,26 +206,36 @@
       pointer-events: none !important;
     }
     .borough-badge-inner {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.96);
       border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 4px 8px 3px;
-      box-shadow: 0 4px 14px rgba(27, 36, 48, 0.12);
-      text-align: center;
-      line-height: 1.15;
-      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(27, 36, 48, 0.12);
       color: var(--ink);
-    }
-    .borough-badge-inner .nm {
-      display: block;
-      font-size: 0.68rem;
-      font-weight: 600;
-    }
-    .borough-badge-inner .n {
-      display: block;
-      font-size: 0.95rem;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      line-height: 1;
+      white-space: nowrap;
+      text-align: center;
+    }
+    .borough-badge-inner.is-count {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      letter-spacing: -0.03em;
+    }
+    .borough-badge-inner.is-named {
+      border-radius: 10px;
+      padding: 3px 7px;
+      font-size: 0.68rem;
+    }
+    .borough-badge-inner.is-named .n {
+      font-weight: 700;
+    }
+    .borough-badge-inner.is-named .nm {
+      font-weight: 600;
+      color: var(--muted);
     }
     .empty {
       padding: 16px;
@@ -287,6 +297,8 @@
         [22, [122, 96, 56]]
       ];
       var SNAP_DEG = 0.01;
+      // City-wide overview: count-only badges. Names appear at this zoom+.
+      var NAME_ZOOM = 12;
       var SHORT_NAMES = {
         "Kensington and Chelsea": "Kensington",
         "City of London": "City",
@@ -633,35 +645,106 @@
         boroughLayer.addLayer(layer);
       });
 
+      var boroughLabelItems = [];
       Object.keys(boroughStats).forEach(function (name) {
         var stats = boroughStats[name];
         if (!stats.visits || !stats.feature) return;
         var bounds = L.geoJSON(stats.feature).getBounds();
         if (!bounds.isValid()) return;
-        var center = bounds.getCenter();
-        if (name === "City of London") {
-          center = L.latLng(center.lat + 0.004, center.lng + 0.012);
-        } else if (name === "Westminster") {
-          center = L.latLng(center.lat + 0.004, center.lng - 0.006);
-        }
-        var short = SHORT_NAMES[name] || name;
-        var badge = L.marker(center, {
-          icon: L.divIcon({
-            className: "borough-badge",
-            html:
-              '<div class="borough-badge-inner"><span class="nm">' +
-              escapeHtml(short) +
-              '</span><span class="n">' +
-              stats.visits +
-              "</span></div>",
-            iconSize: [110, 40],
-            iconAnchor: [55, 20]
-          }),
+        var home = bounds.getCenter();
+        var marker = L.marker(home, {
+          icon: boroughBadgeIcon(name, stats.visits, false),
           interactive: false,
           keyboard: false
         });
-        boroughLabelLayer.addLayer(badge);
+        boroughLabelLayer.addLayer(marker);
+        boroughLabelItems.push({
+          name: name,
+          visits: stats.visits,
+          home: home,
+          marker: marker
+        });
       });
+
+      function boroughBadgeIcon(name, visits, showName) {
+        if (!showName) {
+          return L.divIcon({
+            className: "borough-badge",
+            html: '<div class="borough-badge-inner is-count">' + visits + "</div>",
+            iconSize: [22, 22],
+            iconAnchor: [11, 11]
+          });
+        }
+        var short = SHORT_NAMES[name] || name;
+        var html =
+          '<div class="borough-badge-inner is-named"><span class="nm">' +
+          escapeHtml(short) +
+          '</span> <span class="n">' +
+          visits +
+          "</span></div>";
+        var width = Math.min(140, Math.max(56, short.length * 7 + 28));
+        return L.divIcon({
+          className: "borough-badge",
+          html: html,
+          iconSize: [width, 22],
+          iconAnchor: [width / 2, 11]
+        });
+      }
+
+      function boroughBadgeHalfSize(item, showName) {
+        if (!showName) return { hw: 12, hh: 12 };
+        var short = SHORT_NAMES[item.name] || item.name;
+        var width = Math.min(140, Math.max(56, short.length * 7 + 28));
+        return { hw: width / 2, hh: 12 };
+      }
+
+      function resolveBoroughLabelCollisions() {
+        if (!map.hasLayer(boroughLabelLayer) || !boroughLabelItems.length) return;
+        var showName = map.getZoom() >= NAME_ZOOM;
+        var gap = 4;
+        var placed = [];
+        boroughLabelItems
+          .slice()
+          .sort(function (a, b) {
+            return b.visits - a.visits;
+          })
+          .forEach(function (item) {
+            var pt = map.latLngToContainerPoint(item.home);
+            var box = boroughBadgeHalfSize(item, showName);
+            var cur = { x: pt.x, y: pt.y, hw: box.hw, hh: box.hh, item: item };
+            var guard = 0;
+            var moved = true;
+            while (moved && guard < 24) {
+              moved = false;
+              guard += 1;
+              for (var i = 0; i < placed.length; i++) {
+                var other = placed[i];
+                var ox = cur.hw + other.hw + gap - Math.abs(cur.x - other.x);
+                var oy = cur.hh + other.hh + gap - Math.abs(cur.y - other.y);
+                if (ox > 0 && oy > 0) {
+                  var dx = cur.x - other.x;
+                  var dy = cur.y - other.y;
+                  if (dx === 0 && dy === 0) {
+                    dx = 1;
+                    dy = guard % 2 ? 1 : -1;
+                  }
+                  var len = Math.sqrt(dx * dx + dy * dy) || 1;
+                  var push = Math.max(ox, oy) * 0.6;
+                  cur.x += (dx / len) * push;
+                  cur.y += (dy / len) * push;
+                  moved = true;
+                }
+              }
+            }
+            placed.push(cur);
+          });
+        placed.forEach(function (cur) {
+          cur.item.marker.setIcon(boroughBadgeIcon(cur.item.name, cur.item.visits, showName));
+          cur.item.marker.setLatLng(map.containerPointToLatLng([cur.x, cur.y]));
+        });
+      }
+
+      map.on("zoomend moveend", resolveBoroughLabelCollisions);
 
       features.forEach(function (feature, index) {
         var coords = feature.geometry && feature.geometry.coordinates;
@@ -750,11 +833,12 @@
           outsideLayer.addTo(map);
           crumb.classList.remove("is-on");
           tagline.textContent =
-            "Borough totals from unique-day visits. Click a borough to zoom to its pint pins.";
+            "Borough visit totals. Map badges are counts at city zoom (hover or list for names). Click a borough for its pint pins.";
           heading.textContent = "Boroughs";
           if (!skipFit && londonBounds.isValid()) {
             map.fitBounds(londonBounds, { padding: [28, 28], maxZoom: 12, animate: true });
           }
+          resolveBoroughLabelCollisions();
         } else {
           map.removeLayer(boroughLayer);
           map.removeLayer(boroughLabelLayer);
@@ -872,7 +956,7 @@
             row.appendChild(document.createTextNode(n === 1 ? "1 visit" : n + " visits"));
             root.appendChild(row);
           });
-          hint.textContent = "Click a borough to zoom to its pint pins. Oxford pubs are Outside London.";
+          hint.textContent = "Count badges at city zoom; names on hover, in the list, or when you zoom in. Click a borough for its pint pins.";
         } else {
           title.textContent = "Visits (unique days)";
           var beerSamples = [1, 3, 5, Math.max(8, maxPubVisits)];

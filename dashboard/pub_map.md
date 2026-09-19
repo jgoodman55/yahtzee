@@ -31,7 +31,7 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 | Layer | Default | What you see |
 |---|---|---|
 | **Pubs** (Layer B) | Yes (`#pubs`) | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
-| **Boroughs** (Layer A) | `#boroughs` | Choropleth of London boroughs labelled with unique-day visit totals. Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+| **Boroughs** (Layer A) | `#boroughs` | Choropleth of London boroughs. At city-wide zoom the map shows **visit-count badges only** (collision-offset so they don’t stack); full names stay in the sidebar and on hover. Zoom in to see abbreviated name + count. Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
 
 Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Photo popups are still future work; hover/click shows name, unique-day visits, and the seed address/note when present.
 

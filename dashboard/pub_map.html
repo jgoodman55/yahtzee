@@ -197,13 +197,34 @@
       font-size: 0.78rem;
       line-height: 1.15;
       text-align: center;
-      text-shadow: 0 1px 0 #fff, 0 0 6px #fff;
       pointer-events: none;
     }
     .leaflet-tooltip.borough-label::before { display: none; }
-    .leaflet-tooltip.borough-label .n {
+    .borough-badge {
+      background: none !important;
+      border: none !important;
+      pointer-events: none !important;
+    }
+    .borough-badge-inner {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 4px 8px 3px;
+      box-shadow: 0 4px 14px rgba(27, 36, 48, 0.12);
+      text-align: center;
+      line-height: 1.15;
+      white-space: nowrap;
+      color: var(--ink);
+    }
+    .borough-badge-inner .nm {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+    .borough-badge-inner .n {
       display: block;
       font-size: 0.95rem;
+      font-weight: 700;
       letter-spacing: -0.02em;
     }
     .empty {
@@ -227,7 +248,7 @@
         <button type="button" id="btn-back">← Boroughs</button>
         <span id="crumb-label"></span>
       </div>
-      <p class="basemap-note">Leaflet + Esri World Light Gray canvas (no API key). Optional MapTiler via <code>?maptiler=KEY</code>. Borough boundaries: ONS LAD May 2024 BGC (OGL v3.0). DAC 0.15 cannot embed MapKit or Leaflet.</p>
+      <p class="basemap-note">Esri World Light Gray · ONS boroughs (OGL v3.0). Optional MapTiler: <code>?maptiler=KEY</code>.</p>
     </header>
     <section class="card list" id="side-list" hidden>
       <h2 id="list-heading">Venues</h2>
@@ -266,6 +287,14 @@
         [22, [122, 96, 56]]
       ];
       var SNAP_DEG = 0.01;
+      var SHORT_NAMES = {
+        "Kensington and Chelsea": "Kensington",
+        "City of London": "City",
+        "Hammersmith and Fulham": "Hammersmith",
+        "Richmond upon Thames": "Richmond",
+        "Kingston upon Thames": "Kingston",
+        "Barking and Dagenham": "Barking"
+      };
 
       function collection() {
         if (window.PUB_MAP_DATA && window.PUB_MAP_DATA.features) {
@@ -551,11 +580,13 @@
       var map = L.map("map", {
         center: LONDON,
         zoom: 12,
-        zoomControl: true
+        zoomControl: false
       });
+      L.control.zoom({ position: "topright" }).addTo(map);
       addBasemap(map);
 
       var boroughLayer = L.layerGroup();
+      var boroughLabelLayer = L.layerGroup();
       var pubLayer = L.layerGroup();
       var outsideLayer = L.layerGroup();
       var pubMarkers = [];
@@ -582,19 +613,8 @@
             var label =
               stats.visits === 1 ? "1 visit" : stats.visits + " visits";
             layer.bindTooltip(
-              stats.visits
-                ? "<span>" +
-                    escapeHtml(feature.properties.name) +
-                    '</span><span class="n">' +
-                    stats.visits +
-                    "</span>"
-                : escapeHtml(feature.properties.name),
-              {
-                permanent: stats.visits > 0,
-                direction: "center",
-                className: "borough-label",
-                opacity: 1
-              }
+              escapeHtml(feature.properties.name) + " · " + label,
+              { sticky: true, direction: "top", opacity: 0.95 }
             );
             layer.bindPopup(
               '<p class="popup-title">' +
@@ -611,6 +631,36 @@
         }
       ).eachLayer(function (layer) {
         boroughLayer.addLayer(layer);
+      });
+
+      Object.keys(boroughStats).forEach(function (name) {
+        var stats = boroughStats[name];
+        if (!stats.visits || !stats.feature) return;
+        var bounds = L.geoJSON(stats.feature).getBounds();
+        if (!bounds.isValid()) return;
+        var center = bounds.getCenter();
+        if (name === "City of London") {
+          center = L.latLng(center.lat + 0.004, center.lng + 0.012);
+        } else if (name === "Westminster") {
+          center = L.latLng(center.lat + 0.004, center.lng - 0.006);
+        }
+        var short = SHORT_NAMES[name] || name;
+        var badge = L.marker(center, {
+          icon: L.divIcon({
+            className: "borough-badge",
+            html:
+              '<div class="borough-badge-inner"><span class="nm">' +
+              escapeHtml(short) +
+              '</span><span class="n">' +
+              stats.visits +
+              "</span></div>",
+            iconSize: [110, 40],
+            iconAnchor: [55, 20]
+          }),
+          interactive: false,
+          keyboard: false
+        });
+        boroughLabelLayer.addLayer(badge);
       });
 
       features.forEach(function (feature, index) {
@@ -696,6 +746,7 @@
         if (mode === "boroughs") {
           map.removeLayer(pubLayer);
           boroughLayer.addTo(map);
+          boroughLabelLayer.addTo(map);
           outsideLayer.addTo(map);
           crumb.classList.remove("is-on");
           tagline.textContent =
@@ -706,6 +757,7 @@
           }
         } else {
           map.removeLayer(boroughLayer);
+          map.removeLayer(boroughLabelLayer);
           map.removeLayer(outsideLayer);
           syncPubLayer(filter);
           pubLayer.addTo(map);

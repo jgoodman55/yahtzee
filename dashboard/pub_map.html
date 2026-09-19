@@ -580,7 +580,7 @@
             escapeHtml(props.photo_url) +
             '" alt="' +
             escapeHtml(props.name || "Pub") +
-            '" width="200" height="120" loading="lazy"></div>';
+            '" width="200" height="120"></div>';
         } else {
           photo = emptyPhotoHtml(props);
         }
@@ -607,7 +607,9 @@
         marker.bindPopup(pubPopupHtml(props), {
           maxWidth: 220,
           minWidth: 200,
-          className: "venue-popup"
+          className: "venue-popup",
+          autoPan: true,
+          keepInView: true
         });
         marker.on("popupopen", function (ev) {
           var img = ev.popup.getElement() && ev.popup.getElement().querySelector(".venue-photo img");
@@ -1009,8 +1011,17 @@
           btn.querySelector(".meta").textContent =
             visits === 1 ? "1 visit" : visits + " visits";
           btn.addEventListener("click", function () {
-            map.setView(item.marker.getLatLng(), Math.max(map.getZoom(), 15), { animate: true });
-            item.marker.openPopup();
+            var latlng = item.marker.getLatLng();
+            var targetZoom = Math.max(map.getZoom(), 14);
+            function showPopup() {
+              item.marker.openPopup();
+            }
+            if (map.getZoom() >= 14 && map.getBounds().pad(-0.15).contains(latlng)) {
+              showPopup();
+              return;
+            }
+            map.once("moveend", showPopup);
+            map.setView(latlng, targetZoom, { animate: true });
           });
           root.appendChild(btn);
         });

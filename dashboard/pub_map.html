@@ -167,7 +167,7 @@
       width: 14px;
       height: 14px;
       border-radius: 4px;
-      border: 1px solid rgba(90, 63, 44, 0.25);
+      border: 1px solid rgba(90, 63, 44, 0.35);
       flex: 0 0 auto;
     }
     .pint-pin {
@@ -189,15 +189,13 @@
       max-width: 260px;
     }
     .leaflet-tooltip.borough-label {
-      background: none;
-      border: none;
-      box-shadow: none;
+      background: rgba(255, 248, 237, 0.94);
+      border: 1px solid var(--line);
+      box-shadow: 0 4px 12px rgba(27, 36, 48, 0.12);
       color: var(--ink);
-      font-weight: 700;
+      font-weight: 600;
       font-size: 0.78rem;
-      line-height: 1.15;
-      text-align: center;
-      pointer-events: none;
+      line-height: 1.2;
     }
     .leaflet-tooltip.borough-label::before { display: none; }
     .borough-badge {
@@ -205,38 +203,25 @@
       border: none !important;
       pointer-events: none !important;
     }
-    .borough-badge-inner {
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid var(--line);
-      box-shadow: 0 3px 10px rgba(27, 36, 48, 0.12);
+    .borough-badge.is-hidden {
+      display: none !important;
+    }
+    .borough-label {
+      background: rgba(255, 248, 237, 0.9);
+      border-radius: 4px;
+      padding: 1px 5px 2px;
+      box-shadow: 0 1px 2px rgba(27, 36, 48, 0.16);
       color: var(--ink);
       font-weight: 700;
-      line-height: 1;
+      line-height: 1.15;
       white-space: nowrap;
       text-align: center;
+      letter-spacing: -0.01em;
     }
-    .borough-badge-inner.is-count {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      letter-spacing: -0.03em;
-    }
-    .borough-badge-inner.is-named {
-      border-radius: 10px;
-      padding: 3px 7px;
-      font-size: 0.68rem;
-    }
-    .borough-badge-inner.is-named .n {
-      font-weight: 700;
-    }
-    .borough-badge-inner.is-named .nm {
-      font-weight: 600;
-      color: var(--muted);
-    }
+    .borough-label.is-sm { font-size: 10px; }
+    .borough-label.is-md { font-size: 12px; }
+    .borough-label.is-lg { font-size: 14px; }
+    .borough-label .n { font-weight: 800; }
     .empty {
       padding: 16px;
       color: var(--muted);
@@ -289,16 +274,7 @@
         [5, [196, 103, 18]],
         [8, [61, 34, 14]]
       ];
-      var BOROUGH_STOPS = [
-        [0, [238, 240, 242]],
-        [2, [197, 200, 204]],
-        [5, [176, 169, 160]],
-        [12, [168, 145, 112]],
-        [22, [122, 96, 56]]
-      ];
       var SNAP_DEG = 0.01;
-      // City-wide overview: count-only badges. Names appear at this zoom+.
-      var NAME_ZOOM = 12;
       var SHORT_NAMES = {
         "Kensington and Chelsea": "Kensington",
         "City of London": "City",
@@ -357,8 +333,9 @@
       }
 
       function boroughFill(visits) {
-        if (!visits) return "rgba(238, 240, 242, 0.35)";
-        return colorFromStops(visits, BOROUGH_STOPS);
+        if (!visits) return "rgba(246, 231, 161, 0.18)";
+        var t = visits / Math.max(maxBoroughVisits || 1, 1);
+        return colorFromStops(1 + t * 7, BEER_STOPS);
       }
 
       function pintSvg(fill, width, height) {
@@ -613,11 +590,11 @@
             var stats = boroughStats[feature.properties.name] || { visits: 0 };
             var hasVisits = stats.visits > 0;
             return {
-              color: hasVisits ? "#5a3f2c" : "#c5ccd3",
-              weight: hasVisits ? 1.2 : 0.8,
-              opacity: hasVisits ? 0.85 : 0.45,
+              color: hasVisits ? "#5a3f2c" : "#e6d3b0",
+              weight: hasVisits ? 1.15 : 0.8,
+              opacity: hasVisits ? 0.9 : 0.4,
               fillColor: boroughFill(stats.visits),
-              fillOpacity: hasVisits ? 0.72 : 0.18
+              fillOpacity: hasVisits ? 0.78 : 0.16
             };
           },
           onEachFeature: function (feature, layer) {
@@ -653,7 +630,7 @@
         if (!bounds.isValid()) return;
         var home = bounds.getCenter();
         var marker = L.marker(home, {
-          icon: boroughBadgeIcon(name, stats.visits, false),
+          icon: boroughLabelIcon(name, stats.visits, 10, true),
           interactive: false,
           keyboard: false
         });
@@ -661,87 +638,84 @@
         boroughLabelItems.push({
           name: name,
           visits: stats.visits,
+          area: (bounds.getEast() - bounds.getWest()) * (bounds.getNorth() - bounds.getSouth()),
           home: home,
           marker: marker
         });
       });
 
-      function boroughBadgeIcon(name, visits, showName) {
-        if (!showName) {
+      function labelZoomStyle(zoom) {
+        if (zoom >= 14) return { size: "lg", charW: 7.6, h: 18, pad: 10 };
+        if (zoom >= 12) return { size: "md", charW: 6.7, h: 16, pad: 8 };
+        return { size: "sm", charW: 5.9, h: 14, pad: 7 };
+      }
+
+      function displayBoroughName(name, zoom) {
+        if (zoom >= 13) return name;
+        return SHORT_NAMES[name] || name;
+      }
+
+      function boroughLabelIcon(name, visits, zoom, hidden) {
+        if (hidden) {
           return L.divIcon({
-            className: "borough-badge",
-            html: '<div class="borough-badge-inner is-count">' + visits + "</div>",
-            iconSize: [22, 22],
-            iconAnchor: [11, 11]
+            className: "borough-badge is-hidden",
+            html: "",
+            iconSize: [0, 0],
+            iconAnchor: [0, 0]
           });
         }
-        var short = SHORT_NAMES[name] || name;
+        var z = labelZoomStyle(zoom);
+        var short = displayBoroughName(name, zoom);
         var html =
-          '<div class="borough-badge-inner is-named"><span class="nm">' +
+          '<div class="borough-label is-' +
+          z.size +
+          '">' +
           escapeHtml(short) +
-          '</span> <span class="n">' +
+          ' <span class="n">' +
           visits +
           "</span></div>";
-        var width = Math.min(140, Math.max(56, short.length * 7 + 28));
+        var width = Math.ceil((short + " " + visits).length * z.charW + z.pad);
         return L.divIcon({
           className: "borough-badge",
           html: html,
-          iconSize: [width, 22],
-          iconAnchor: [width / 2, 11]
+          iconSize: [width, z.h],
+          iconAnchor: [width / 2, z.h / 2]
         });
-      }
-
-      function boroughBadgeHalfSize(item, showName) {
-        if (!showName) return { hw: 12, hh: 12 };
-        var short = SHORT_NAMES[item.name] || item.name;
-        var width = Math.min(140, Math.max(56, short.length * 7 + 28));
-        return { hw: width / 2, hh: 12 };
       }
 
       function resolveBoroughLabelCollisions() {
         if (!map.hasLayer(boroughLabelLayer) || !boroughLabelItems.length) return;
-        var showName = map.getZoom() >= NAME_ZOOM;
-        var gap = 4;
+        var zoom = map.getZoom();
+        var style = labelZoomStyle(zoom);
+        var gap = 3;
         var placed = [];
         boroughLabelItems
           .slice()
           .sort(function (a, b) {
-            return b.visits - a.visits;
+            if (b.visits !== a.visits) return b.visits - a.visits;
+            return b.area - a.area;
           })
           .forEach(function (item) {
             var pt = map.latLngToContainerPoint(item.home);
-            var box = boroughBadgeHalfSize(item, showName);
-            var cur = { x: pt.x, y: pt.y, hw: box.hw, hh: box.hh, item: item };
-            var guard = 0;
-            var moved = true;
-            while (moved && guard < 24) {
-              moved = false;
-              guard += 1;
-              for (var i = 0; i < placed.length; i++) {
-                var other = placed[i];
-                var ox = cur.hw + other.hw + gap - Math.abs(cur.x - other.x);
-                var oy = cur.hh + other.hh + gap - Math.abs(cur.y - other.y);
-                if (ox > 0 && oy > 0) {
-                  var dx = cur.x - other.x;
-                  var dy = cur.y - other.y;
-                  if (dx === 0 && dy === 0) {
-                    dx = 1;
-                    dy = guard % 2 ? 1 : -1;
-                  }
-                  var len = Math.sqrt(dx * dx + dy * dy) || 1;
-                  var push = Math.max(ox, oy) * 0.6;
-                  cur.x += (dx / len) * push;
-                  cur.y += (dy / len) * push;
-                  moved = true;
-                }
+            var short = displayBoroughName(item.name, zoom);
+            var width = Math.ceil((short + " " + item.visits).length * style.charW + style.pad);
+            var hw = width / 2;
+            var hh = style.h / 2;
+            var hidden = false;
+            for (var i = 0; i < placed.length; i++) {
+              var other = placed[i];
+              if (
+                Math.abs(pt.x - other.x) < hw + other.hw + gap &&
+                Math.abs(pt.y - other.y) < hh + other.hh + gap
+              ) {
+                hidden = true;
+                break;
               }
             }
-            placed.push(cur);
+            item.marker.setLatLng(item.home);
+            item.marker.setIcon(boroughLabelIcon(item.name, item.visits, zoom, hidden));
+            if (!hidden) placed.push({ x: pt.x, y: pt.y, hw: hw, hh: hh });
           });
-        placed.forEach(function (cur) {
-          cur.item.marker.setIcon(boroughBadgeIcon(cur.item.name, cur.item.visits, showName));
-          cur.item.marker.setLatLng(map.containerPointToLatLng([cur.x, cur.y]));
-        });
       }
 
       map.on("zoomend moveend", resolveBoroughLabelCollisions);
@@ -833,7 +807,7 @@
           outsideLayer.addTo(map);
           crumb.classList.remove("is-on");
           tagline.textContent =
-            "Borough visit totals. Map badges are counts at city zoom (hover or list for names). Click a borough for its pint pins.";
+            "Borough visit totals (same pale-lager → stout ramp as the pints). Labels show name + visits; crowded ones hide until you zoom in. Click a borough for its pins.";
           heading.textContent = "Boroughs";
           if (!skipFit && londonBounds.isValid()) {
             map.fitBounds(londonBounds, { padding: [28, 28], maxZoom: 12, animate: true });
@@ -942,21 +916,21 @@
         root.innerHTML = "";
         if (mode === "boroughs") {
           title.textContent = "Borough visits (unique days)";
-          var samples = [2, 5, 12, maxBoroughVisits];
+          var samples = [1, Math.max(3, Math.round(maxBoroughVisits / 4)), Math.max(5, Math.round(maxBoroughVisits / 2)), maxBoroughVisits];
           var seen = {};
           samples.forEach(function (n) {
             if (seen[n]) return;
             seen[n] = true;
             var row = document.createElement("div");
             row.className = "swatch";
-            var chip = document.createElement("span");
-            chip.className = "choropleth-chip";
-            chip.style.background = boroughFill(n);
-            row.appendChild(chip);
-            row.appendChild(document.createTextNode(n === 1 ? "1 visit" : n + " visits"));
+            var icon = document.createElement("span");
+            icon.className = "pint-pin";
+            icon.innerHTML = pintSvg(boroughFill(n), 14, 18);
+            row.appendChild(icon);
+            row.appendChild(document.createTextNode(n === 1 ? "1" : String(n)));
             root.appendChild(row);
           });
-          hint.textContent = "Count badges at city zoom; names on hover, in the list, or when you zoom in. Click a borough for its pint pins.";
+          hint.textContent = "Same pale-lager → stout ramp as the pint pins. Name labels hide on collision; zoom in to see more. Click a borough for its pins.";
         } else {
           title.textContent = "Visits (unique days)";
           var beerSamples = [1, 3, 5, Math.max(8, maxPubVisits)];

@@ -155,8 +155,11 @@ def test_html_layers_and_pint_svg():
     assert "BEER_STOPS" in html
     assert "assignBorough" in html
     assert "pub_map/london_boroughs.js" in html
-    assert "NAME_ZOOM" in html
-    assert "is-count" in html
+    assert "is-count" not in html
+    assert "NAME_ZOOM" not in html
+    assert "BOROUGH_STOPS" not in html
+    assert "displayBoroughName" in html
+    assert "is-hidden" in html
     assert "resolveBoroughLabelCollisions" in html
     assert "photo" not in html.lower() or "Photos later" in html
 

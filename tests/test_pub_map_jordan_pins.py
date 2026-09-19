@@ -156,9 +156,14 @@ def test_spaniards_pin_is_the_pub_amenity_not_the_bus_stop():
     assert abs(coords[0] - lng) < 1e-6
 
 
-def test_map_keeps_transparent_bubbles_and_esri_basemap():
+def test_map_uses_pint_pins_and_esri_basemap():
     html = MAP_HTML.read_text(encoding="utf-8")
-    assert "fillOpacity: 0.4" in html
+    assert "circleMarker" not in html
+    assert "pint-pin" in html
+    assert "pale lager" in html.lower() or "pale → stout" in html or "pale lager" in html
+    assert 'id="btn-boroughs"' in html
+    assert 'id="btn-pubs"' in html
+    assert "pub_map/london_boroughs.js" in html
     assert "World_Light_Gray_Base" in html
     assert "World_Light_Gray_Reference" in html
 
@@ -181,7 +186,7 @@ if __name__ == "__main__":
         test_added_crown_monument_beehive,
         test_mc_and_marketplace_are_day_deduped,
         test_spaniards_pin_is_the_pub_amenity_not_the_bus_stop,
-        test_map_keeps_transparent_bubbles_and_esri_basemap,
+        test_map_uses_pint_pins_and_esri_basemap,
         test_confirmed_pin_count,
     ):
         fn()

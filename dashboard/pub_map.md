@@ -21,20 +21,45 @@ from Metabase are converted to **tables**).
 
 This is **not Apple MapKit** (that needs an Apple token and still cannot live
 inside DAC). Leaflet + a light Esri gray canvas is the closest practical
-equivalent: pan/zoom, visit-sized bubbles, name + visit popups.
+equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 
 ## Interactive map (primary)
 
 `dashboard/pub_map.html` loads confirmed rows from `mart_pub_locations`
-(`pub_map/pubs.js`, regenerated from DuckDB). Circle radius still encodes
-`visit_count`, but with a tight square-root curve
-(`r = 4 + 9 * sqrt(visits / maxVisits)`, capped at 13px) so a London
-overview is not dominated by the busiest pins (~8 unique days). Default
-center is London. Default basemap is
+(`pub_map/pubs.js`, regenerated from DuckDB). Two layers:
+
+| Layer | Default | What you see |
+|---|---|---|
+| **Pubs** (Layer B) | Yes (`#pubs`) | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
+| **Boroughs** (Layer A) | `#boroughs` | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+
+Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Photo popups are still future work; hover/click shows name, unique-day visits, and the seed address/note when present.
+
+Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
+
+Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png).
+
+Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
 **no API key and no signup**. (CartoDB Positron is the usual keyless light
-style, but those tiles now watermark without a Carto key.) Overlapping
-bubbles use a lower fill opacity so stacked pins stay readable.
+style, but those tiles now watermark without a Carto key.)
+
+### Borough boundaries (source + attribution)
+
+Vendored at `dashboard/pub_map/london_boroughs.geojson` (and `london_boroughs.js`
+for `file://`).
+
+- **Dataset:** [ONS Local Authority Districts (May 2024) Boundaries UK BGC](https://geoportal.statistics.gov.uk/) — generalised 20 m, clipped to Mean High Water.
+- **Filter:** `LAD24CD LIKE 'E09%'` (32 London boroughs + City of London).
+- **Service used to download:** ArcGIS FeatureServer `Local_Authority_Districts_May_2024_Boundaries_UK_BGC` (`outSR=4326`).
+- **Processing:** coordinates rounded to 5 decimal places (~1 m) to keep the file small. Properties kept: `name`, `lad24cd`.
+- **Licence:** [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+- **Copyright:** Contains OS data © Crown copyright and database right 2024. Contains National Statistics data © Crown copyright and database right 2024.
+
+The map does **not** add a `borough` column to `mart_pub_locations`. Assignment is
+client-side: ray-casting point-in-polygon, then (only for points inside the
+Greater London bbox that miss a polygon — e.g. Tamesis Dock on the Thames)
+snap to the nearest borough within ~1 km. Oxford stays **Outside London**.
 
 ### Optional nicer tiles (not required)
 
@@ -53,7 +78,8 @@ python3 dashboard/scripts/export_pub_map.py
 
 Writes `dashboard/pub_map/pubs.geojson` and `dashboard/pub_map/pubs.js`.
 `pubs.js` is what the HTML loads so the map also works as a local `file://`
-page (no CORS fetch).
+page (no CORS fetch). Seed `note` (address / Jordan pin comment) is joined in
+the exporter from `assets/seeds/seed_pubs.csv` — not a mart column.
 
 `visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
 row per merchant × Transaction Date (summed when proximity-dedup collapses
@@ -95,6 +121,9 @@ open dashboard/pub_map.html   # macOS; or just open the file
 # 2) Tiny static server (needed for the DAC Markdown link on :8765)
 python3 -m http.server 8765 --directory dashboard
 # then http://localhost:8765/pub_map.html
+# Layers: http://localhost:8765/pub_map.html#pubs
+#         http://localhost:8765/pub_map.html#boroughs
+# Drill:  http://localhost:8765/pub_map.html#borough=Southwark
 
 # 3) DAC itself (widgets only — it will not serve pub_map.html)
 dac serve --dir dashboard --open

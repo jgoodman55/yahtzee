@@ -15,6 +15,7 @@
         "merchant_name_raw": "ANCHOR BANKSIDE",
         "source": "seed",
         "visit_count": 8,
+        "note": "Chase alias for Anchor Bar / Bankside — same pin as ANCHOR BAR",
         "merged_from": "ANCHOR BANKSIDE"
       }
     },
@@ -32,6 +33,7 @@
         "merchant_name_raw": "THE BLACK DOG VAUX",
         "source": "seed",
         "visit_count": 6,
+        "note": "112 Vauxhall Walk — Chase THE BLACK DOG VAUX",
         "merged_from": "THE BLACK DOG VAUX"
       }
     },
@@ -49,6 +51,7 @@
         "merchant_name_raw": "THE DERBY",
         "source": "seed",
         "visit_count": 6,
+        "note": "Jordan 2026-09-15: 336 Kennington Park Rd, London SE11 4PP — neighbor of Hanover Arms; kept as a separate pin",
         "merged_from": "THE DERBY"
       }
     },
@@ -66,6 +69,7 @@
         "merchant_name_raw": "GORDON'S WINE BAR",
         "source": "seed",
         "visit_count": 4,
+        "note": "47 Villiers Street",
         "merged_from": "GORDON'S WINE BAR"
       }
     },
@@ -83,6 +87,7 @@
         "merchant_name_raw": "BARROW BOY AND BANKER SE1",
         "source": "seed",
         "visit_count": 3,
+        "note": "6-8 Borough High Street SE1 9QQ",
         "merged_from": "BARROW BOY AND BANKER SE1"
       }
     },
@@ -100,6 +105,7 @@
         "merchant_name_raw": "MC AND SONS",
         "source": "seed",
         "visit_count": 3,
+        "note": "Jordan 2026-09-14: MC and Sons Southwark — 160 Union Street (separate pin from Vauxhall)",
         "merged_from": "MC AND SONS"
       }
     },
@@ -117,6 +123,7 @@
         "merchant_name_raw": "MC AND SONS VAUXHALL",
         "source": "seed",
         "visit_count": 3,
+        "note": "Jordan 2026-09-14: MC and Sons Vauxhall — 355 Kennington Lane (separate pin from Southwark)",
         "merged_from": "MC AND SONS VAUXHALL"
       }
     },
@@ -134,6 +141,7 @@
         "merchant_name_raw": "VAUXHALL MARKETPLACE",
         "source": "seed",
         "visit_count": 3,
+        "note": "Jordan addendum: 7 S Lambeth Pl, London SW8 1SP — one pin for the marketplace (statement strings like TST-Unit … Vauxhall MP / TST-MarketPlace - Vaux). Nominatim labels 7-11 South Lambeth Place (Sainsbury's Local); marketplace not separately mapped",
         "merged_from": "VAUXHALL MARKETPLACE"
       }
     },
@@ -151,6 +159,7 @@
         "merchant_name_raw": "DE BEAUVOIR ARMS",
         "source": "seed",
         "visit_count": 2,
+        "note": "113 Southgate Road",
         "merged_from": "DE BEAUVOIR ARMS"
       }
     },
@@ -168,6 +177,7 @@
         "merchant_name_raw": "CROWN TAVERN EC1",
         "source": "seed",
         "visit_count": 2,
+        "note": "Clerkenwell Green — OSM seed",
         "merged_from": "CROWN TAVERN EC1"
       }
     },
@@ -185,6 +195,7 @@
         "merchant_name_raw": "MONUMENT",
         "source": "seed",
         "visit_count": 2,
+        "note": "Jordan 2026-09-15: The Monument — 18 Fish St Hill, London EC3R 6DB (Chase MONUMENT; 2 unique days)",
         "merged_from": "MONUMENT"
       }
     },
@@ -202,6 +213,7 @@
         "merchant_name_raw": "THREE JOHNS",
         "source": "seed",
         "visit_count": 2,
+        "note": "73 White Lion Street, Islington",
         "merged_from": "THREE JOHNS"
       }
     },
@@ -219,6 +231,7 @@
         "merchant_name_raw": "ANGLESEA ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: 15 Selwood Terrace, South Kensington, London SW7 3QG (OSM labels the same pub 15 Neville Terrace)",
         "merged_from": "ANGLESEA ARMS"
       }
     },
@@ -236,6 +249,7 @@
         "merchant_name_raw": "BAG O'NAILS",
         "source": "seed",
         "visit_count": 1,
+        "note": "6 Buckingham Palace Road, Victoria",
         "merged_from": "BAG O'NAILS"
       }
     },
@@ -253,6 +267,7 @@
         "merchant_name_raw": "BEDALES ENTERPRIS",
         "source": "seed",
         "visit_count": 1,
+        "note": "5 Bedale Street, Borough Market — Chase BEDALES ENTERPRIS",
         "merged_from": "BEDALES ENTERPRIS"
       }
     },
@@ -270,6 +285,7 @@
         "merchant_name_raw": "CADOGAN ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "298 Old Church Street / World's End, Chelsea",
         "merged_from": "CADOGAN ARMS"
       }
     },
@@ -287,6 +303,7 @@
         "merchant_name_raw": "CHURCHILL ARMS KENSINGTON",
         "source": "seed",
         "visit_count": 1,
+        "note": "119 Kensington Church Street",
         "merged_from": "CHURCHILL ARMS KENSINGTON"
       }
     },
@@ -304,6 +321,7 @@
         "merchant_name_raw": "DIOGENES THE DOG L",
         "source": "seed",
         "visit_count": 1,
+        "note": "96 Rodney Road, Walworth — Chase DIOGENES THE DOG L",
         "merged_from": "DIOGENES THE DOG L"
       }
     },
@@ -321,6 +339,7 @@
         "merchant_name_raw": "DRAYTON ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "153 Old Brompton Road",
         "merged_from": "DRAYTON ARMS"
       }
     },
@@ -338,6 +357,7 @@
         "merchant_name_raw": "DUKE OF WELLINGTON",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: 63 Eaton Terrace, London SW1W 8TR",
         "merged_from": "DUKE OF WELLINGTON"
       }
     },
@@ -355,6 +375,7 @@
         "merchant_name_raw": "FENTIMAN ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "64 Fentiman Road, Oval",
         "merged_from": "FENTIMAN ARMS"
       }
     },
@@ -372,6 +393,7 @@
         "merchant_name_raw": "JOHN SNOW",
         "source": "seed",
         "visit_count": 1,
+        "note": "39 Broadwick Street, Soho",
         "merged_from": "JOHN SNOW"
       }
     },
@@ -389,6 +411,7 @@
         "merchant_name_raw": "GERMAN KRAFT MM",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: Mercato Metropolitano — 42 Newington Causeway, London SE1 6DR",
         "merged_from": "GERMAN KRAFT MM"
       }
     },
@@ -406,6 +429,7 @@
         "merchant_name_raw": "NANCY SPAINS MONUMENT",
         "source": "seed",
         "visit_count": 1,
+        "note": "143 Fenchurch Street, Monument",
         "merged_from": "NANCY SPAINS MONUMENT"
       }
     },
@@ -423,6 +447,7 @@
         "merchant_name_raw": "PEDRO'S WINE BAR",
         "source": "seed",
         "visit_count": 1,
+        "note": "Unit 128 Druid Street SE1 2HH (Nominatim labels the arch The Bottle Shop)",
         "merged_from": "PEDRO'S WINE BAR"
       }
     },
@@ -440,6 +465,7 @@
         "merchant_name_raw": "PIG AND BUTCHER",
         "source": "seed",
         "visit_count": 1,
+        "note": "80 Liverpool Road, Islington",
         "merged_from": "PIG AND BUTCHER"
       }
     },
@@ -457,6 +483,7 @@
         "merchant_name_raw": "SOUTHWARK BREW",
         "source": "seed",
         "visit_count": 1,
+        "note": "46 Druid Street, Bermondsey",
         "merged_from": "SOUTHWARK BREW"
       }
     },
@@ -474,6 +501,7 @@
         "merchant_name_raw": "STANHOPE ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "97 Gloucester Road",
         "merged_from": "STANHOPE ARMS"
       }
     },
@@ -491,6 +519,7 @@
         "merchant_name_raw": "SUPERCUTE TAPROOM",
         "source": "seed",
         "visit_count": 1,
+        "note": "Market Row, Brixton Village (street geocode; taproom not separately mapped). Brewhouse is 245a Coldharbour Lane",
         "merged_from": "SUPERCUTE TAPROOM"
       }
     },
@@ -508,6 +537,7 @@
         "merchant_name_raw": "TAMESIS DOCK",
         "source": "seed",
         "visit_count": 1,
+        "note": "Albert Embankment barge",
         "merged_from": "TAMESIS DOCK"
       }
     },
@@ -525,6 +555,7 @@
         "merchant_name_raw": "ANTELOPE SW1",
         "source": "seed",
         "visit_count": 1,
+        "note": "22-24 Eaton Terrace SW1",
         "merged_from": "ANTELOPE SW1"
       }
     },
@@ -542,6 +573,7 @@
         "merchant_name_raw": "BEAR INN OXFORD",
         "source": "seed",
         "visit_count": 1,
+        "note": "6 Alfred Street, Oxford — out of London OK",
         "merged_from": "BEAR INN OXFORD"
       }
     },
@@ -559,6 +591,7 @@
         "merchant_name_raw": "BEEHIVE",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: The Beehive — 51 Durham St, London SE11 5JA — exactly 1 visit (override; Chase has 2 unique days)",
         "merged_from": "BEEHIVE"
       }
     },
@@ -576,6 +609,7 @@
         "merchant_name_raw": "THE CANTON ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "177 South Lambeth Road",
         "merged_from": "THE CANTON ARMS"
       }
     },
@@ -593,6 +627,7 @@
         "merchant_name_raw": "THE CHALK FREE HOUSE L",
         "source": "seed",
         "visit_count": 1,
+        "note": "25-27 Tryon Street, Chelsea — Chase THE CHALK FREE HOUSE L",
         "merged_from": "THE CHALK FREE HOUSE L"
       }
     },
@@ -610,6 +645,7 @@
         "merchant_name_raw": "CROWN 052892",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: The Crown — 59a Cornmarket St, Oxford OX1 3HB (Chase CROWN 052892; 1 unique day / 4 same-day sales)",
         "merged_from": "CROWN 052892"
       }
     },
@@ -627,6 +663,7 @@
         "merchant_name_raw": "THE DEVONSHIRE",
         "source": "seed",
         "visit_count": 1,
+        "note": "17 Denman Street, Soho",
         "merged_from": "THE DEVONSHIRE"
       }
     },
@@ -644,6 +681,7 @@
         "merchant_name_raw": "THE DUCHY",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: The Duchy Arms — 63 Sancroft St, London SE11 5UG",
         "merged_from": "THE DUCHY"
       }
     },
@@ -661,6 +699,7 @@
         "merchant_name_raw": "FLORENCE BRIXTON",
         "source": "seed",
         "visit_count": 1,
+        "note": "131-133 Dulwich Road, Herne Hill / Brixton",
         "merged_from": "FLORENCE BRIXTON"
       }
     },
@@ -678,6 +717,7 @@
         "merchant_name_raw": "THE HANOVER ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: 326 Kennington Park Rd, London SE11 4PP — neighbor of The Derby; kept as a separate pin",
         "merged_from": "THE HANOVER ARMS"
       }
     },
@@ -695,6 +735,7 @@
         "merchant_name_raw": "ROUND HOUSE COVENT GARDEN",
         "source": "seed",
         "visit_count": 1,
+        "note": "1 Garrick Street, Covent Garden",
         "merged_from": "ROUND HOUSE COVENT GARDEN"
       }
     },
@@ -712,6 +753,7 @@
         "merchant_name_raw": "THE SCOTTISH STORES",
         "source": "seed",
         "visit_count": 1,
+        "note": "2-4 Caledonian Road, King's Cross",
         "merged_from": "THE SCOTTISH STORES"
       }
     },
@@ -729,6 +771,7 @@
         "merchant_name_raw": "THE SHIP",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)",
         "merged_from": "THE SHIP"
       }
     },
@@ -746,6 +789,7 @@
         "merchant_name_raw": "SPANIARDS",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (OSM amenity=pub; not the inn-named bus stop ~50m NE)",
         "merged_from": "SPANIARDS"
       }
     },
@@ -763,6 +807,7 @@
         "merchant_name_raw": "THE THIRSTY FARRIER S",
         "source": "seed",
         "visit_count": 1,
+        "note": "Seasonal Southbank pop-up — Queen's Walk SE1 7PB (not a permanent pub building)",
         "merged_from": "THE THIRSTY FARRIER S"
       }
     },
@@ -780,6 +825,7 @@
         "merchant_name_raw": "TOWER BRIDGE ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "206-208 Tower Bridge Road SE1 2UP",
         "merged_from": "TOWER BRIDGE ARMS"
       }
     },
@@ -797,6 +843,7 @@
         "merchant_name_raw": "WHITE HORSE",
         "source": "seed",
         "visit_count": 1,
+        "note": "Jordan 2026-09-15: 20-222 Peckham Rye, London SE15 4JR — Nominatim pub match is The White Horse, 20 Peckham Rye SE15 4JR",
         "merged_from": "WHITE HORSE"
       }
     },
@@ -814,6 +861,7 @@
         "merchant_name_raw": "ZETLAND ARMS",
         "source": "seed",
         "visit_count": 1,
+        "note": "2 Bute Street, South Kensington",
         "merged_from": "ZETLAND ARMS"
       }
     }

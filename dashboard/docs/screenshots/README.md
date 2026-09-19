@@ -19,6 +19,12 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 - `pubs_tab_leaflet_link.png` — Pubs tab (Leaflet link + venue table)
 - `leaflet_pub_map_anchor_bar.png` — standalone Leaflet map, Anchor Bar popup (3 visits)
 
+Pub map Layers A + B (pint pins + borough drill-down):
+
+- `pub_map_layer_a_boroughs.png` — Boroughs choropleth with visit-total badges
+- `pub_map_layer_b_pint_pins.png` — same-size pint glasses coloured pale lager → stout
+- `pub_map_southwark_drilldown.png` — after clicking Southwark, filtered pint pins
+
 Earlier dark-redesign captures:
 
 - `pubs_tab.png` — Pubs tab

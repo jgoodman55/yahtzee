@@ -150,10 +150,11 @@ Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 `mart_strategy_rescue`, `mart_yz_matchup`. Serve with
 `dac serve --dir dashboard --template yahtzee-dark`.
 
-Standalone Leaflet map (`dashboard/pub_map.html`) — visit-sized bubbles from
-`mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit; the Pubs tab
-links out to this page. Default tiles are free OSM (no API key). See
-`dashboard/pub_map.md`.
+Standalone Leaflet map (`dashboard/pub_map.html`) — same-size pint pins
+coloured by unique-day visits, plus a London borough choropleth with
+drill-down, from `mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit;
+the Pubs tab links out to this page. Default tiles are Esri World Light Gray
+(no API key). See `dashboard/pub_map.md`.
 
 ## 5. Animation
 

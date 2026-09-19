@@ -51,8 +51,8 @@ OFFLINE_TEST=1 bruin run --workers 1        # builds marts into yahtzee.duckdb
 ```shell
 dac validate --dir dashboard
 dac validate --dir dashboard --with-database
-dac check --dir dashboard
-dac serve --dir dashboard --template yahtzee-dark --open
+dac check --dir dashboard --config /c/Users/jorda/yahtzee/yahtzee/.bruin.yml
+dac serve --dir dashboard --template yahtzee-dark --open --config /c/Users/jorda/yahtzee/yahtzee/.bruin.yml
 ```
 
 `--template yahtzee-dark` loads `themes/yahtzee-dark.yml` (extends `bruin-dark`,

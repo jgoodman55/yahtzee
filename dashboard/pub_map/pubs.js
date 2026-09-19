@@ -18,6 +18,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 8,
         "note": "Chase alias for Anchor Bar / Bankside — same pin as ANCHOR BAR",
         "merged_from": "ANCHOR BANKSIDE",
+        "photo_url": "pub_map/photos/anchor_bar.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ian S / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Anchor+Bar+51.5073%2C-0.0931"
       }
     },
@@ -37,6 +40,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 6,
         "note": "112 Vauxhall Walk — Chase THE BLACK DOG VAUX",
         "merged_from": "THE BLACK DOG VAUX",
+        "photo_url": "pub_map/photos/black_dog.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Chris Whippet / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Black+Dog+51.4886893%2C-0.1209019"
       }
     },
@@ -56,6 +62,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 6,
         "note": "Jordan 2026-09-15: 336 Kennington Park Rd, London SE11 4PP — neighbor of Hanover Arms; kept as a separate pin",
         "merged_from": "THE DERBY",
+        "photo_url": "pub_map/photos/the_derby.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Derby+51.4811678%2C-0.1132925"
       }
     },
@@ -75,6 +84,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 4,
         "note": "47 Villiers Street",
         "merged_from": "GORDON'S WINE BAR",
+        "photo_url": "pub_map/photos/gordons_wine_bar.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Gordon%27s+Wine+Bar+51.5079244%2C-0.1233137"
       }
     },
@@ -94,6 +106,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 3,
         "note": "6-8 Borough High Street SE1 9QQ",
         "merged_from": "BARROW BOY AND BANKER SE1",
+        "photo_url": "pub_map/photos/barrowboy_and_banker.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Chris Whippet / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Barrowboy+and+Banker+51.5062565%2C-0.0886568"
       }
     },
@@ -113,6 +128,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 3,
         "note": "Jordan 2026-09-14: MC and Sons Southwark — 160 Union Street (separate pin from Vauxhall)",
         "merged_from": "MC AND SONS",
+        "photo_url": "pub_map/photos/mc_and_sons_southwark.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "N Chadwick / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=MC+and+Sons+Southwark+51.5038242%2C-0.0998305"
       }
     },
@@ -132,6 +150,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 3,
         "note": "Jordan 2026-09-14: MC and Sons Vauxhall — 355 Kennington Lane (separate pin from Southwark)",
         "merged_from": "MC AND SONS VAUXHALL",
+        "photo_url": "pub_map/photos/mc_and_sons_vauxhall.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=MC+and+Sons+Vauxhall+51.4862183%2C-0.1195286"
       }
     },
@@ -170,6 +191,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 2,
         "note": "113 Southgate Road",
         "merged_from": "DE BEAUVOIR ARMS",
+        "photo_url": "pub_map/photos/de_beauvoir_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Chris Whippet / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=De+Beauvoir+Arms+51.5416461%2C-0.085144"
       }
     },
@@ -189,6 +213,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 2,
         "note": "Clerkenwell Green — OSM seed",
         "merged_from": "CROWN TAVERN EC1",
+        "photo_url": "pub_map/photos/crown_tavern.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "No Swan So Fine / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Crown+Tavern+51.523179%2C-0.105238"
       }
     },
@@ -208,6 +235,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 2,
         "note": "Jordan 2026-09-15: The Monument — 18 Fish St Hill, London EC3R 6DB (Chase MONUMENT; 2 unique days)",
         "merged_from": "MONUMENT",
+        "photo_url": "pub_map/photos/the_monument.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Monument+51.5100863%2C-0.0862828"
       }
     },
@@ -227,6 +257,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 2,
         "note": "73 White Lion Street, Islington",
         "merged_from": "THREE JOHNS",
+        "photo_url": "pub_map/photos/three_johns.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Three+Johns+51.532915%2C-0.1090829"
       }
     },
@@ -246,6 +279,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: 15 Selwood Terrace, South Kensington, London SW7 3QG (OSM labels the same pub 15 Neville Terrace)",
         "merged_from": "ANGLESEA ARMS",
+        "photo_url": "pub_map/photos/anglesea_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Anglesea+Arms+51.4901293%2C-0.1769294"
       }
     },
@@ -265,6 +301,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "6 Buckingham Palace Road, Victoria",
         "merged_from": "BAG O'NAILS",
+        "photo_url": "pub_map/photos/bag_o_nails.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "PAUL FARMER / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Bag+O%27Nails+51.4980235%2C-0.1441267"
       }
     },
@@ -284,6 +323,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "5 Bedale Street, Borough Market — Chase BEDALES ENTERPRIS",
         "merged_from": "BEDALES ENTERPRIS",
+        "photo_url": "pub_map/photos/bedales.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Bedales+51.5054026%2C-0.0902409"
       }
     },
@@ -363,6 +405,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "153 Old Brompton Road",
         "merged_from": "DRAYTON ARMS",
+        "photo_url": "pub_map/photos/drayton_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Matt Brown / Wikimedia Commons (CC BY 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Drayton+Arms+51.490632%2C-0.1833474"
       }
     },
@@ -382,6 +427,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: 63 Eaton Terrace, London SW1W 8TR",
         "merged_from": "DUKE OF WELLINGTON",
+        "photo_url": "pub_map/photos/duke_of_wellington.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Duke+of+Wellington+51.4930969%2C-0.1533448"
       }
     },
@@ -401,6 +449,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "64 Fentiman Road, Oval",
         "merged_from": "FENTIMAN ARMS",
+        "photo_url": "pub_map/photos/fentiman_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Matt Brown / Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Fentiman+Arms+51.4809874%2C-0.1182178"
       }
     },
@@ -420,6 +471,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "39 Broadwick Street, Soho",
         "merged_from": "JOHN SNOW",
+        "photo_url": "pub_map/photos/john_snow.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "No Swan So Fine / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=John+Snow+51.5132722%2C-0.1365995"
       }
     },
@@ -439,6 +493,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: Mercato Metropolitano — 42 Newington Causeway, London SE1 6DR",
         "merged_from": "GERMAN KRAFT MM",
+        "photo_url": "pub_map/photos/mercato_metropolitano.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Jwslubbock / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Mercato+Metropolitano+51.4984274%2C-0.098174"
       }
     },
@@ -458,6 +515,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "143 Fenchurch Street, Monument",
         "merged_from": "NANCY SPAINS MONUMENT",
+        "photo_url": "pub_map/photos/nancy_spains.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Nancy+Spains+51.5116889%2C-0.0826189"
       }
     },
@@ -477,6 +537,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Unit 128 Druid Street SE1 2HH (Nominatim labels the arch The Bottle Shop)",
         "merged_from": "PEDRO'S WINE BAR",
+        "photo_url": "pub_map/photos/pedros_wine_bar.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Pedro%27s+Wine+Bar+51.4984945%2C-0.073223"
       }
     },
@@ -496,6 +559,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "80 Liverpool Road, Islington",
         "merged_from": "PIG AND BUTCHER",
+        "photo_url": "pub_map/photos/pig_and_butcher.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Pig+and+Butcher+51.5372759%2C-0.1067419"
       }
     },
@@ -515,6 +581,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "46 Druid Street, Bermondsey",
         "merged_from": "SOUTHWARK BREW",
+        "photo_url": "pub_map/photos/southwark_brewing.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Southwark+Brewing+51.5005941%2C-0.0771444"
       }
     },
@@ -534,6 +603,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "97 Gloucester Road",
         "merged_from": "STANHOPE ARMS",
+        "photo_url": "pub_map/photos/stanhope_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Stanhope+Arms+51.4940964%2C-0.1821606"
       }
     },
@@ -572,6 +644,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Albert Embankment barge",
         "merged_from": "TAMESIS DOCK",
+        "photo_url": "pub_map/photos/tamesis_dock.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Acabashi / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Tamesis+Dock+51.4919181%2C-0.1221916"
       }
     },
@@ -591,6 +666,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "22-24 Eaton Terrace SW1",
         "merged_from": "ANTELOPE SW1",
+        "photo_url": "pub_map/photos/antelope.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Chris Gunns / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Antelope+51.4939827%2C-0.1555113"
       }
     },
@@ -610,6 +688,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "6 Alfred Street, Oxford — out of London OK",
         "merged_from": "BEAR INN OXFORD",
+        "photo_url": "pub_map/photos/bear_inn.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ian S / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Bear+Inn+51.7515552%2C-1.2557041"
       }
     },
@@ -629,6 +710,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: The Beehive — 51 Durham St, London SE11 5JA — exactly 1 visit (override; Chase has 2 unique days)",
         "merged_from": "BEEHIVE",
+        "photo_url": "pub_map/photos/beehive.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Beehive+51.4848284%2C-0.1183509"
       }
     },
@@ -648,6 +732,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "177 South Lambeth Road",
         "merged_from": "THE CANTON ARMS",
+        "photo_url": "pub_map/photos/canton_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Reading Tom / Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Canton+Arms+51.4771539%2C-0.122896"
       }
     },
@@ -686,6 +773,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: The Crown — 59a Cornmarket St, Oxford OX1 3HB (Chase CROWN 052892; 1 unique day / 4 same-day sales)",
         "merged_from": "CROWN 052892",
+        "photo_url": "pub_map/photos/crown_oxford.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Crown+51.7522047%2C-1.2583282"
       }
     },
@@ -705,6 +795,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "17 Denman Street, Soho",
         "merged_from": "THE DEVONSHIRE",
+        "photo_url": "pub_map/photos/devonshire.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ham II / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Devonshire+51.5106407%2C-0.1353307"
       }
     },
@@ -724,6 +817,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: The Duchy Arms — 63 Sancroft St, London SE11 5UG",
         "merged_from": "THE DUCHY",
+        "photo_url": "pub_map/photos/duchy_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Reading Tom / Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Duchy+Arms+51.4891639%2C-0.1144482"
       }
     },
@@ -743,6 +839,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "131-133 Dulwich Road, Herne Hill / Brixton",
         "merged_from": "FLORENCE BRIXTON",
+        "photo_url": "pub_map/photos/the_florence.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Reading Tom / Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Florence+51.4528429%2C-0.1030312"
       }
     },
@@ -762,6 +861,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: 326 Kennington Park Rd, London SE11 4PP — neighbor of The Derby; kept as a separate pin",
         "merged_from": "THE HANOVER ARMS",
+        "photo_url": "pub_map/photos/hanover_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Hanover+Arms+51.4813791%2C-0.1130873"
       }
     },
@@ -781,6 +883,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "1 Garrick Street, Covent Garden",
         "merged_from": "ROUND HOUSE COVENT GARDEN",
+        "photo_url": "pub_map/photos/round_house.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Round+House+51.5112657%2C-0.1255387"
       }
     },
@@ -800,6 +905,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "2-4 Caledonian Road, King's Cross",
         "merged_from": "THE SCOTTISH STORES",
+        "photo_url": "pub_map/photos/scottish_stores.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Scottish+Stores+51.5310789%2C-0.1208228"
       }
     },
@@ -819,6 +927,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)",
         "merged_from": "THE SHIP",
+        "photo_url": "pub_map/photos/the_ship.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Christine Matthews / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Ship+51.5172518%2C-0.1191791"
       }
     },
@@ -838,6 +949,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (OSM amenity=pub; not the inn-named bus stop ~50m NE)",
         "merged_from": "SPANIARDS",
+        "photo_url": "pub_map/photos/spaniards_inn.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "John Slater / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Spaniards+Inn+51.5698601%2C-0.1740839"
       }
     },
@@ -876,6 +990,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "206-208 Tower Bridge Road SE1 2UP",
         "merged_from": "TOWER BRIDGE ARMS",
+        "photo_url": "pub_map/photos/tower_bridge_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Tower+Bridge+Arms+51.5028873%2C-0.0768883"
       }
     },
@@ -895,6 +1012,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "Jordan 2026-09-15: 20-222 Peckham Rye, London SE15 4JR — Nominatim pub match is The White Horse, 20 Peckham Rye SE15 4JR",
         "merged_from": "WHITE HORSE",
+        "photo_url": "pub_map/photos/white_horse_peckham.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=White+Horse+Peckham+51.4659902%2C-0.067218"
       }
     },
@@ -914,6 +1034,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "2 Bute Street, South Kensington",
         "merged_from": "ZETLAND ARMS",
+        "photo_url": "pub_map/photos/zetland_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Zetland+Arms+51.493427%2C-0.175945"
       }
     }
@@ -925,6 +1048,6 @@ window.PUB_MAP_DATA = {
       "lat": 51.5074
     },
     "confirmed_pub_count": 48,
-    "photo_count": 1
+    "photo_count": 42
   }
 };

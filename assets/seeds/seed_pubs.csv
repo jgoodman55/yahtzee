@@ -1,50 +1,50 @@
 merchant_name_raw,pub_name,lat,lng,note,photo_url,photo_attribution
-ANCHOR BAR,Anchor Bar,51.5073,-0.0931,Flint Eye / Bankside,,
-CROWN TAVERN EC1,The Crown Tavern,51.523179,-0.105238,Clerkenwell Green — OSM seed,,
-ANCHOR BANKSIDE,Anchor Bar,51.5073,-0.0931,Chase alias for Anchor Bar / Bankside — same pin as ANCHOR BAR,,
-MC AND SONS VAUXHALL,MC and Sons Vauxhall,51.4862183,-0.1195286,Jordan 2026-09-14: MC and Sons Vauxhall — 355 Kennington Lane (separate pin from Southwark),,
-MC AND SONS,MC and Sons Southwark,51.5038242,-0.0998305,Jordan 2026-09-14: MC and Sons Southwark — 160 Union Street (separate pin from Vauxhall),,
-THE BLACK DOG VAUX,The Black Dog,51.4886893,-0.1209019,112 Vauxhall Walk — Chase THE BLACK DOG VAUX,,
-GORDON'S WINE BAR,Gordon's Wine Bar,51.5079244,-0.1233137,47 Villiers Street,,
-DE BEAUVOIR ARMS,De Beauvoir Arms,51.5416461,-0.085144,113 Southgate Road,,
-THREE JOHNS,The Three Johns,51.532915,-0.1090829,"73 White Lion Street, Islington",,
-WHITE HORSE,White Horse Peckham,51.4659902,-0.067218,"Jordan 2026-09-15: 20-222 Peckham Rye, London SE15 4JR — Nominatim pub match is The White Horse, 20 Peckham Rye SE15 4JR",,
-THE CANTON ARMS,The Canton Arms,51.4771539,-0.122896,177 South Lambeth Road,,
+ANCHOR BAR,Anchor Bar,51.5073,-0.0931,Flint Eye / Bankside,pub_map/photos/anchor_bar.jpg,Ian S / geograph.org.uk (CC BY-SA 2.0)
+CROWN TAVERN EC1,The Crown Tavern,51.523179,-0.105238,Clerkenwell Green — OSM seed,pub_map/photos/crown_tavern.jpg,No Swan So Fine / Wikimedia Commons (CC BY-SA 4.0)
+ANCHOR BANKSIDE,Anchor Bar,51.5073,-0.0931,Chase alias for Anchor Bar / Bankside — same pin as ANCHOR BAR,pub_map/photos/anchor_bar.jpg,Ian S / geograph.org.uk (CC BY-SA 2.0)
+MC AND SONS VAUXHALL,MC and Sons Vauxhall,51.4862183,-0.1195286,Jordan 2026-09-14: MC and Sons Vauxhall — 355 Kennington Lane (separate pin from Southwark),pub_map/photos/mc_and_sons_vauxhall.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+MC AND SONS,MC and Sons Southwark,51.5038242,-0.0998305,Jordan 2026-09-14: MC and Sons Southwark — 160 Union Street (separate pin from Vauxhall),pub_map/photos/mc_and_sons_southwark.jpg,N Chadwick / geograph.org.uk (CC BY-SA 2.0)
+THE BLACK DOG VAUX,The Black Dog,51.4886893,-0.1209019,112 Vauxhall Walk — Chase THE BLACK DOG VAUX,pub_map/photos/black_dog.jpg,Chris Whippet / geograph.org.uk (CC BY-SA 2.0)
+GORDON'S WINE BAR,Gordon's Wine Bar,51.5079244,-0.1233137,47 Villiers Street,pub_map/photos/gordons_wine_bar.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+DE BEAUVOIR ARMS,De Beauvoir Arms,51.5416461,-0.085144,113 Southgate Road,pub_map/photos/de_beauvoir_arms.jpg,Chris Whippet / geograph.org.uk (CC BY-SA 2.0)
+THREE JOHNS,The Three Johns,51.532915,-0.1090829,"73 White Lion Street, Islington",pub_map/photos/three_johns.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+WHITE HORSE,White Horse Peckham,51.4659902,-0.067218,"Jordan 2026-09-15: 20-222 Peckham Rye, London SE15 4JR — Nominatim pub match is The White Horse, 20 Peckham Rye SE15 4JR",pub_map/photos/white_horse_peckham.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
+THE CANTON ARMS,The Canton Arms,51.4771539,-0.122896,177 South Lambeth Road,pub_map/photos/canton_arms.jpg,Reading Tom / Wikimedia Commons (CC BY 2.0)
 CADOGAN ARMS,Cadogan Arms,51.4859699,-0.1729707,"298 Old Church Street / World's End, Chelsea",,
-THE SHIP,The Ship,51.5172518,-0.1191791,"Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)",,
+THE SHIP,The Ship,51.5172518,-0.1191791,"Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)",pub_map/photos/the_ship.jpg,Christine Matthews / geograph.org.uk (CC BY-SA 2.0)
 DIOGENES THE DOG L,Diogenes the Dog,51.491504,-0.091059,"96 Rodney Road, Walworth — Chase DIOGENES THE DOG L",,
-THE DERBY,The Derby,51.4811678,-0.1132925,"Jordan 2026-09-15: 336 Kennington Park Rd, London SE11 4PP — neighbor of Hanover Arms; kept as a separate pin",,
-BARROW BOY AND BANKER SE1,Barrowboy and Banker,51.5062565,-0.0886568,6-8 Borough High Street SE1 9QQ,,
-THE DUCHY,The Duchy Arms,51.4891639,-0.1144482,"Jordan 2026-09-15: The Duchy Arms — 63 Sancroft St, London SE11 5UG",,
-DRAYTON ARMS,Drayton Arms,51.490632,-0.1833474,153 Old Brompton Road,,
-CHURCHILL ARMS KENSINGTON,Churchill Arms,51.5068785,-0.1948694,119 Kensington Church Street,pub_map/photos/churchill_arms.jpg,"CVB / Wikimedia Commons (CC BY-SA 4.0)"
-ANTELOPE SW1,The Antelope,51.4939827,-0.1555113,22-24 Eaton Terrace SW1,,
-SPANIARDS,The Spaniards Inn,51.5698601,-0.1740839,"Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (OSM amenity=pub; not the inn-named bus stop ~50m NE)",,
-BEDALES ENTERPRIS,Bedales,51.5054026,-0.0902409,"5 Bedale Street, Borough Market — Chase BEDALES ENTERPRIS",,
-DUKE OF WELLINGTON,Duke of Wellington,51.4930969,-0.1533448,"Jordan 2026-09-15: 63 Eaton Terrace, London SW1W 8TR",,
-PEDRO'S WINE BAR,Pedro's Wine Bar,51.4984945,-0.073223,Unit 128 Druid Street SE1 2HH (Nominatim labels the arch The Bottle Shop),,
-TAMESIS DOCK,Tamesis Dock,51.4919181,-0.1221916,Albert Embankment barge,,
-ZETLAND ARMS,Zetland Arms,51.493427,-0.175945,"2 Bute Street, South Kensington",,
+THE DERBY,The Derby,51.4811678,-0.1132925,"Jordan 2026-09-15: 336 Kennington Park Rd, London SE11 4PP — neighbor of Hanover Arms; kept as a separate pin",pub_map/photos/the_derby.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 2.0)
+BARROW BOY AND BANKER SE1,Barrowboy and Banker,51.5062565,-0.0886568,6-8 Borough High Street SE1 9QQ,pub_map/photos/barrowboy_and_banker.jpg,Chris Whippet / geograph.org.uk (CC BY-SA 2.0)
+THE DUCHY,The Duchy Arms,51.4891639,-0.1144482,"Jordan 2026-09-15: The Duchy Arms — 63 Sancroft St, London SE11 5UG",pub_map/photos/duchy_arms.jpg,Reading Tom / Wikimedia Commons (CC BY 2.0)
+DRAYTON ARMS,Drayton Arms,51.490632,-0.1833474,153 Old Brompton Road,pub_map/photos/drayton_arms.jpg,Matt Brown / Wikimedia Commons (CC BY 4.0)
+CHURCHILL ARMS KENSINGTON,Churchill Arms,51.5068785,-0.1948694,119 Kensington Church Street,pub_map/photos/churchill_arms.jpg,CVB / Wikimedia Commons (CC BY-SA 4.0)
+ANTELOPE SW1,The Antelope,51.4939827,-0.1555113,22-24 Eaton Terrace SW1,pub_map/photos/antelope.jpg,Chris Gunns / geograph.org.uk (CC BY-SA 2.0)
+SPANIARDS,The Spaniards Inn,51.5698601,-0.1740839,"Jordan 2026-09-15: The Spaniards Inn — Spaniards Rd, London NW3 7JJ (OSM amenity=pub; not the inn-named bus stop ~50m NE)",pub_map/photos/spaniards_inn.jpg,John Slater / geograph.org.uk (CC BY-SA 2.0)
+BEDALES ENTERPRIS,Bedales,51.5054026,-0.0902409,"5 Bedale Street, Borough Market — Chase BEDALES ENTERPRIS",pub_map/photos/bedales.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 2.0)
+DUKE OF WELLINGTON,Duke of Wellington,51.4930969,-0.1533448,"Jordan 2026-09-15: 63 Eaton Terrace, London SW1W 8TR",pub_map/photos/duke_of_wellington.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
+PEDRO'S WINE BAR,Pedro's Wine Bar,51.4984945,-0.073223,Unit 128 Druid Street SE1 2HH (Nominatim labels the arch The Bottle Shop),pub_map/photos/pedros_wine_bar.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+TAMESIS DOCK,Tamesis Dock,51.4919181,-0.1221916,Albert Embankment barge,pub_map/photos/tamesis_dock.jpg,Acabashi / Wikimedia Commons (CC BY-SA 4.0)
+ZETLAND ARMS,Zetland Arms,51.493427,-0.175945,"2 Bute Street, South Kensington",pub_map/photos/zetland_arms.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
 THE CHALK FREE HOUSE L,The Chalk Freehouse,51.49072,-0.163173,"25-27 Tryon Street, Chelsea — Chase THE CHALK FREE HOUSE L",,
 SUPERCUTE TAPROOM,Supercute Taproom,51.4619831,-0.1134801,"Market Row, Brixton Village (street geocode; taproom not separately mapped). Brewhouse is 245a Coldharbour Lane",,
-THE DEVONSHIRE,The Devonshire,51.5106407,-0.1353307,"17 Denman Street, Soho",,
-BEAR INN OXFORD,The Bear Inn,51.7515552,-1.2557041,"6 Alfred Street, Oxford — out of London OK",,
-CROWN 052892,The Crown,51.7522047,-1.2583282,"Jordan 2026-09-15: The Crown — 59a Cornmarket St, Oxford OX1 3HB (Chase CROWN 052892; 1 unique day / 4 same-day sales)",,
-FENTIMAN ARMS,Fentiman Arms,51.4809874,-0.1182178,"64 Fentiman Road, Oval",,
+THE DEVONSHIRE,The Devonshire,51.5106407,-0.1353307,"17 Denman Street, Soho",pub_map/photos/devonshire.jpg,Ham II / Wikimedia Commons (CC BY-SA 4.0)
+BEAR INN OXFORD,The Bear Inn,51.7515552,-1.2557041,"6 Alfred Street, Oxford — out of London OK",pub_map/photos/bear_inn.jpg,Ian S / geograph.org.uk (CC BY-SA 2.0)
+CROWN 052892,The Crown,51.7522047,-1.2583282,"Jordan 2026-09-15: The Crown — 59a Cornmarket St, Oxford OX1 3HB (Chase CROWN 052892; 1 unique day / 4 same-day sales)",pub_map/photos/crown_oxford.jpg,geograph.org.uk (CC BY-SA 2.0)
+FENTIMAN ARMS,Fentiman Arms,51.4809874,-0.1182178,"64 Fentiman Road, Oval",pub_map/photos/fentiman_arms.jpg,Matt Brown / Wikimedia Commons (CC BY 2.0)
 THE THIRSTY FARRIER S,The Thirsty Farrier,51.5021332,-0.1196679,Seasonal Southbank pop-up — Queen's Walk SE1 7PB (not a permanent pub building),,
-ROUND HOUSE COVENT GARDEN,The Round House,51.5112657,-0.1255387,"1 Garrick Street, Covent Garden",,
-ANGLESEA ARMS,Anglesea Arms,51.4901293,-0.1769294,"Jordan 2026-09-15: 15 Selwood Terrace, South Kensington, London SW7 3QG (OSM labels the same pub 15 Neville Terrace)",,
-THE HANOVER ARMS,The Hanover Arms,51.4813791,-0.1130873,"Jordan 2026-09-15: 326 Kennington Park Rd, London SE11 4PP — neighbor of The Derby; kept as a separate pin",,
-TOWER BRIDGE ARMS,Tower Bridge Arms,51.5028873,-0.0768883,206-208 Tower Bridge Road SE1 2UP,,
-STANHOPE ARMS,Stanhope Arms,51.4940964,-0.1821606,97 Gloucester Road,,
-JOHN SNOW,John Snow,51.5132722,-0.1365995,"39 Broadwick Street, Soho",,
-THE SCOTTISH STORES,The Scottish Stores,51.5310789,-0.1208228,"2-4 Caledonian Road, King's Cross",,
-NANCY SPAINS MONUMENT,Nancy Spains,51.5116889,-0.0826189,"143 Fenchurch Street, Monument",,
-MONUMENT,The Monument,51.5100863,-0.0862828,"Jordan 2026-09-15: The Monument — 18 Fish St Hill, London EC3R 6DB (Chase MONUMENT; 2 unique days)",,
-BAG O'NAILS,Bag O'Nails,51.4980235,-0.1441267,"6 Buckingham Palace Road, Victoria",,
-FLORENCE BRIXTON,The Florence,51.4528429,-0.1030312,"131-133 Dulwich Road, Herne Hill / Brixton",,
-GERMAN KRAFT MM,Mercato Metropolitano,51.4984274,-0.098174,"Jordan 2026-09-15: Mercato Metropolitano — 42 Newington Causeway, London SE1 6DR",,
-SOUTHWARK BREW,Southwark Brewing,51.5005941,-0.0771444,"46 Druid Street, Bermondsey",,
-PIG AND BUTCHER,Pig and Butcher,51.5372759,-0.1067419,"80 Liverpool Road, Islington",,
-BEEHIVE,The Beehive,51.4848284,-0.1183509,"Jordan 2026-09-15: The Beehive — 51 Durham St, London SE11 5JA — exactly 1 visit (override; Chase has 2 unique days)",,
+ROUND HOUSE COVENT GARDEN,The Round House,51.5112657,-0.1255387,"1 Garrick Street, Covent Garden",pub_map/photos/round_house.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 2.0)
+ANGLESEA ARMS,Anglesea Arms,51.4901293,-0.1769294,"Jordan 2026-09-15: 15 Selwood Terrace, South Kensington, London SW7 3QG (OSM labels the same pub 15 Neville Terrace)",pub_map/photos/anglesea_arms.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
+THE HANOVER ARMS,The Hanover Arms,51.4813791,-0.1130873,"Jordan 2026-09-15: 326 Kennington Park Rd, London SE11 4PP — neighbor of The Derby; kept as a separate pin",pub_map/photos/hanover_arms.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 2.0)
+TOWER BRIDGE ARMS,Tower Bridge Arms,51.5028873,-0.0768883,206-208 Tower Bridge Road SE1 2UP,pub_map/photos/tower_bridge_arms.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
+STANHOPE ARMS,Stanhope Arms,51.4940964,-0.1821606,97 Gloucester Road,pub_map/photos/stanhope_arms.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
+JOHN SNOW,John Snow,51.5132722,-0.1365995,"39 Broadwick Street, Soho",pub_map/photos/john_snow.jpg,No Swan So Fine / Wikimedia Commons (CC BY-SA 4.0)
+THE SCOTTISH STORES,The Scottish Stores,51.5310789,-0.1208228,"2-4 Caledonian Road, King's Cross",pub_map/photos/scottish_stores.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+NANCY SPAINS MONUMENT,Nancy Spains,51.5116889,-0.0826189,"143 Fenchurch Street, Monument",pub_map/photos/nancy_spains.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+MONUMENT,The Monument,51.5100863,-0.0862828,"Jordan 2026-09-15: The Monument — 18 Fish St Hill, London EC3R 6DB (Chase MONUMENT; 2 unique days)",pub_map/photos/the_monument.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+BAG O'NAILS,Bag O'Nails,51.4980235,-0.1441267,"6 Buckingham Palace Road, Victoria",pub_map/photos/bag_o_nails.jpg,PAUL FARMER / geograph.org.uk (CC BY-SA 2.0)
+FLORENCE BRIXTON,The Florence,51.4528429,-0.1030312,"131-133 Dulwich Road, Herne Hill / Brixton",pub_map/photos/the_florence.jpg,Reading Tom / Wikimedia Commons (CC BY 2.0)
+GERMAN KRAFT MM,Mercato Metropolitano,51.4984274,-0.098174,"Jordan 2026-09-15: Mercato Metropolitano — 42 Newington Causeway, London SE1 6DR",pub_map/photos/mercato_metropolitano.jpg,Jwslubbock / Wikimedia Commons (CC BY-SA 4.0)
+SOUTHWARK BREW,Southwark Brewing,51.5005941,-0.0771444,"46 Druid Street, Bermondsey",pub_map/photos/southwark_brewing.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+PIG AND BUTCHER,Pig and Butcher,51.5372759,-0.1067419,"80 Liverpool Road, Islington",pub_map/photos/pig_and_butcher.jpg,Ewan-M / Wikimedia Commons (CC BY-SA 4.0)
+BEEHIVE,The Beehive,51.4848284,-0.1183509,"Jordan 2026-09-15: The Beehive — 51 Durham St, London SE11 5JA — exactly 1 visit (override; Chase has 2 unique days)",pub_map/photos/beehive.jpg,Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)
 VAUXHALL MARKETPLACE,Vauxhall Marketplace,51.485713,-0.1230148,"Jordan addendum: 7 S Lambeth Pl, London SW8 1SP — one pin for the marketplace (statement strings like TST-Unit … Vauxhall MP / TST-MarketPlace - Vaux). Nominatim labels 7-11 South Lambeth Place (Sainsbury's Local); marketplace not separately mapped",,

@@ -350,7 +350,21 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert farrier["properties"]["maps_url"].startswith(
         "https://www.google.com/maps/search/"
     )
-    assert data["metadata"]["photo_count"] >= 1
+    assert data["metadata"]["photo_count"] >= 40
+    skipped = {
+        "Cadogan Arms",
+        "Diogenes the Dog",
+        "The Chalk Freehouse",
+        "Supercute Taproom",
+        "The Thirsty Farrier",
+        "Vauxhall Marketplace",
+    }
+    names_without = {
+        ft["properties"]["name"]
+        for ft in features
+        if not ft["properties"].get("photo_url")
+    }
+    assert names_without == skipped
 
 
 if __name__ == "__main__":

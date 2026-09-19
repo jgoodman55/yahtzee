@@ -37,7 +37,7 @@ Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after
 
 Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
 
-Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png).
+Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png).
 
 Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
@@ -92,8 +92,14 @@ Add `photo_url` or `image_url` on the `seed_pubs.csv` row. Relative paths are
 resolved from `dashboard/pub_map.html` (so `pub_map/photos/….jpg` works on
 `file://` and the port-8765 static server). `https://` URLs work too. Optional
 `photo_attribution` is shown under the address (needed for Commons / CC
-licenses). Churchill Arms ships with a vendored Commons preview
-(`dashboard/pub_map/photos/churchill_arms.jpg`, CVB, CC BY-SA 4.0).
+licenses). Most confirmed pins now have a vendored Commons / Geograph
+preview under `dashboard/pub_map/photos/` (small JPEG, ~400 px). Churchill
+Arms was first (`churchill_arms.jpg`, CVB, CC BY-SA 4.0); the rest were
+backfilled the same way. Attribution is on the seed row and in the popup.
+
+Skipped (no decent reusable facade found — do not invent): Cadogan Arms,
+Diogenes the Dog, The Chalk Freehouse, Supercute Taproom, The Thirsty
+Farrier (seasonal Southbank pop-up), Vauxhall Marketplace.
 
 **2. Google Places Photos (optional key)**
 

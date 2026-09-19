@@ -161,12 +161,16 @@ def test_html_layers_and_pint_svg():
     assert "displayBoroughName" in html
     assert "is-hidden" in html
     assert "resolveBoroughLabelCollisions" in html
-    assert "photo" not in html.lower() or "Photos later" in html
+    assert "venue-card" in html
+    assert "No photo yet" in html
+    assert "bindVenuePopup" in html
+    assert "Photos later" not in html
 
 
 def test_export_script_joins_notes_not_borough():
     src = EXPORT.read_text(encoding="utf-8")
     assert "attach_seed_notes" in src
+    assert "attach_photos" in src
     assert "seed_pubs.csv" in src
     assert "client-side" in src
 

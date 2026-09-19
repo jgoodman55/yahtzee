@@ -33,11 +33,11 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 | **Pubs** (Layer B) | Yes (`#pubs`) | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
 | **Boroughs** (Layer A) | `#boroughs` | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
 
-Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Photo popups are still future work; hover/click shows name, unique-day visits, and the seed address/note when present.
+Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Click or hover a pint pin for a Google-Maps-ish card: photo (when we have one), name, unique-day visits, and the seed address/note. Pins without a photo still open the card with a **No photo yet** strip and a Google Maps search link — the map never depends on photos loading.
 
 Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
 
-Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png).
+Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png).
 
 Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
@@ -78,8 +78,66 @@ python3 dashboard/scripts/export_pub_map.py
 
 Writes `dashboard/pub_map/pubs.geojson` and `dashboard/pub_map/pubs.js`.
 `pubs.js` is what the HTML loads so the map also works as a local `file://`
-page (no CORS fetch). Seed `note` (address / Jordan pin comment) is joined in
-the exporter from `assets/seeds/seed_pubs.csv` — not a mart column.
+page (no CORS fetch). Seed `note` (address / Jordan pin comment) and optional
+`photo_url` are joined in the exporter from `assets/seeds/seed_pubs.csv` —
+not mart columns.
+
+### Venue photos
+
+Popup photos are **optional**. Not every pin needs one on day one.
+
+**1. Manual seed URL (highest trust, no API)**
+
+Add `photo_url` or `image_url` on the `seed_pubs.csv` row. Relative paths are
+resolved from `dashboard/pub_map.html` (so `pub_map/photos/….jpg` works on
+`file://` and the port-8765 static server). `https://` URLs work too. Optional
+`photo_attribution` is shown under the address (needed for Commons / CC
+licenses). Churchill Arms ships with a vendored Commons preview
+(`dashboard/pub_map/photos/churchill_arms.jpg`, CVB, CC BY-SA 4.0).
+
+**2. Google Places Photos (optional key)**
+
+Same env var already used for geocoding in `geocode_pubs.py`:
+
+```bash
+export GOOGLE_PLACES_API_KEY=your-key   # Places API (New) — Text Search + Place Photos
+python3 dashboard/scripts/export_pub_map.py
+```
+
+The exporter text-searches each pub (name + lat/lng bias, 80 m), then fetches
+one Place Photo (`maxWidthPx=400`, `skipHttpRedirect=true`) and stores the
+`photoUri` plus `place_id` in `dashboard/pub_map/pub_photos.json`. Rebuilds
+reuse that sidecar, so you do **not** pay per export. Use
+`--refresh-photos` to ignore hits and re-query (still skips seed URLs).
+
+Google photo *resource names* expire and must not be reused; the cache stores
+the media `photoUri` instead. Those URIs can also go stale — the Leaflet
+`<img>` falls back to **No photo yet** on error, and `--refresh-photos` with a
+key refreshes them.
+
+**Rate limits / cost (Places API New, personal project)**
+
+| Call | When | Notes |
+|---|---|---|
+| Text Search (New) | once per pub **not** already in seed or cache | billed SKU; includes `places.photos` (Pro-tier fields) |
+| Place Photos (New) | once per pub that has a photo | `maxWidthPx=400`; 1 photo / pub |
+| Cache hit / seed URL | every other rebuild | **zero** live calls |
+| Negative cache (`status: miss`) | same | do not retry until `--refresh-photos` |
+
+Google’s Maps Platform free credit (~USD 200 / month) covers a one-shot
+backfill of ~50 pubs many times over. The exporter sleeps 0.15 s between live
+calls. Do not loop `--refresh-photos` in CI.
+
+**3. Offline / no key**
+
+```bash
+OFFLINE_TEST=1 python3 dashboard/scripts/export_pub_map.py
+```
+
+`OFFLINE_TEST=1` skips live Place Photos the same way `geocode_pubs.py` skips
+Nominatim/Google. No key is the same: seed + cache only. The map still loads
+(Esri tiles + pint pins + popups). Missing photos show **No photo yet** and a
+Maps search link. You do **not** need `GOOGLE_PLACES_API_KEY` to open the map.
 
 `visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
 row per merchant × Transaction Date (summed when proximity-dedup collapses

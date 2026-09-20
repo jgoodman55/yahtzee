@@ -345,6 +345,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "298 Old Church Street / World's End, Chelsea",
         "merged_from": "CADOGAN ARMS",
+        "photo_url": "pub_map/photos/cadogan_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Charles / Flickr via Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Cadogan+Arms+51.4859699%2C-0.1729707"
       }
     },
@@ -368,25 +371,6 @@ window.PUB_MAP_DATA = {
         "photo_source": "seed",
         "photo_attribution": "CVB / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Churchill+Arms+51.5068785%2C-0.1948694"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.091059,
-          51.491504
-        ]
-      },
-      "properties": {
-        "name": "Diogenes the Dog",
-        "merchant_name_raw": "DIOGENES THE DOG L",
-        "source": "seed",
-        "visit_count": 1,
-        "note": "96 Rodney Road, Walworth — Chase DIOGENES THE DOG L",
-        "merged_from": "DIOGENES THE DOG L",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Diogenes+the+Dog+51.491504%2C-0.091059"
       }
     },
     {
@@ -614,25 +598,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1134801,
-          51.4619831
-        ]
-      },
-      "properties": {
-        "name": "Supercute Taproom",
-        "merchant_name_raw": "SUPERCUTE TAPROOM",
-        "source": "seed",
-        "visit_count": 1,
-        "note": "Market Row, Brixton Village (street geocode; taproom not separately mapped). Brewhouse is 245a Coldharbour Lane",
-        "merged_from": "SUPERCUTE TAPROOM",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Supercute+Taproom+51.4619831%2C-0.1134801"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.1221916,
           51.4919181
         ]
@@ -736,25 +701,6 @@ window.PUB_MAP_DATA = {
         "photo_source": "seed",
         "photo_attribution": "Reading Tom / Wikimedia Commons (CC BY 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Canton+Arms+51.4771539%2C-0.122896"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.163173,
-          51.49072
-        ]
-      },
-      "properties": {
-        "name": "The Chalk Freehouse",
-        "merchant_name_raw": "THE CHALK FREE HOUSE L",
-        "source": "seed",
-        "visit_count": 1,
-        "note": "25-27 Tryon Street, Chelsea — Chase THE CHALK FREE HOUSE L",
-        "merged_from": "THE CHALK FREE HOUSE L",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Chalk+Freehouse+51.49072%2C-0.163173"
       }
     },
     {
@@ -960,25 +906,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1196679,
-          51.5021332
-        ]
-      },
-      "properties": {
-        "name": "The Thirsty Farrier",
-        "merchant_name_raw": "THE THIRSTY FARRIER S",
-        "source": "seed",
-        "visit_count": 1,
-        "note": "Seasonal Southbank pop-up — Queen's Walk SE1 7PB (not a permanent pub building)",
-        "merged_from": "THE THIRSTY FARRIER S",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Thirsty+Farrier+51.5021332%2C-0.1196679"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.0768883,
           51.5028873
         ]
@@ -1047,7 +974,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 48,
-    "photo_count": 42
+    "confirmed_pub_count": 44,
+    "photo_count": 43
   }
 };

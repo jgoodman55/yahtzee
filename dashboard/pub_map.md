@@ -37,7 +37,7 @@ Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after
 
 Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
 
-Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png).
+Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png), [Cadogan Arms](docs/screenshots/pub_map_popup_cadogan_photo.png), [Vauxhall Marketplace fallback](docs/screenshots/pub_map_popup_marketplace.png).
 
 Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —

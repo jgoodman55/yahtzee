@@ -1,0 +1,83 @@
+# PR validation: impossible Yahtzee scores (OCR / spreadsheet leftovers).
+#
+# Grok stays the OCR step. This workflow does not call any vision API.
+# Failures are Jordan's review queue: fix the seed, or (rarely) add a row
+# to assets/seeds/known_score_rule_violations.csv after photo review.
+#
+# No repository secrets required. Fork PRs can run this job as-is.
+#
+# Related: docs/hosting-vps.md (day-to-day: Grok → PR → this check → merge → deploy)
+
+name: Scorecard validation
+
+on:
+  pull_request:
+    paths:
+      - "assets/seeds/**"
+      - "assets/audit/**"
+      - "tests/**"
+      - ".github/workflows/scorecard-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  score-rules:
+    name: Impossible scores
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install test deps
+        run: pip install pytest
+
+      - name: List score-rule violations
+        id: audit
+        run: |
+          set +e
+          python tests/test_raw_games_score_rules.py | tee score-rule-report.txt
+          status=${PIPESTATUS[0]}
+          echo "exit_code=${status}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Fail on new or stale impossible scores
+        run: |
+          set +e
+          pytest -q tests/test_raw_games_score_rules.py
+          pytest_status=$?
+          script_status="${{ steps.audit.outputs.exit_code }}"
+          if [ "${script_status}" != "0" ] || [ "${pytest_status}" != "0" ]; then
+            echo "::error::Score-rule validation failed. New impossible scores (not in known_score_rule_violations.csv) or stale allowlist rows. Table is in the log above."
+            echo
+            echo "===== violation table ====="
+            cat score-rule-report.txt
+            echo "===== end table ====="
+            exit 1
+          fi
+          echo "Score-rule audit passed (script + pytest)."
+
+      - name: Comment violation table on PR
+        if: failure() && github.event_name == 'pull_request'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "### Score-rule validation failed"
+            echo
+            echo "Impossible scores, or stale rows in \`known_score_rule_violations.csv\`."
+            echo "This is the review queue (Grok OCR → seed PR). Fix the seed or, after photo review, allowlist a leftover."
+            echo
+            echo '```'
+            cat score-rule-report.txt
+            echo '```'
+          } > /tmp/score-rule-comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/score-rule-comment.md

@@ -86,6 +86,8 @@ def test_html_popup_is_photo_card():
     assert "Google Maps" in html
     assert "bindVenuePopup" in html
     assert "mouseover" in html
+    assert "keepInView: false" in html
+    assert "keepInView: true" not in html
     assert "Photos later" not in html
     assert "isSafePhotoUrl" in html
 
@@ -178,7 +180,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert marketplace["photo_source"] == "seed"
     assert marketplace["photo_attribution"] == "Jordan"
     assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
-    assert data["metadata"]["photo_count"] == 44
+    assert data["metadata"]["photo_count"] == 43
     names_without = {
         ft["properties"]["name"]
         for ft in features
@@ -190,6 +192,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
         "The Chalk Freehouse",
         "Supercute Taproom",
         "The Thirsty Farrier",
+        "Pig and Butcher",
     }
     assert gone.isdisjoint(by_name)
 

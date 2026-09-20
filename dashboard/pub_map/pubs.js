@@ -535,28 +535,6 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1067419,
-          51.5372759
-        ]
-      },
-      "properties": {
-        "name": "Pig and Butcher",
-        "merchant_name_raw": "PIG AND BUTCHER",
-        "source": "seed",
-        "visit_count": 1,
-        "note": "80 Liverpool Road, Islington",
-        "merged_from": "PIG AND BUTCHER",
-        "photo_url": "pub_map/photos/pig_and_butcher.jpg",
-        "photo_source": "seed",
-        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Pig+and+Butcher+51.5372759%2C-0.1067419"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.0771444,
           51.5005941
         ]
@@ -865,8 +843,8 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1191791,
-          51.5172518
+          -0.0969249,
+          51.4992665
         ]
       },
       "properties": {
@@ -874,12 +852,12 @@ window.PUB_MAP_DATA = {
         "merchant_name_raw": "THE SHIP",
         "source": "seed",
         "visit_count": 1,
-        "note": "Jordan confirm: 12 Gate St, London WC2A 3HP (Ship Tavern)",
+        "note": "Jordan confirm: 68 Borough Rd, London SE1 1DX",
         "merged_from": "THE SHIP",
         "photo_url": "pub_map/photos/the_ship.jpg",
         "photo_source": "seed",
         "photo_attribution": "Christine Matthews / geograph.org.uk (CC BY-SA 2.0)",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Ship+51.5172518%2C-0.1191791"
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Ship+51.4992665%2C-0.0969249"
       }
     },
     {
@@ -977,7 +955,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 44,
-    "photo_count": 44
+    "confirmed_pub_count": 43,
+    "photo_count": 43
   }
 };

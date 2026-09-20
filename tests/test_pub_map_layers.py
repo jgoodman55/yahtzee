@@ -164,6 +164,9 @@ def test_html_layers_and_pint_svg():
     assert "venue-card" in html
     assert "No photo yet" in html
     assert "bindVenuePopup" in html
+    assert "keepInView: false" in html
+    assert "keepInView: true" not in html
+    assert ".leaflet-popup-pane { pointer-events: none; }" in html
     assert "Photos later" not in html
 
 
@@ -189,7 +192,7 @@ def test_point_in_polygon_assignments():
     pubs = load_json(GEOJSON)["features"]
     expected = {
         "Anchor Bar": "Southwark",
-        "The Ship": "Camden",
+        "The Ship": "Southwark",
         "The Monument": "City of London",
         "Nancy Spains": "City of London",
         "The Three Johns": "Islington",

@@ -1,4 +1,4 @@
-"""Pub map venue photo popups: seed URL, Google cache, offline fallback.
+"""Pub map venue photo popups: seed URL / vendored JPEG only.
 
     python tests/test_pub_map_photos.py
     pytest tests/test_pub_map_photos.py
@@ -69,217 +69,29 @@ def test_html_popup_is_photo_card():
     assert "isSafePhotoUrl" in html
 
 
-def test_seed_photo_beats_cache_and_google(tmp_path):
+def test_exporter_is_seed_only_no_live_photo_api():
     exp = load_export()
-    cache_path = tmp_path / "pub_photos.json"
-    calls = []
+    src = EXPORT.read_text(encoding="utf-8")
+    assert not hasattr(exp, "fetch_google_place_photo")
+    assert not hasattr(exp, "load_photo_cache")
+    assert "GOOGLE_PLACES" not in src
+    assert "OFFLINE_TEST" not in src
+    assert "--refresh-photos" not in src
 
-    def fake_google(pub, api_key):
-        calls.append(pub["name"])
-        return {
-            "status": "ok",
-            "photo_url": "https://example.invalid/google.jpg",
-            "photo_source": "google",
-            "fetched_at": "2026-09-19T00:00:00Z",
-        }
 
+def test_seed_photo_used_missing_seed_stays_empty():
+    exp = load_export()
     pubs = sample_pubs()
-    stats = exp.attach_photos(
-        pubs,
-        cache_path=cache_path,
-        refresh=False,
-        offline=False,
-        api_key="fake-key",
-        sleep_s=0,
-        fetch_google=fake_google,
-    )
+    stats = exp.attach_photos(pubs)
     churchill = next(p for p in pubs if p["name"] == "Churchill Arms")
     farrier = next(p for p in pubs if p["name"] == "No Photo Arms")
     assert churchill["photo_url"] == "pub_map/photos/churchill_arms.jpg"
     assert churchill["photo_source"] == "seed"
     assert "Wikimedia" in churchill["photo_attribution"]
-    assert farrier["photo_url"] == "https://example.invalid/google.jpg"
-    assert farrier["photo_source"] == "google"
+    assert "photo_url" not in farrier
     assert farrier["maps_url"].startswith("https://www.google.com/maps/search/")
     assert stats["seed"] == 1
-    assert stats["google"] == 1
-    assert calls == ["No Photo Arms"]
-
-
-def test_cache_hit_skips_live_fetch(tmp_path):
-    exp = load_export()
-    pubs = [
-        {
-            "name": "No Photo Arms",
-            "merchant_name_raw": "NO PHOTO ARMS",
-            "lat": 51.5021332,
-            "lng": -0.1196679,
-            "source": "seed",
-            "visit_count": 1,
-        }
-    ]
-    key = exp.photo_cache_key(pubs[0])
-    cache_path = tmp_path / "pub_photos.json"
-    cache_path.write_text(
-        json.dumps(
-            {
-                "version": 1,
-                "photos": {
-                    key: {
-                        "status": "ok",
-                        "photo_url": "https://example.invalid/cached.jpg",
-                        "photo_source": "google",
-                        "photo_attribution": "Cached Photog",
-                        "place_id": "ChIJ-test",
-                    }
-                },
-            }
-        ),
-        encoding="utf-8",
-    )
-    calls = []
-    stats = exp.attach_photos(
-        pubs,
-        cache_path=cache_path,
-        refresh=False,
-        offline=False,
-        api_key="fake-key",
-        sleep_s=0,
-        fetch_google=lambda pub, key: calls.append(pub["name"]),
-        seed_fields={"merchant": {}, "name": {}},
-    )
-    assert calls == []
-    assert pubs[0]["photo_url"] == "https://example.invalid/cached.jpg"
-    assert pubs[0]["place_id"] == "ChIJ-test"
-    assert stats["cache"] == 1
-    assert stats["google"] == 0
-
-
-def test_offline_and_missing_key_skip_live_fetch(tmp_path):
-    exp = load_export()
-    calls = []
-
-    def fake_google(pub, api_key):
-        calls.append(api_key)
-        return {"status": "ok", "photo_url": "https://example.invalid/nope.jpg"}
-
-    pubs = [
-        {
-            "name": "No Photo Arms",
-            "merchant_name_raw": "NO PHOTO ARMS",
-            "lat": 51.5021332,
-            "lng": -0.1196679,
-            "source": "seed",
-            "visit_count": 1,
-        }
-    ]
-    seed_fields = {"merchant": {}, "name": {}}
-    exp.attach_photos(
-        pubs,
-        cache_path=tmp_path / "a.json",
-        offline=True,
-        api_key="fake-key",
-        sleep_s=0,
-        fetch_google=fake_google,
-        seed_fields=seed_fields,
-    )
-    exp.attach_photos(
-        list(pubs),
-        cache_path=tmp_path / "b.json",
-        offline=False,
-        api_key="",
-        sleep_s=0,
-        fetch_google=fake_google,
-        seed_fields=seed_fields,
-    )
-    assert calls == []
-    assert "photo_url" not in pubs[0]
-
-
-def test_negative_cache_not_retried(tmp_path):
-    exp = load_export()
-    pubs = [
-        {
-            "name": "No Photo Arms",
-            "merchant_name_raw": "NO PHOTO ARMS",
-            "lat": 51.5021332,
-            "lng": -0.1196679,
-            "source": "seed",
-            "visit_count": 1,
-        }
-    ]
-    key = exp.photo_cache_key(pubs[0])
-    cache_path = tmp_path / "pub_photos.json"
-    cache_path.write_text(
-        json.dumps(
-            {
-                "version": 1,
-                "photos": {key: {"status": "miss", "reason": "no_photos"}},
-            }
-        ),
-        encoding="utf-8",
-    )
-    calls = []
-    stats = exp.attach_photos(
-        pubs,
-        cache_path=cache_path,
-        refresh=False,
-        offline=False,
-        api_key="fake-key",
-        sleep_s=0,
-        fetch_google=lambda pub, key: calls.append("x") or {"status": "ok"},
-        seed_fields={"merchant": {}, "name": {}},
-    )
-    assert calls == []
     assert stats["none"] == 1
-
-
-def test_refresh_photos_bypasses_cache(tmp_path):
-    exp = load_export()
-    pubs = [
-        {
-            "name": "No Photo Arms",
-            "merchant_name_raw": "NO PHOTO ARMS",
-            "lat": 51.5021332,
-            "lng": -0.1196679,
-            "source": "seed",
-            "visit_count": 1,
-        }
-    ]
-    key = exp.photo_cache_key(pubs[0])
-    cache_path = tmp_path / "pub_photos.json"
-    cache_path.write_text(
-        json.dumps(
-            {
-                "version": 1,
-                "photos": {
-                    key: {
-                        "status": "ok",
-                        "photo_url": "https://example.invalid/old.jpg",
-                    }
-                },
-            }
-        ),
-        encoding="utf-8",
-    )
-    stats = exp.attach_photos(
-        pubs,
-        cache_path=cache_path,
-        refresh=True,
-        offline=False,
-        api_key="fake-key",
-        sleep_s=0,
-        fetch_google=lambda pub, key: {
-            "status": "ok",
-            "photo_url": "https://example.invalid/new.jpg",
-            "photo_source": "google",
-        },
-        seed_fields={"merchant": {}, "name": {}},
-    )
-    assert pubs[0]["photo_url"] == "https://example.invalid/new.jpg"
-    assert stats["google"] == 1
-    saved = json.loads(cache_path.read_text(encoding="utf-8"))
-    assert saved["photos"][key]["photo_url"] == "https://example.invalid/new.jpg"
 
 
 def test_image_url_alias_and_feature_export():
@@ -304,22 +116,14 @@ def test_image_url_alias_and_feature_export():
         },
         "name": {},
     }
-    # Simulate image_url already normalized by load_seed_popup_fields.
-    exp.attach_photos(
-        pubs,
-        cache_path=None,
-        offline=True,
-        api_key="",
-        sleep_s=0,
-        fetch_google=lambda *_: None,
-        seed_fields=seed_fields,
-    )
+    exp.attach_photos(pubs, seed_fields=seed_fields)
     collection = exp.to_feature_collection(pubs)
     props = collection["features"][0]["properties"]
     assert props["photo_url"] == "https://example.invalid/alias.jpg"
     assert props["maps_url"].startswith("https://www.google.com/maps/search/")
     assert collection["metadata"]["photo_count"] == 1
     assert "borough" not in props
+    assert "place_id" not in props
 
 
 def test_load_seed_accepts_image_url_alias(tmp_path, monkeypatch):

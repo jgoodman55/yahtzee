@@ -10,21 +10,20 @@ Popup notes and optional seed photos come from seed_pubs.csv (joined here).
 Borough is not exported — the map assigns it client-side from lat/lng +
 vendored ONS GeoJSON.
 
-Photo preview (highest trust first):
+Photo preview is seed-only:
 
-  1. seed_pubs.csv ``photo_url`` / ``image_url`` (manual, no API)
-  2. dashboard/pub_map/pub_photos.json cache (previous Google Places hits)
-  3. Google Places Text Search + Place Photos when GOOGLE_PLACES_API_KEY is
-     set and OFFLINE_TEST is not 1
+  seed_pubs.csv ``photo_url`` / ``image_url`` (manual; often a vendored
+  JPEG under dashboard/pub_map/photos/)
+
+There is no live Google Places photo fetch and no API key. Pins without a
+seed photo still export; the map shows **No photo yet**.
 
 Run after `bruin run` whenever seed_pubs / raw_pub_visits / geocoding change:
 
   python3 dashboard/scripts/export_pub_map.py
   python3 dashboard/scripts/export_pub_map.py --db /path/to/yahtzee.duckdb
-  OFFLINE_TEST=1 python3 dashboard/scripts/export_pub_map.py   # skip live photos
 
 Requires: pip install duckdb
-Live Place Photos also need: pip install requests
 """
 
 from __future__ import annotations
@@ -32,31 +31,19 @@ from __future__ import annotations
 import argparse
 import csv
 import json
-import os
-import time
-from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable
 from urllib.parse import quote_plus
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = REPO_ROOT / "yahtzee.duckdb"
 OUT_DIR = REPO_ROOT / "dashboard" / "pub_map"
 SEED_PUBS = REPO_ROOT / "assets" / "seeds" / "seed_pubs.csv"
-PHOTO_CACHE = OUT_DIR / "pub_photos.json"
 LONDON_CENTER = (-0.1278, 51.5074)
-
-GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
-GOOGLE_PHOTO_MEDIA = "https://places.googleapis.com/v1/{name}/media"
-PHOTO_MAX_WIDTH_PX = 400
-GOOGLE_SEARCH_RADIUS_M = 80.0
-GOOGLE_SLEEP_S = 0.15
 
 OPTIONAL_PHOTO_KEYS = (
     "photo_url",
     "photo_source",
     "photo_attribution",
-    "place_id",
     "maps_url",
 )
 
@@ -88,8 +75,7 @@ def load_confirmed_pubs(con) -> list[dict]:
     cols = _table_columns(con, "mart_pub_locations")
     if not cols:
         raise SystemExit(
-            "mart_pub_locations is missing — run `bruin run` first "
-            "(OFFLINE_TEST=1 is fine)."
+            "mart_pub_locations is missing — run `bruin run` first."
         )
 
     visit_expr = (
@@ -213,13 +199,6 @@ def attach_seed_notes(pubs: list[dict]) -> None:
             pub["note"] = extra["note"]
 
 
-def photo_cache_key(pub: dict) -> str:
-    name = (pub.get("name") or "").strip()
-    lat = float(pub["lat"])
-    lng = float(pub["lng"])
-    return f"{name}|{lat:.5f}|{lng:.5f}"
-
-
 def maps_search_url(pub: dict) -> str:
     name = (pub.get("name") or "pub").strip()
     lat = pub.get("lat")
@@ -230,185 +209,14 @@ def maps_search_url(pub: dict) -> str:
     return "https://www.google.com/maps/search/?api=1&query=" + quote_plus(query)
 
 
-def load_photo_cache(path: Path | None = None) -> dict:
-    cache_path = path or PHOTO_CACHE
-    if not cache_path.exists():
-        return {"version": 1, "photos": {}}
-    try:
-        data = json.loads(cache_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return {"version": 1, "photos": {}}
-    if not isinstance(data, dict):
-        return {"version": 1, "photos": {}}
-    photos = data.get("photos")
-    if not isinstance(photos, dict):
-        photos = {}
-    return {"version": 1, "photos": photos}
-
-
-def save_photo_cache(data: dict, path: Path | None = None) -> Path:
-    cache_path = path or PHOTO_CACHE
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "version": 1,
-        "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "photos": data.get("photos") or {},
-    }
-    cache_path.write_text(
-        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
-        encoding="utf-8",
-    )
-    return cache_path
-
-
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def _attribution_from_photo(photo: dict) -> str:
-    authors = photo.get("authorAttributions") or []
-    names = []
-    for author in authors:
-        label = (author.get("displayName") or "").strip()
-        if label:
-            names.append(label)
-    if names:
-        return ", ".join(names)
-    return "Google"
-
-
-def fetch_google_place_photo(pub: dict, api_key: str) -> dict | None:
-    """Resolve a Place and return a cacheable photo URI, or None on miss/error.
-
-    Uses Places API (New) Text Search + Place Photos. The photo *name*
-    expires and must not be reused; we store the ``photoUri`` (and place id)
-    so the static map can show an ``<img>`` without a client-side key.
-    Those URIs can themselves go stale — ``--refresh-photos`` re-fetches.
-    """
-    try:
-        import requests
-    except ImportError:
-        return None
-
-    name = (pub.get("name") or "").strip()
-    if not name:
-        return None
-    lat = float(pub["lat"])
-    lng = float(pub["lng"])
-    headers = {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": api_key,
-        "X-Goog-FieldMask": (
-            "places.id,places.displayName,places.photos,places.formattedAddress"
-        ),
-    }
-    body = {
-        "textQuery": f"{name} pub",
-        "maxResultCount": 1,
-        "locationBias": {
-            "circle": {
-                "center": {"latitude": lat, "longitude": lng},
-                "radius": GOOGLE_SEARCH_RADIUS_M,
-            }
-        },
-    }
-    try:
-        resp = requests.post(
-            GOOGLE_PLACES_URL, json=body, headers=headers, timeout=10
-        )
-        resp.raise_for_status()
-        places = resp.json().get("places") or []
-        if not places:
-            return {
-                "status": "miss",
-                "reason": "no_place",
-                "fetched_at": _now_iso(),
-            }
-        place = places[0]
-        photos = place.get("photos") or []
-        place_id = place.get("id")
-        if not photos:
-            return {
-                "status": "miss",
-                "reason": "no_photos",
-                "place_id": place_id,
-                "fetched_at": _now_iso(),
-            }
-        photo = photos[0]
-        photo_name = photo.get("name")
-        if not photo_name:
-            return {
-                "status": "miss",
-                "reason": "no_photo_name",
-                "place_id": place_id,
-                "fetched_at": _now_iso(),
-            }
-        media = requests.get(
-            GOOGLE_PHOTO_MEDIA.format(name=photo_name),
-            params={
-                "maxWidthPx": PHOTO_MAX_WIDTH_PX,
-                "skipHttpRedirect": "true",
-                "key": api_key,
-            },
-            timeout=10,
-        )
-        media.raise_for_status()
-        photo_uri = (media.json() or {}).get("photoUri")
-        if not photo_uri:
-            return {
-                "status": "miss",
-                "reason": "no_photo_uri",
-                "place_id": place_id,
-                "fetched_at": _now_iso(),
-            }
-        return {
-            "status": "ok",
-            "photo_url": photo_uri,
-            "photo_source": "google",
-            "photo_attribution": _attribution_from_photo(photo),
-            "place_id": place_id,
-            "fetched_at": _now_iso(),
-        }
-    except Exception:
-        return {
-            "status": "miss",
-            "reason": "request_error",
-            "fetched_at": _now_iso(),
-        }
-
-
 def attach_photos(
     pubs: list[dict],
     *,
-    cache_path: Path | None = None,
-    refresh: bool = False,
-    offline: bool | None = None,
-    api_key: str | None = None,
-    sleep_s: float = GOOGLE_SLEEP_S,
-    fetch_google: Callable[[dict, str], dict | None] | None = None,
     seed_fields: dict[str, dict[str, str]] | None = None,
 ) -> dict:
-    """Fill photo_url / maps_url on each pub. Never raises; map still works."""
-    if offline is None:
-        offline = os.environ.get("OFFLINE_TEST") == "1"
-    if api_key is None:
-        api_key = os.environ.get("GOOGLE_PLACES_API_KEY") or ""
-    fetcher = fetch_google or fetch_google_place_photo
+    """Fill photo_url / maps_url from seed_pubs only. Never raises."""
     fields = seed_fields if seed_fields is not None else load_seed_popup_fields()
-    cache = load_photo_cache(cache_path)
-    photos = cache.setdefault("photos", {})
-    stats = {
-        "seed": 0,
-        "cache": 0,
-        "google": 0,
-        "none": 0,
-        "live_skipped": bool(offline or not api_key),
-        "offline": bool(offline),
-        "has_key": bool(api_key),
-    }
-    cache_dirty = False
-    live_calls = 0
-
+    stats = {"seed": 0, "none": 0}
     for pub in pubs:
         pub["maps_url"] = maps_search_url(pub)
         extra = _lookup_seed_extra(pub, fields)
@@ -420,57 +228,8 @@ def attach_photos(
             if extra.get("photo_attribution"):
                 pub["photo_attribution"] = extra["photo_attribution"]
             stats["seed"] += 1
-            continue
-
-        key = photo_cache_key(pub)
-        cached = photos.get(key) if isinstance(photos.get(key), dict) else None
-        usable_cache = (
-            cached
-            and not refresh
-            and cached.get("status") == "ok"
-            and cached.get("photo_url")
-        )
-        if usable_cache:
-            pub["photo_url"] = cached["photo_url"]
-            pub["photo_source"] = cached.get("photo_source") or "google"
-            if cached.get("photo_attribution"):
-                pub["photo_attribution"] = cached["photo_attribution"]
-            if cached.get("place_id"):
-                pub["place_id"] = cached["place_id"]
-            stats["cache"] += 1
-            continue
-        negative_cache = cached and not refresh and cached.get("status") == "miss"
-        if negative_cache:
-            stats["none"] += 1
-            continue
-
-        if offline or not api_key:
-            stats["none"] += 1
-            continue
-
-        if live_calls:
-            time.sleep(sleep_s)
-        result = fetcher(pub, api_key) or {
-            "status": "miss",
-            "reason": "empty",
-            "fetched_at": _now_iso(),
-        }
-        live_calls += 1
-        photos[key] = result
-        cache_dirty = True
-        if result.get("status") == "ok" and result.get("photo_url"):
-            pub["photo_url"] = result["photo_url"]
-            pub["photo_source"] = result.get("photo_source") or "google"
-            if result.get("photo_attribution"):
-                pub["photo_attribution"] = result["photo_attribution"]
-            if result.get("place_id"):
-                pub["place_id"] = result["place_id"]
-            stats["google"] += 1
         else:
             stats["none"] += 1
-
-    if cache_dirty:
-        save_photo_cache(cache, cache_path)
     return stats
 
 
@@ -532,18 +291,10 @@ def write_outputs(collection: dict) -> tuple[Path, Path]:
 
 
 def _photo_summary(stats: dict) -> str:
-    bits = [
-        f"{stats['seed']} seed",
-        f"{stats['cache']} cache",
-        f"{stats['google']} google",
-        f"{stats['none']} none",
-    ]
-    line = "Photos: " + ", ".join(bits)
-    if stats.get("offline"):
-        line += " (OFFLINE_TEST=1 — skipped live Place Photos)"
-    elif not stats.get("has_key"):
-        line += " (no GOOGLE_PLACES_API_KEY — seed/cache only)"
-    return line
+    return (
+        f"Photos: {stats['seed']} seed, {stats['none']} none "
+        "(seed_pubs.csv / vendored dashboard/pub_map/photos/ only)"
+    )
 
 
 def main() -> None:
@@ -554,11 +305,6 @@ def main() -> None:
         default=DEFAULT_DB,
         help=f"DuckDB path (default: {DEFAULT_DB})",
     )
-    parser.add_argument(
-        "--refresh-photos",
-        action="store_true",
-        help="Ignore pub_photos.json hits and re-query Google Places (needs a key).",
-    )
     args = parser.parse_args()
 
     con = _connect(args.db)
@@ -568,7 +314,7 @@ def main() -> None:
         con.close()
 
     attach_seed_notes(pubs)
-    photo_stats = attach_photos(pubs, refresh=args.refresh_photos)
+    photo_stats = attach_photos(pubs)
     collection = to_feature_collection(pubs)
     geojson_path, js_path = write_outputs(collection)
     print(

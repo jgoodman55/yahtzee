@@ -24,6 +24,50 @@ def load_geocode():
     return mod
 
 
+def test_geocode_is_seed_only_no_live_apis():
+    geo = load_geocode()
+    src = GEOCODE.read_text(encoding="utf-8")
+    assert not hasattr(geo, "try_nominatim")
+    assert not hasattr(geo, "try_google_places")
+    assert not hasattr(geo, "OFFLINE_TEST")
+    assert not hasattr(geo, "GOOGLE_API_KEY")
+    assert "nominatim.openstreetmap.org" not in src
+    assert "GOOGLE_PLACES" not in src
+    assert "OFFLINE_TEST" not in src
+
+
+def test_resolve_merchant_uses_seed_coords():
+    geo = load_geocode()
+    seed = pd.DataFrame(
+        [
+            {
+                "merchant_name_raw": "THE DERBY",
+                "pub_name": "The Derby",
+                "lat": 51.4811678,
+                "lng": -0.1132925,
+            }
+        ]
+    )
+    hit = geo.resolve_merchant("THE DERBY", seed)
+    assert hit["source"] == "seed"
+    assert hit["pub_name"] == "The Derby"
+    assert hit["lat"] == 51.4811678
+    assert hit["is_confirmed_pub"] is True
+
+
+def test_unresolved_when_no_seed_match():
+    geo = load_geocode()
+    seed = pd.DataFrame(
+        columns=["merchant_name_raw", "pub_name", "lat", "lng"]
+    )
+    miss = geo.resolve_merchant("UNKNOWN TAPROOM LTD", seed)
+    assert miss["source"] == "unresolved"
+    assert miss["lat"] is None
+    assert miss["lng"] is None
+    assert miss["is_confirmed_pub"] is False
+    assert miss["merchant_name_raw"] == "UNKNOWN TAPROOM LTD"
+
+
 def test_derby_and_hanover_stay_distinct():
     geo = load_geocode()
     df = pd.DataFrame(
@@ -88,6 +132,9 @@ def test_same_named_seed_aliases_still_merge():
 
 
 if __name__ == "__main__":
+    test_geocode_is_seed_only_no_live_apis()
+    test_resolve_merchant_uses_seed_coords()
+    test_unresolved_when_no_seed_match()
     test_derby_and_hanover_stay_distinct()
     test_same_named_seed_aliases_still_merge()
     print("ok")

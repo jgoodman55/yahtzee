@@ -148,8 +148,12 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 ## 6. Hosting
 
 - Local: `bruin run` + DAC dev server, DuckDB file on disk — zero cost.
-- Optional: small VPS ($5–6/mo) to serve the built DAC site + animation file
-  if you want to share it.
+- VPS: after merge, GitHub Actions SSHs to a small Ubuntu box (~£5/mo) and
+  runs Bruin there. Runbook: [`docs/hosting-vps.md`](docs/hosting-vps.md).
+  - **PR validation** — [`.github/workflows/scorecard-validation.yml`](.github/workflows/scorecard-validation.yml)
+    (impossible scores; no secrets). Grok stays OCR; CI is the alert.
+  - **Deploy** — [`.github/workflows/deploy-vps.yml`](.github/workflows/deploy-vps.yml)
+    (`push` to `main`, or Actions → Deploy VPS → Run workflow).
 
 ## 7. Build order
 
@@ -243,8 +247,10 @@ Impossible category scores (wrong Full House / straight / Yahtzee box,
 Chance 0, upper faces that are not `n * face`) fail `bruin run` unless
 they are listed in `known_score_rule_violations.csv` (empty by policy).
 Those failures are what Jordan checks after a Grok extract — listed as
-`(game_seq, player, category, score, rule)`. Print the same list without
-Bruin:
+`(game_seq, player, category, score, rule)`. The same check runs
+on PRs that touch seeds / audit / tests
+([`.github/workflows/scorecard-validation.yml`](.github/workflows/scorecard-validation.yml)).
+Print the same list without Bruin:
 
 ```bash
 python tests/test_raw_games_score_rules.py

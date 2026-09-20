@@ -1,0 +1,105 @@
+# Deploy / rebuild on a VPS over SSH after merge to main.
+#
+# Jordan's hosting choice: GitHub Actions SSHs to the box and runs Bruin there.
+# Do not use this workflow to provision a VPS — see docs/hosting-vps.md.
+#
+# ---------------------------------------------------------------------------
+# Repository secrets (Settings → Secrets and variables → Actions → Secrets)
+#   VPS_HOST      hostname or IP (required)
+#   VPS_USER      SSH user, e.g. ubuntu (required)
+#   VPS_SSH_KEY   private key whose public half is in authorized_keys (required)
+#   VPS_PORT      SSH port (optional; default 22)
+#
+# Repository variables (Settings → Secrets and variables → Actions → Variables)
+#   DEPLOY_PATH         clone path on the box (optional; default $HOME/yahtzee)
+#   BRUIN_CONFIG_FILE   absolute path to .bruin.yml (optional;
+#                       default $DEPLOY_PATH/.bruin.yml)
+#
+# Deploy only runs when VPS_HOST, VPS_USER, and VPS_SSH_KEY are set.
+# Missing secrets (forks, or before the VPS exists): this job skips green.
+# Adhoc rebuild: Actions → Deploy VPS → Run workflow (always resets to origin/main).
+#
+# Remote Bruin flag: --config-file points at .bruin.yml (connections + DuckDB path).
+# Same file as DAC's --config. DuckDB paths in that file should be absolute.
+# ---------------------------------------------------------------------------
+
+name: Deploy VPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: SSH rebuild on VPS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require VPS secrets
+        id: gate
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          if [ -z "$VPS_HOST" ] || [ -z "$VPS_USER" ] || [ -z "$VPS_SSH_KEY" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Skipping deploy: repository secrets VPS_HOST, VPS_USER, VPS_SSH_KEY are not set."
+            echo "Expected on forks and before the VPS is wired up. See docs/hosting-vps.md."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: SSH — fetch main, bruin run, export sidecars
+        if: steps.gate.outputs.skip != 'true'
+        uses: appleboy/ssh-action@v1.2.5
+        env:
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          BRUIN_CONFIG_FILE: ${{ vars.BRUIN_CONFIG_FILE }}
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          command_timeout: 30m
+          envs: DEPLOY_PATH,BRUIN_CONFIG_FILE
+          script: |
+            set -euo pipefail
+            export PATH="$HOME/.local/bin:$PATH"
+            export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+            export DBUS_SESSION_BUS_ADDRESS="${DBUS_SESSION_BUS_ADDRESS:-unix:path=${XDG_RUNTIME_DIR}/bus}"
+
+            DEPLOY_PATH="${DEPLOY_PATH:-$HOME/yahtzee}"
+            BRUIN_CONFIG_FILE="${BRUIN_CONFIG_FILE:-$DEPLOY_PATH/.bruin.yml}"
+
+            cd "$DEPLOY_PATH"
+            git fetch origin
+            git reset --hard origin/main
+
+            # DuckDB is single-writer: stop DAC before bruin run.
+            # Placeholder — no-op until the user unit is enabled (docs/hosting-vps.md).
+            if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
+              systemctl --user stop yahtzee-dac.service
+            fi
+
+            # --config-file: path to .bruin.yml (DuckDB connections). --workers 1 avoids file locks.
+            # OFFLINE_TEST=1: skip Nominatim/Places until seed-only pubs land on main (PR #25).
+            # After that merge, drop the env var; no geocoding keys are required either way.
+            OFFLINE_TEST=1 bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"
+
+            python3 dashboard/scripts/export_scorecards.py
+            python3 dashboard/scripts/export_pub_map.py
+
+            # Placeholder reload: restart DAC so widgets see the new DuckDB file.
+            # Sidecar (python -m http.server / nginx) reads files from disk — no restart needed.
+            # Alternative: touch a reload file if you wire one up.
+            if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
+              systemctl --user start yahtzee-dac.service
+            fi

@@ -26,6 +26,14 @@ REMOVED = (
     "WALRUS AND CARPENTER",
     "The Walrus & Carpenter",
     "The Walrus",
+    "DIOGENES THE DOG L",
+    "THE CHALK FREE HOUSE L",
+    "SUPERCUTE TAPROOM",
+    "THE THIRSTY FARRIER S",
+    "Diogenes the Dog",
+    "The Chalk Freehouse",
+    "Supercute Taproom",
+    "The Thirsty Farrier",
 )
 
 
@@ -170,11 +178,15 @@ def test_map_uses_pint_pins_and_esri_basemap():
 
 def test_confirmed_pin_count():
     features = load_features()
-    assert len(features) == 48
+    assert len(features) == 44
     names = [f["properties"]["name"] for f in features]
     assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
     assert "German Kraft" not in names
+    assert "Diogenes the Dog" not in names
+    assert "The Chalk Freehouse" not in names
+    assert "Supercute Taproom" not in names
+    assert "The Thirsty Farrier" not in names
 
 
 if __name__ == "__main__":

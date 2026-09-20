@@ -38,8 +38,8 @@ def sample_pubs():
             "visit_count": 2,
         },
         {
-            "name": "The Thirsty Farrier",
-            "merchant_name_raw": "THE THIRSTY FARRIER S",
+            "name": "No Photo Arms",
+            "merchant_name_raw": "NO PHOTO ARMS",
             "lat": 51.5021332,
             "lng": -0.1196679,
             "source": "seed",
@@ -94,7 +94,7 @@ def test_seed_photo_beats_cache_and_google(tmp_path):
         fetch_google=fake_google,
     )
     churchill = next(p for p in pubs if p["name"] == "Churchill Arms")
-    farrier = next(p for p in pubs if p["name"] == "The Thirsty Farrier")
+    farrier = next(p for p in pubs if p["name"] == "No Photo Arms")
     assert churchill["photo_url"] == "pub_map/photos/churchill_arms.jpg"
     assert churchill["photo_source"] == "seed"
     assert "Wikimedia" in churchill["photo_attribution"]
@@ -103,15 +103,15 @@ def test_seed_photo_beats_cache_and_google(tmp_path):
     assert farrier["maps_url"].startswith("https://www.google.com/maps/search/")
     assert stats["seed"] == 1
     assert stats["google"] == 1
-    assert calls == ["The Thirsty Farrier"]
+    assert calls == ["No Photo Arms"]
 
 
 def test_cache_hit_skips_live_fetch(tmp_path):
     exp = load_export()
     pubs = [
         {
-            "name": "The Thirsty Farrier",
-            "merchant_name_raw": "THE THIRSTY FARRIER S",
+            "name": "No Photo Arms",
+            "merchant_name_raw": "NO PHOTO ARMS",
             "lat": 51.5021332,
             "lng": -0.1196679,
             "source": "seed",
@@ -165,8 +165,8 @@ def test_offline_and_missing_key_skip_live_fetch(tmp_path):
 
     pubs = [
         {
-            "name": "The Thirsty Farrier",
-            "merchant_name_raw": "THE THIRSTY FARRIER S",
+            "name": "No Photo Arms",
+            "merchant_name_raw": "NO PHOTO ARMS",
             "lat": 51.5021332,
             "lng": -0.1196679,
             "source": "seed",
@@ -200,8 +200,8 @@ def test_negative_cache_not_retried(tmp_path):
     exp = load_export()
     pubs = [
         {
-            "name": "The Thirsty Farrier",
-            "merchant_name_raw": "THE THIRSTY FARRIER S",
+            "name": "No Photo Arms",
+            "merchant_name_raw": "NO PHOTO ARMS",
             "lat": 51.5021332,
             "lng": -0.1196679,
             "source": "seed",
@@ -238,8 +238,8 @@ def test_refresh_photos_bypasses_cache(tmp_path):
     exp = load_export()
     pubs = [
         {
-            "name": "The Thirsty Farrier",
-            "merchant_name_raw": "THE THIRSTY FARRIER S",
+            "name": "No Photo Arms",
+            "merchant_name_raw": "NO PHOTO ARMS",
             "lat": 51.5021332,
             "lng": -0.1196679,
             "source": "seed",
@@ -339,18 +339,31 @@ def test_load_seed_accepts_image_url_alias(tmp_path, monkeypatch):
 def test_exported_geojson_has_churchill_photo_and_maps_links():
     data = json.loads(GEOJSON.read_text(encoding="utf-8"))
     features = data["features"]
-    churchill = next(ft for ft in features if ft["properties"]["name"] == "Churchill Arms")
-    farrier = next(
-        ft for ft in features if ft["properties"]["name"] == "The Thirsty Farrier"
-    )
-    assert churchill["properties"]["photo_url"] == "pub_map/photos/churchill_arms.jpg"
-    assert churchill["properties"]["photo_source"] == "seed"
-    assert "maps_url" in churchill["properties"]
-    assert "photo_url" not in farrier["properties"]
-    assert farrier["properties"]["maps_url"].startswith(
-        "https://www.google.com/maps/search/"
-    )
-    assert data["metadata"]["photo_count"] >= 1
+    by_name = {ft["properties"]["name"]: ft["properties"] for ft in features}
+    churchill = by_name["Churchill Arms"]
+    cadogan = by_name["Cadogan Arms"]
+    marketplace = by_name["Vauxhall Marketplace"]
+    assert churchill["photo_url"] == "pub_map/photos/churchill_arms.jpg"
+    assert churchill["photo_source"] == "seed"
+    assert "maps_url" in churchill
+    assert cadogan["photo_url"] == "pub_map/photos/cadogan_arms.jpg"
+    assert cadogan["photo_source"] == "seed"
+    assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
+    assert "photo_url" not in marketplace
+    assert data["metadata"]["photo_count"] == 43
+    names_without = {
+        ft["properties"]["name"]
+        for ft in features
+        if not ft["properties"].get("photo_url")
+    }
+    assert names_without == {"Vauxhall Marketplace"}
+    gone = {
+        "Diogenes the Dog",
+        "The Chalk Freehouse",
+        "Supercute Taproom",
+        "The Thirsty Farrier",
+    }
+    assert gone.isdisjoint(by_name)
 
 
 if __name__ == "__main__":

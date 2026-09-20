@@ -11,7 +11,8 @@ list plus later address/naming overrides and the Vauxhall Marketplace
 addendum. Excluded: Thomas Cubitt, Hung Drawn & Quartered, Bar Crispin,
 Guinness Open Gate Brewery, Hector's, The Buccaneer (didn't play there),
 Walrus / Walrus & Carpenter (didn't play there), FCB Paddington (coffee,
-not a pub).
+not a pub), Diogenes the Dog, The Chalk Freehouse, Supercute Taproom,
+The Thirsty Farrier (didn't play there).
 
   python3 assets/python/build_pub_visits.py \\
       --chase /path/to/Chase7977_Activity_20260830.csv
@@ -58,6 +59,10 @@ EXCLUDED_SUBSTR = (
     "WALRUS AND CARPENTER",
     "WALRUS",
     "FCB PADDINGTON",
+    "DIOGENES",
+    "CHALK FREE",
+    "SUPERCUTE",
+    "THIRSTY FARRIER",
 )
 
 # Jordan visit-count overrides applied after unique-day counts.

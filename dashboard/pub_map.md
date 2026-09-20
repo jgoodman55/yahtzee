@@ -37,7 +37,7 @@ Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after
 
 Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
 
-Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png).
+Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png).
 
 Default basemap is
 [Esri World Light Gray](https://www.esri.com/) canvas tiles (base + labels) —
@@ -92,8 +92,16 @@ Add `photo_url` or `image_url` on the `seed_pubs.csv` row. Relative paths are
 resolved from `dashboard/pub_map.html` (so `pub_map/photos/….jpg` works on
 `file://` and the port-8765 static server). `https://` URLs work too. Optional
 `photo_attribution` is shown under the address (needed for Commons / CC
-licenses). Churchill Arms ships with a vendored Commons preview
-(`dashboard/pub_map/photos/churchill_arms.jpg`, CVB, CC BY-SA 4.0).
+licenses). Most confirmed pins now have a vendored Commons / Geograph
+preview under `dashboard/pub_map/photos/` (small JPEG, ~400 px). Churchill
+Arms was first (`churchill_arms.jpg`, CVB, CC BY-SA 4.0); the rest were
+backfilled the same way. Attribution is on the seed row and in the popup.
+
+Cadogan Arms uses a vendored Commons / Flickr facade (`cadogan_arms.jpg`,
+Charles, CC BY 2.0). Skipped (no decent reusable facade on disk — do not
+invent): Vauxhall Marketplace. Removed (didn’t play there — not on the
+map): Diogenes the Dog, The Chalk Freehouse, Supercute Taproom, The
+Thirsty Farrier.
 
 **2. Google Places Photos (optional key)**
 
@@ -148,7 +156,9 @@ Chase statement merchants classified `likely_pub=yes` (Jordan 2026-09-14)
 are in `seed_pubs.csv` / `raw_pub_visits.csv`. Excluded: Thomas Cubitt,
 Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s,
 The Buccaneer (didn’t play there), Walrus / Walrus & Carpenter (didn’t
-play there), FCB Paddington (coffee, not a pub).
+play there), FCB Paddington (coffee, not a pub), Diogenes the Dog, The
+Chalk Freehouse, Supercute Taproom, The Thirsty Farrier (didn’t play
+there).
 The Derby and Hanover Arms stay as separate pins (~30m neighbors; identity
 exception in proximity dedupe). Beehive is exactly 1 visit (Jordan override).
 Spaniards Inn is the OSM pub amenity on Spaniards Road, not the bus stop.

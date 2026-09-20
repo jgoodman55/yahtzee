@@ -20,6 +20,8 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 - `leaflet_pub_map_anchor_bar.png` — standalone Leaflet map, Anchor Bar popup (3 visits)
 - `pub_map_popup_with_photo.png` — Churchill Arms pint-pin popup with photo preview
 - `pub_map_popup_without_photo.png` — popup with name/visits/address and no photo yet
+- `pub_map_popup_gordons_photo.png` — Gordon's Wine Bar after Commons backfill
+- `pub_map_popup_spaniards_photo.png` — Spaniards Inn after Commons backfill
 
 Pub map Layers A + B (pint pins + borough drill-down):
 

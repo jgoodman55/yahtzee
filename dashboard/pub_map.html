@@ -178,6 +178,10 @@
       display: block;
       filter: drop-shadow(0 1px 1px rgba(27, 36, 48, 0.35));
     }
+    /* Popup pane is a full-map overlay; let pan/zoom/wheel pass through
+       empty space while the card itself stays clickable. */
+    .leaflet-popup-pane { pointer-events: none; }
+    .leaflet-popup { pointer-events: auto; }
     .leaflet-popup-content { margin: 10px 12px; }
     .leaflet-popup.venue-popup .leaflet-popup-content-wrapper {
       padding: 0;
@@ -609,7 +613,9 @@
           minWidth: 200,
           className: "venue-popup",
           autoPan: true,
-          keepInView: true
+          keepInView: false,
+          closeOnClick: true,
+          autoClose: true
         });
         marker.on("popupopen", function (ev) {
           var img = ev.popup.getElement() && ev.popup.getElement().querySelector(".venue-photo img");

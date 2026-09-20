@@ -121,7 +121,7 @@ Hung Drawn & Quartered, Bar Crispin, Guinness Open Gate Brewery, Hector’s,
 The Buccaneer (didn’t play there), Walrus / Walrus & Carpenter (didn’t
 play there), FCB Paddington (coffee, not a pub), Diogenes the Dog, The
 Chalk Freehouse, Supercute Taproom, The Thirsty Farrier (didn’t play
-there).
+there), The Pig and Butcher (didn’t play there).
 The Derby and Hanover Arms stay as separate pins (~30m neighbors; identity
 exception in proximity dedupe). Beehive is exactly 1 visit (Jordan override).
 Spaniards Inn is the OSM pub amenity on Spaniards Road, not the bus stop.

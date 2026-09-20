@@ -34,6 +34,8 @@ REMOVED = (
     "The Chalk Freehouse",
     "Supercute Taproom",
     "The Thirsty Farrier",
+    "PIG AND BUTCHER",
+    "Pig and Butcher",
 )
 
 
@@ -63,7 +65,7 @@ def test_seed_jordan_addresses_and_names():
     seed = load_seed()
     cases = {
         "WHITE HORSE": ("White Horse Peckham", "20-222 Peckham Rye"),
-        "THE SHIP": ("The Ship", "12 Gate St"),
+        "THE SHIP": ("The Ship", "68 Borough Rd"),
         "THE DERBY": ("The Derby", "336 Kennington Park Rd"),
         "THE HANOVER ARMS": ("The Hanover Arms", "326 Kennington Park Rd"),
         "DUKE OF WELLINGTON": ("Duke of Wellington", "63 Eaton Terrace"),
@@ -164,6 +166,29 @@ def test_spaniards_pin_is_the_pub_amenity_not_the_bus_stop():
     assert abs(coords[0] - lng) < 1e-6
 
 
+def test_ship_is_borough_road_not_gate_st():
+    seed = load_seed()
+    grouped = by_name(load_features())
+    row = seed["THE SHIP"]
+    assert row["pub_name"] == "The Ship"
+    assert "68 Borough Rd" in row["note"]
+    assert "SE1 1DX" in row["note"]
+    assert "Gate St" not in row["note"]
+    lat = float(row["lat"])
+    lng = float(row["lng"])
+    # 68 Borough Rd, London SE1 1DX (public GPS for that address, not Gate St).
+    assert abs(lat - 51.4992665) < 1e-6
+    assert abs(lng - (-0.0969249)) < 1e-6
+    feat = grouped["The Ship"][0]
+    coords = feat["geometry"]["coordinates"]
+    assert abs(coords[1] - lat) < 1e-6
+    assert abs(coords[0] - lng) < 1e-6
+    blob = GEOJSON.read_text(encoding="utf-8")
+    assert "Gate St" not in blob
+    assert "Pig and Butcher" not in blob
+    assert "PIG AND BUTCHER" not in blob
+
+
 def test_map_uses_pint_pins_and_esri_basemap():
     html = MAP_HTML.read_text(encoding="utf-8")
     assert "circleMarker" not in html
@@ -174,11 +199,13 @@ def test_map_uses_pint_pins_and_esri_basemap():
     assert "pub_map/london_boroughs.js" in html
     assert "World_Light_Gray_Base" in html
     assert "World_Light_Gray_Reference" in html
+    assert "keepInView: false" in html
+    assert "keepInView: true" not in html
 
 
 def test_confirmed_pin_count():
     features = load_features()
-    assert len(features) == 44
+    assert len(features) == 43
     names = [f["properties"]["name"] for f in features]
     assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
@@ -187,6 +214,8 @@ def test_confirmed_pin_count():
     assert "The Chalk Freehouse" not in names
     assert "Supercute Taproom" not in names
     assert "The Thirsty Farrier" not in names
+    assert "Pig and Butcher" not in names
+    assert "The Ship" in names
 
 
 if __name__ == "__main__":
@@ -198,6 +227,7 @@ if __name__ == "__main__":
         test_added_crown_monument_beehive,
         test_mc_and_marketplace_are_day_deduped,
         test_spaniards_pin_is_the_pub_amenity_not_the_bus_stop,
+        test_ship_is_borough_road_not_gate_st,
         test_map_uses_pint_pins_and_esri_basemap,
         test_confirmed_pin_count,
     ):

@@ -42,7 +42,7 @@ From the repo root:
 
 cp -n ../.bruin.yml.example ../.bruin.yml   # if .bruin.yml is missing
 pip install -r ../assets/python/requirements.txt
-OFFLINE_TEST=1 bruin run --workers 1        # builds marts into yahtzee.duckdb
+bruin run --workers 1                       # builds marts into yahtzee.duckdb
 ```
 
 `dac` walks upward from this directory to find the repo-root `.bruin.yml`.

@@ -1,4 +1,9 @@
 """
+Leftover Claude helper — not the ingest path.
+
+Intended loop (Grok chat + score-rule tests, no Anthropic/OpenAI vendor):
+see docs/scorecard_ingest.md. Do not wire this script into `bruin run`.
+
 Reads photographed Yahtzee scorecards (handwritten — see
 scorecard_format.md for the physical layout and known notation quirks)
 using a vision-capable Claude model, spot-checks the arithmetic, and

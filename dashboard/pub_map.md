@@ -84,9 +84,8 @@ not mart columns.
 
 ### Venue photos
 
-Popup photos are **optional**. Not every pin needs one on day one.
-
-**1. Manual seed URL (highest trust, no API)**
+Popup photos are **optional** and **seed-only**. There is no live Google
+Places photo fetch, no `--refresh-photos`, and no API key.
 
 Add `photo_url` or `image_url` on the `seed_pubs.csv` row. Relative paths are
 resolved from `dashboard/pub_map.html` (so `pub_map/photos/….jpg` works on
@@ -103,49 +102,13 @@ invent): Vauxhall Marketplace. Removed (didn’t play there — not on the
 map): Diogenes the Dog, The Chalk Freehouse, Supercute Taproom, The
 Thirsty Farrier.
 
-**2. Google Places Photos (optional key)**
+`python3 dashboard/scripts/export_pub_map.py` copies those seed URLs onto
+the GeoJSON. Pins without a seed photo still load: **No photo yet** plus a
+Maps search link. Pub **locations** are the same story — `seed_pubs.csv`
+lat/lng only; `bruin run` does not geocode.
 
-Same env var already used for geocoding in `geocode_pubs.py`:
-
-```bash
-export GOOGLE_PLACES_API_KEY=your-key   # Places API (New) — Text Search + Place Photos
-python3 dashboard/scripts/export_pub_map.py
-```
-
-The exporter text-searches each pub (name + lat/lng bias, 80 m), then fetches
-one Place Photo (`maxWidthPx=400`, `skipHttpRedirect=true`) and stores the
-`photoUri` plus `place_id` in `dashboard/pub_map/pub_photos.json`. Rebuilds
-reuse that sidecar, so you do **not** pay per export. Use
-`--refresh-photos` to ignore hits and re-query (still skips seed URLs).
-
-Google photo *resource names* expire and must not be reused; the cache stores
-the media `photoUri` instead. Those URIs can also go stale — the Leaflet
-`<img>` falls back to **No photo yet** on error, and `--refresh-photos` with a
-key refreshes them.
-
-**Rate limits / cost (Places API New, personal project)**
-
-| Call | When | Notes |
-|---|---|---|
-| Text Search (New) | once per pub **not** already in seed or cache | billed SKU; includes `places.photos` (Pro-tier fields) |
-| Place Photos (New) | once per pub that has a photo | `maxWidthPx=400`; 1 photo / pub |
-| Cache hit / seed URL | every other rebuild | **zero** live calls |
-| Negative cache (`status: miss`) | same | do not retry until `--refresh-photos` |
-
-Google’s Maps Platform free credit (~USD 200 / month) covers a one-shot
-backfill of ~50 pubs many times over. The exporter sleeps 0.15 s between live
-calls. Do not loop `--refresh-photos` in CI.
-
-**3. Offline / no key**
-
-```bash
-OFFLINE_TEST=1 python3 dashboard/scripts/export_pub_map.py
-```
-
-`OFFLINE_TEST=1` skips live Place Photos the same way `geocode_pubs.py` skips
-Nominatim/Google. No key is the same: seed + cache only. The map still loads
-(Esri tiles + pint pins + popups). Missing photos show **No photo yet** and a
-Maps search link. You do **not** need `GOOGLE_PLACES_API_KEY` to open the map.
+The map itself still loads Esri (or OSM) tiles in the **browser**. That is
+client-side Leaflet, not Bruin, and needs no `OFFLINE_TEST` flag.
 
 `visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
 row per merchant × Transaction Date (summed when proximity-dedup collapses

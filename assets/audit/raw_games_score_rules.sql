@@ -3,8 +3,10 @@ name: raw_games_score_rules
 type: duckdb.sql
 description: |
   Impossible Yahtzee scores in raw_games (spreadsheet typos / OCR).
-  One row per violating (game_seq, player, category). Allowlist holds
-  leftovers still on the card (currently empty).
+  One row per violating (game_seq, player, category, score, rule).
+  That tuple is Jordan's review queue after a Grok extract — not a
+  prompt to re-read every sheet. Allowlist holds leftovers still on
+  the card (currently empty by policy).
   Hard-fail: `no_new_score_rule_violations` so a new bad value fails
   `bruin run`. Do not silently "fix" allowlisted cells.
 materialization:

@@ -11,46 +11,25 @@ materialization:
 
 # Resolves each merchant name in raw_pub_visits to a confirmed pub location
 # (visit_count is unique calendar days per merchant: one visit-log row per
-# Transaction Date at that venue, then summed on proximity-dedup), in priority order:
-#   1. seed_pubs.csv        (manual, free, highest trust)
-#   2. OpenStreetMap Nominatim (free, no key)
-#   3. Google Places Text Search (needs GOOGLE_PLACES_API_KEY, small free tier)
-#   4. unresolved            (flagged for you to review and add to the seed)
+# Transaction Date at that venue, then summed on proximity-dedup).
 #
-# Then dedupes across sources by physical proximity: "Anchor Bar" (seed) and
+# Locations come from seed_pubs.csv only (lat/lng already in the seed).
+# There is no live Nominatim / Google Places lookup and no API key.
+# Merchants without a seed match stay unresolved (flagged for review).
+#
+# Then dedupes by physical proximity: "Anchor Bar" (seed) and
 # "Anchor Bankside (South" (a card-statement merchant string) are different
 # text but the same building — string similarity alone won't reliably catch
 # that (fuzzy name matching is fooled by chain pub naming and abbreviations
 # just as easily as it's helped by them). Instead, once each merchant string
-# has *coordinates* (from any of the three sources above), venues within
-# ~50m of each other are treated as the same physical pub and collapsed to
-# one row, keeping the seed's name/coords as authoritative when a seed match
-# is involved. Distinct seed pubs with different pub_name values are never
-# collapsed. The Derby and Hanover Arms are the identity exception that
-# motivated that rule (~30m neighbors on Kennington Park Road).
-#
-# Set OFFLINE_TEST=1 to skip live Nominatim/Google calls entirely (seed
-# matches only, everything else marked unresolved) — useful for testing the
-# rest of the Bruin pipeline without network access or API keys.
-#
-# Requires: requests  (add to requirements.txt next to this asset)
-
-import os
-import time
+# has *coordinates* (from the seed), venues within ~50m of each other are
+# treated as the same physical pub and collapsed to one row, keeping the
+# seed's name/coords as authoritative. Distinct seed pubs with different
+# pub_name values are never collapsed. The Derby and Hanover Arms are the
+# identity exception that motivated that rule (~30m neighbors on Kennington
+# Park Road).
 
 import pandas as pd
-import requests
-
-NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
-GOOGLE_PLACES_URL = "https://places.googleapis.com/v1/places:searchText"
-GOOGLE_API_KEY = os.environ.get("GOOGLE_PLACES_API_KEY")
-OFFLINE_TEST = os.environ.get("OFFLINE_TEST") == "1"
-
-# Nominatim's usage policy requires a real identifying User-Agent and max 1 req/sec.
-HEADERS = {"User-Agent": "yahtzee-analytics-personal-project (contact: you@example.com)"}
-
-PUB_OSM_CLASSES = {"pub", "bar", "biergarten"}
-PUB_GOOGLE_TYPES = {"bar", "night_club"}  # Google has no distinct "pub" type
 
 # ~50m at London's latitude — tight enough not to merge genuinely different
 # pubs a couple of blocks apart, loose enough to absorb GPS/geocoding jitter.
@@ -71,74 +50,11 @@ def try_seed(merchant: str, seed_df: pd.DataFrame):
     return None
 
 
-def try_nominatim(merchant: str):
-    if OFFLINE_TEST:
-        return None
-    try:
-        resp = requests.get(
-            NOMINATIM_URL,
-            params={"q": merchant, "format": "jsonv2", "addressdetails": 0, "limit": 1},
-            headers=HEADERS,
-            timeout=10,
-        )
-        resp.raise_for_status()
-        results = resp.json()
-        time.sleep(1)  # respect Nominatim's 1 req/sec policy
-        if not results:
-            return None
-        top = results[0]
-        if top.get("class") == "amenity" and top.get("type") in PUB_OSM_CLASSES:
-            return {
-                "pub_name": top.get("display_name", merchant).split(",")[0],
-                "lat": float(top["lat"]),
-                "lng": float(top["lon"]),
-                "source": "osm",
-                "is_confirmed_pub": True,
-            }
-    except requests.RequestException:
-        pass
-    return None
-
-
-def try_google_places(merchant: str):
-    if OFFLINE_TEST or not GOOGLE_API_KEY:
-        return None
-    try:
-        resp = requests.post(
-            GOOGLE_PLACES_URL,
-            json={"textQuery": merchant},
-            headers={
-                "Content-Type": "application/json",
-                "X-Goog-Api-Key": GOOGLE_API_KEY,
-                "X-Goog-FieldMask": "places.displayName,places.location,places.types",
-            },
-            timeout=10,
-        )
-        resp.raise_for_status()
-        places = resp.json().get("places", [])
-        if not places:
-            return None
-        top = places[0]
-        types = set(top.get("types", []))
-        if types & PUB_GOOGLE_TYPES:
-            return {
-                "pub_name": top["displayName"]["text"],
-                "lat": top["location"]["latitude"],
-                "lng": top["location"]["longitude"],
-                "source": "google",
-                "is_confirmed_pub": True,
-            }
-    except requests.RequestException:
-        pass
-    return None
-
-
 def resolve_merchant(merchant: str, seed_df: pd.DataFrame) -> dict:
-    for resolver in (lambda m: try_seed(m, seed_df), try_nominatim, try_google_places):
-        result = resolver(merchant)
-        if result:
-            result["merchant_name_raw"] = merchant
-            return result
+    result = try_seed(merchant, seed_df)
+    if result:
+        result["merchant_name_raw"] = merchant
+        return result
     return {
         "merchant_name_raw": merchant,
         "pub_name": None,
@@ -245,13 +161,13 @@ def materialize():
             result_df["visit_count"].fillna(1).astype(int)
         )
 
-    unresolved_count = (result_df["source"] == "unresolved").sum()
-    if unresolved_count:
+    unresolved = result_df[result_df["source"] == "unresolved"]
+    if not unresolved.empty:
         print(
-            f"{unresolved_count} venue(s) unresolved — review them and add rows "
+            f"{len(unresolved)} venue(s) unresolved — review them and add rows "
             "to assets/seeds/seed_pubs.csv, then re-run."
         )
-    if OFFLINE_TEST:
-        print("OFFLINE_TEST=1 — skipped live geocoding, seed matches only.")
+        for name in unresolved["merchant_name_raw"].tolist():
+            print(f"  - {name}")
 
     return result_df

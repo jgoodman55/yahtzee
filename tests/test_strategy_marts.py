@@ -1,6 +1,6 @@
 """Grounding checks for Strategy marts (n=108 seed, 0 ties).
 
-Run after `OFFLINE_TEST=1 bruin run --workers 1`:
+Run after `bruin run --workers 1`:
 
     python tests/test_strategy_marts.py
     pytest tests/test_strategy_marts.py

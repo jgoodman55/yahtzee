@@ -2,6 +2,36 @@
 
 Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 
+## OCR + score-rule review loop
+
+Jordan extracts sheets with **Grok** (chat vision). There is no Anthropic or
+OpenAI integration, and `bruin run` never calls a model.
+
+1. Upload the sheet photo to Grok and ask it to extract / propose
+   `raw_games.csv` updates. Layout and handwriting notes:
+   `ingestion/scorecard_format.md`.
+2. Patch `assets/seeds/raw_games.csv` (and the crosswalk if this is a new
+   sheet). Then run:
+
+   ```bash
+   python tests/test_raw_games_score_rules.py
+   # or: pytest tests/test_raw_games_score_rules.py
+   # or: bruin run --workers 1
+   ```
+
+   **Failures are Jordan's review queue** — impossible boxes listed as
+   `(game_seq, player, category, score, rule)`. Check those cells on the
+   photo. That is the default alert surface, not a full-sheet re-read.
+3. `known_score_rule_violations.csv` is empty **by policy**. Do not grow it
+   for OCR noise. Fix the seed. Only add a row if the card itself really
+   has an illegal box that you are leaving as written.
+4. Legal-but-wrong scores (e.g. a 25 Full House that was actually 0) do
+   **not** fail the rules. Spot-check those occasionally with the
+   side-by-side scorecards viewer. Default alert is still the rule tests.
+
+Do not add Claude / ChatGPT wiring to this repo. `ingestion/scan_scorecard.py`
+is a leftover Anthropic helper and is not part of `bruin run`.
+
 ## Source
 
 - Google Drive folder: https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
@@ -23,7 +53,7 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 | `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 108 games = 3240 data rows). Players are `jordan` / `erin`. |
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
-| `assets/seeds/known_score_rule_violations.csv` | Leftover impossible scores still under photo review (allowlist for `raw_games_score_rules`) |
+| `assets/seeds/known_score_rule_violations.csv` | Leftover impossible scores still under photo review (allowlist for `raw_games_score_rules`; empty by policy) |
 
 `recorded_total` is repeated on all 15 category rows for that `(game_seq, player)`. After Jordan's category review it was set to `sum(score)` for every player-game (0 remaining mismatches). `fact_games.totals_match` still compares computed vs recorded as a spot-check. Historical card-vs-sum notes stay in `extraction_flags.md`.
 
@@ -38,13 +68,16 @@ Real Yahtzee games replace the 3-game demo seed in `assets/seeds/raw_games.csv`.
 
 Most of these rules hard-fail on the `raw_games` seed. Leftovers stay in
 `known_score_rule_violations.csv` (currently empty).
-`raw_games_score_rules` fails `OFFLINE_TEST=1 bruin run --workers 1` when a
-violation is not on that allowlist. List leftovers without Bruin:
+`raw_games_score_rules` fails `bruin run --workers 1` when a violation is
+not on that allowlist. List leftovers without Bruin:
 
 ```bash
 python tests/test_raw_games_score_rules.py
 # or: pytest tests/test_raw_games_score_rules.py
 ```
+
+Failure output lists each row as
+`(game_seq=…, player=…, category=…, score=…, rule=…)`.
 
 ## Side-by-side scorecards (dashboard)
 
@@ -67,5 +100,9 @@ Seeds feed `stg_games` → `fact_games` (computed vs recorded totals) → `int_w
 
 ```bash
 cp -n .bruin.yml.example .bruin.yml
-OFFLINE_TEST=1 bruin run --workers 1
+bruin run --workers 1
 ```
+
+No `OFFLINE_TEST` flag and no geocoding / Places keys. Pub locations come
+from `seed_pubs.csv` only. Leaflet map tiles (Esri / OSM) load in the
+browser when you open the map — they are not part of `bruin run`.

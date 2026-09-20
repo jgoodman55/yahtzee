@@ -54,69 +54,50 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   `mart_yz_matchup` — player-blind Strategy tab (exclusive-feature holder
   win rates, miss × consolation rescue matrix, exclusive Yahtzee
   holder-won vs upset). Cohort definitions: `assets/marts/strategy.md`.
-- `mart_pub_locations` — geocoded, deduped pub list (seed → Nominatim →
-  Google Places → unresolved) — standalone, not joined to games.
+- `mart_pub_locations` — seed-only pub list (lat/lng from `seed_pubs.csv`,
+  proximity-deduped; unresolved merchants flagged) — standalone, not
+  joined to games.
 
 ## 2. Scorecard ingestion (OCR)
 
-`ingestion/scan_scorecard.py` — a human-in-the-loop helper (not a Bruin
-asset), run manually before `bruin run`. Each photographed sheet holds up
-to 3 games; `ingestion/scorecard_format.md` documents the physical layout
-and handwriting quirks (edit that file as you learn more about your own
-handwriting patterns — the script reads it as part of the extraction
-prompt, so corrections there improve future scans too).
+Upload each photographed sheet to **Grok** and have it extract / propose
+`raw_games.csv` updates. Layout and handwriting notes live in
+`ingestion/scorecard_format.md`. There is no Anthropic or OpenAI
+integration; `bruin run` never calls a model.
 
-1. Name files like `scorecard_games_1_to_3.jpg` — the number range in the
-   filename drives `game_seq` numbering, not guesswork.
-2. Sends the photo to a vision-capable Claude model — not classical OCR
-   (pytesseract etc.), which is unreliable on handwriting, especially with
-   crossed-out corrections.
-3. The model returns structured JSON per game: all 15 categories per
-   player, the recorded total, and any cells it's genuinely unsure about.
-4. **Spot-check before writing anything**: sums the 15 category values per
-   player and compares to the recorded total, and checks the extracted game
-   count matches the filename's range. Any mismatch, or any flagged
-   uncertain cell, stops the write for that whole sheet — the extraction is
-   dumped to a `*.review.json` file for you to check by eye instead of
-   silently trusting either the arithmetic or the handwriting.
-5. Only a clean sheet gets appended to `raw_games.csv` (15 category rows
-   per player, each carrying that player's `recorded_total`).
+After patching the seed:
 
-Batch mode: `python scan_scorecard.py --dir /path/to/photos` processes every
-`scorecard_games_*` file in a folder in one run.
+1. `python tests/test_raw_games_score_rules.py` (or `bruin run --workers 1`).
+2. **Failures are the review queue** — impossible boxes as
+   `(game_seq, player, category, score, rule)`. Check those cells on the
+   photo. That is the default alert, not a full-sheet re-read.
+3. `known_score_rule_violations.csv` stays empty by policy. Fix the seed;
+   do not allowlist OCR noise.
+4. Legal-but-wrong scores still need occasional side-by-side on the
+   scorecards viewer. They will not fail the rule tests.
 
-**Getting an API key**, if you want to run this script yourself: sign up at
-console.anthropic.com, add billing (pay-as-you-go, no subscription), and
-generate a key under "API Keys" — image requests to Claude cost a small
-fraction of a cent each at this volume. Set it as `ANTHROPIC_API_KEY` in
-your environment before running the script.
-
-**Or skip the script entirely**: since you're already talking to Claude in
-a chat interface with vision built in, you can just upload scorecard photos
-directly in conversation and ask Claude to extract and spot-check them the
-same way — no key, no script, no local setup. That's the better option for
-occasional/small batches; the standalone script is worth it once you want
-this to run unattended as part of a repeatable pipeline.
+Full loop: `docs/scorecard_ingest.md`. `ingestion/scan_scorecard.py` is a
+leftover Claude helper and is not part of the pipeline.
 
 ## 3. Pub geocoding pipeline
 
-1. Seed match (`seed_pubs.csv`) — free, no API call, highest trust.
-2. OpenStreetMap Nominatim — free, no key, decent baseline.
-3. Google Places Text Search — fallback for fuzzy/abbreviated merchant names,
-   small free tier.
-4. Unresolved — flagged for manual review, feeds back into the seed file.
-5. **Proximity dedup**: once a merchant string has coordinates (from any
-   source above), venues within ~50m of each other are collapsed into one
-   pub. This is what actually catches "Anchor Bar" and "Anchor Bankside
+Locations come from `seed_pubs.csv` only (lat/lng already in the seed).
+No Nominatim, no Google Places, no API key, no `OFFLINE_TEST` flag.
+
+1. Seed match (`seed_pubs.csv`) — merchant string → seed lat/lng.
+2. Unresolved — visit-log merchants with no seed match are printed for
+   review; add a seed row (with coords) and re-run. No network.
+3. **Proximity dedup**: once a merchant string has coordinates from the
+   seed, venues within ~50m of each other are collapsed into one pub.
+   This is what actually catches "Anchor Bar" and "Anchor Bankside
    (South" being the same building — string similarity alone is fooled
    too easily by chain naming and abbreviations; matching on the resolved
    coordinates is more reliable than fuzzy-matching the raw text. Distinct
    seed pubs with different `pub_name` values (The Derby and Hanover Arms)
    are not collapsed even when they sit inside that radius.
 
-Set `OFFLINE_TEST=1` to skip both live geocoding APIs entirely (seed
-matches only) — useful for testing the rest of the pipeline with no
-network access or API keys.
+Popup photos are the same: seed `photo_url` / vendored
+`dashboard/pub_map/photos/` only. No live Place Photos.
 
 ## 4. Dashboard (Bruin DAC)
 
@@ -175,8 +156,8 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 1. Seeds + `stg_games`/`stg_players` + `dim_player` + `fact_games`
    (get the core stats and spot-check working first)
 2. `int_win_loss` + `int_commentary` (cheeky logic)
-3. `ingestion/scan_scorecard.py` for scanning real scorecards
-4. Pub geocoding pipeline + `mart_pub_locations`
+3. Grok extract + score-rule tests for new scorecards (`docs/scorecard_ingest.md`)
+4. Seed-only pub locations + `mart_pub_locations`
 5. DAC dashboard pages
 6. Animation script
 7. Wire everything into `pipeline.yml`, validate, run
@@ -184,15 +165,18 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 See `/assets` for the Bruin pipeline (108 photographed games in
 `raw_games.csv`; `recorded_total` was recomputed from category sums after
 Jordan's review, and `fact_games.totals_match` remains the spot-check),
-`/ingestion` for the OCR helper, `/docs/scorecard_ingest.md`
-for photo provenance, and `/visuals` for the animation script.
+`/docs/scorecard_ingest.md` for the Grok + score-rule loop, and
+`/visuals` for the animation script.
 
 ## 8. Running just the Bruin portion
 
-You don't need an Anthropic or Google API key to run the core pipeline —
-only `assets/python/geocode_pubs.py` (pub geocoding) makes live network
-calls, and everything else runs entirely off the seed CSVs already in
-`assets/seeds/`.
+No API keys. `bruin run` is seed-only: games, commentary, and pub
+locations all come from CSVs in `assets/seeds/`. `mart_pub_locations`
+never calls Nominatim or Google Places.
+
+The only remaining optional network is **client-side map tiles** when you
+open `dashboard/pub_map.html` in a browser (Esri World Light Gray / OSM).
+That is Leaflet in the browser, not Bruin.
 
 ```bash
 cd yahtzee
@@ -234,16 +218,16 @@ That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →
 (`mart_player_kpis`, `mart_headline_kpis`, `mart_game_trends`,
 `mart_category_stats`, `int_strategy_features` → `mart_strategy_swing` /
 `mart_strategy_rescue` / `mart_yz_matchup`), and `mart_pub_locations`
-(which will attempt live geocoding unless you set `OFFLINE_TEST=1` —
-see below). Inspect results directly:
+(seed matches only; unresolved merchants are printed). Inspect results
+directly:
 
 ```bash
 duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
 `assets/seeds/raw_games.csv` already holds the 108 games from sheets
-`IMG_2885`–`IMG_2920`. Re-run after appending more sheets (via
-`ingestion/scan_scorecard.py` or by hand). See `docs/scorecard_ingest.md`.
+`IMG_2885`–`IMG_2920`. Re-run after appending more sheets (Grok extract,
+then score-rule tests). See `docs/scorecard_ingest.md`.
 
 **Migrating an older two-file seed:** if you still have a separate
 `raw_game_totals.csv` (`game_seq,player,recorded_total`), join it onto
@@ -253,28 +237,14 @@ duckdb yahtzee.duckdb "select * from mart_head_to_head"
 `sum(score)` after Jordan's category review; `fact_games.totals_match`
 is still the spot-check if those ever diverge again.
 
-## 9. Testing without any API keys
-
-Set `OFFLINE_TEST=1` before running to make `mart_pub_locations` skip both
-Nominatim and Google Places entirely — it'll resolve only what's in
-`seed_pubs.csv` and mark everything else `unresolved`, with no network calls
-and no keys required:
-
-```bash
-OFFLINE_TEST=1 bruin run
-```
-
-This is enough to validate the whole pipeline structure, the spot-check
-logic, the score-rule audit (`raw_games_score_rules`), and the commentary
-model end to end — the OCR ingestion script is the only piece that
-genuinely needs an API key, and it's a separate manual step outside
-`bruin run` (see the OCR section above and the README note on getting a
-key).
+## 9. Score-rule review queue
 
 Impossible category scores (wrong Full House / straight / Yahtzee box,
 Chance 0, upper faces that are not `n * face`) fail `bruin run` unless
-they are listed in `known_score_rule_violations.csv`. To print the same
-list without Bruin:
+they are listed in `known_score_rule_violations.csv` (empty by policy).
+Those failures are what Jordan checks after a Grok extract — listed as
+`(game_seq, player, category, score, rule)`. Print the same list without
+Bruin:
 
 ```bash
 python tests/test_raw_games_score_rules.py

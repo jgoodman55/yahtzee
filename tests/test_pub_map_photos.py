@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import csv
 import importlib.util
 import json
 import sys
@@ -16,7 +17,10 @@ EXPORT = REPO / "dashboard" / "scripts" / "export_pub_map.py"
 MAP_HTML = REPO / "dashboard" / "pub_map.html"
 GEOJSON = REPO / "dashboard" / "pub_map" / "pubs.geojson"
 SEED = REPO / "assets" / "seeds" / "seed_pubs.csv"
-CHURCHILL_JPG = REPO / "dashboard" / "pub_map" / "photos" / "churchill_arms.jpg"
+PHOTOS = REPO / "dashboard" / "pub_map" / "photos"
+CHURCHILL_JPG = PHOTOS / "churchill_arms.jpg"
+CADOGAN_JPG = PHOTOS / "cadogan_arms.jpg"
+MARKETPLACE_JPG = PHOTOS / "vauxhall_marketplace.jpg"
 
 
 def load_export():
@@ -55,6 +59,23 @@ def test_churchill_seed_photo_is_vendored():
     assert "photo_url" in blob.splitlines()[0]
     assert "pub_map/photos/churchill_arms.jpg" in blob
     assert "CVB / Wikimedia Commons" in blob
+
+
+def test_jordan_cadogan_and_marketplace_photos_are_vendored():
+    assert CADOGAN_JPG.exists()
+    assert CADOGAN_JPG.stat().st_size > 1000
+    assert MARKETPLACE_JPG.exists()
+    assert MARKETPLACE_JPG.stat().st_size > 1000
+    with SEED.open(newline="", encoding="utf-8") as fh:
+        rows = {row["merchant_name_raw"]: row for row in csv.DictReader(fh)}
+    cadogan = rows["CADOGAN ARMS"]
+    marketplace = rows["VAUXHALL MARKETPLACE"]
+    assert cadogan["photo_url"] == "pub_map/photos/cadogan_arms.jpg"
+    assert marketplace["photo_url"] == "pub_map/photos/vauxhall_marketplace.jpg"
+    assert "Commons" not in cadogan["photo_attribution"]
+    assert "Flickr" not in cadogan["photo_attribution"]
+    assert cadogan["photo_attribution"] == "Jordan"
+    assert marketplace["photo_attribution"] == "Jordan"
 
 
 def test_html_popup_is_photo_card():
@@ -152,15 +173,18 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert "maps_url" in churchill
     assert cadogan["photo_url"] == "pub_map/photos/cadogan_arms.jpg"
     assert cadogan["photo_source"] == "seed"
+    assert cadogan["photo_attribution"] == "Jordan"
+    assert marketplace["photo_url"] == "pub_map/photos/vauxhall_marketplace.jpg"
+    assert marketplace["photo_source"] == "seed"
+    assert marketplace["photo_attribution"] == "Jordan"
     assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
-    assert "photo_url" not in marketplace
-    assert data["metadata"]["photo_count"] == 43
+    assert data["metadata"]["photo_count"] == 44
     names_without = {
         ft["properties"]["name"]
         for ft in features
         if not ft["properties"].get("photo_url")
     }
-    assert names_without == {"Vauxhall Marketplace"}
+    assert names_without == set()
     gone = {
         "Diogenes the Dog",
         "The Chalk Freehouse",

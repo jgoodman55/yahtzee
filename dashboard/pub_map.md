@@ -96,11 +96,11 @@ preview under `dashboard/pub_map/photos/` (small JPEG, ~400 px). Churchill
 Arms was first (`churchill_arms.jpg`, CVB, CC BY-SA 4.0); the rest were
 backfilled the same way. Attribution is on the seed row and in the popup.
 
-Cadogan Arms uses a vendored Commons / Flickr facade (`cadogan_arms.jpg`,
-Charles, CC BY 2.0). Skipped (no decent reusable facade on disk — do not
-invent): Vauxhall Marketplace. Removed (didn’t play there — not on the
-map): Diogenes the Dog, The Chalk Freehouse, Supercute Taproom, The
-Thirsty Farrier.
+Cadogan Arms and Vauxhall Marketplace use Jordan’s own exterior photos
+(`cadogan_arms.jpg` on Old Church Street SW3; `vauxhall_marketplace.jpg`
+for Market Place Vauxhall under the railway bridge). Removed (didn’t play
+there — not on the map): Diogenes the Dog, The Chalk Freehouse, Supercute
+Taproom, The Thirsty Farrier.
 
 `python3 dashboard/scripts/export_pub_map.py` copies those seed URLs onto
 the GeoJSON. Pins without a seed photo still load: **No photo yet** plus a

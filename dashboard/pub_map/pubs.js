@@ -172,6 +172,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 3,
         "note": "Jordan addendum: 7 S Lambeth Pl, London SW8 1SP — one pin for the marketplace (statement strings like TST-Unit … Vauxhall MP / TST-MarketPlace - Vaux). Nominatim labels 7-11 South Lambeth Place (Sainsbury's Local); marketplace not separately mapped",
         "merged_from": "VAUXHALL MARKETPLACE",
+        "photo_url": "pub_map/photos/vauxhall_marketplace.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Jordan",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Vauxhall+Marketplace+51.485713%2C-0.1230148"
       }
     },
@@ -347,7 +350,7 @@ window.PUB_MAP_DATA = {
         "merged_from": "CADOGAN ARMS",
         "photo_url": "pub_map/photos/cadogan_arms.jpg",
         "photo_source": "seed",
-        "photo_attribution": "Charles / Flickr via Wikimedia Commons (CC BY 2.0)",
+        "photo_attribution": "Jordan",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Cadogan+Arms+51.4859699%2C-0.1729707"
       }
     },
@@ -975,6 +978,6 @@ window.PUB_MAP_DATA = {
       "lat": 51.5074
     },
     "confirmed_pub_count": 44,
-    "photo_count": 43
+    "photo_count": 44
   }
 };

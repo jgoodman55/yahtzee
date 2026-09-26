@@ -84,6 +84,7 @@ jobs:
             git reset --hard origin/main
 
             # DuckDB is single-writer: stop DAC before bruin run.
+            # The host binary is pinned to DAC 0.21.0 (docs/hosting-vps.md). This job does not install it.
             # Placeholder — no-op until the user unit is enabled (docs/hosting-vps.md).
             if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
               systemctl --user stop yahtzee-dac.service

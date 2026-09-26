@@ -31,7 +31,8 @@ sudo apt-get install -y git python3 python3-pip python3-venv
 
 # Bruin + DAC CLIs land in ~/.local/bin
 curl -LsSf https://getbruin.com/install/cli | sh
-curl -LsSf https://getbruin.com/install/dac | sh
+# Pin DAC so this box matches the laptop (do not install floating latest).
+curl -LsSf https://getbruin.com/install/dac | sh -s -- v0.21.0
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -40,7 +41,7 @@ python3 -m pip install --user -U pip
 # pandas/requests are required by Bruin Python assets.
 ```
 
-Confirm `bruin version` and `dac version`.
+Confirm `bruin version` and `dac version` (`dac version` must print `0.21.0`).
 
 ## 3. Clone the repo and copy `.bruin.yml` with **absolute** DuckDB paths
 
@@ -124,7 +125,7 @@ open readers). The deploy workflow does this automatically.
 
 ## 5. Sidecar for pub map / scorecards
 
-DAC 0.15 does not publish `dashboard/pub_map.html` or
+DAC 0.21.0 does not publish `dashboard/pub_map.html` or
 `dashboard/scorecards/`. Export, then serve the `dashboard/` directory.
 
 ```bash

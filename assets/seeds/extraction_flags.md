@@ -317,10 +317,11 @@ One sheet after IMG_2921. Conceptual name `IMG_2922`. Columns `E J E J E J`
 left to right = game_on_sheet 1, 2, 3 → `game_seq` **112, 113, 114**.
 `recorded_total` equals `sum(score)` on every player-game.
 
-No photo file arrived with this follow-up (uploads still only had the
-IMG_2921 JPEG), so there was no EXIF date to read. Sheet date for this
-note is **2026-09-26**. `raw_games.csv` still has no date column. The
-sample JPG for `IMG_2922` is not vendored until that photo is in the repo.
+Photo EXIF has no capture date (only pixel dimensions 4284×5712). Sheet date
+for this note is **2026-09-26**. `raw_games.csv` still has no date column
+(games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2922.jpg`.
 
 Header, in column order: **Butcher's Hook - 1** then **Queen's Arms - 2**,
 with **Pimlico** under Queen's Arms.

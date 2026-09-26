@@ -105,7 +105,7 @@ Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
 electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Tabs go
 simple → deep:
 
-1. **Overview** — games, wins, high scores (`recorded_total`), yahtzees
+1. **Overview** — games, wins, high and low scores (`recorded_total`, per player), yahtzees
    (Erin / Jordan / combined), upper bonuses, multi-yahtzee player-games,
    streaks. Big numbers: Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`),
    combined totals white.

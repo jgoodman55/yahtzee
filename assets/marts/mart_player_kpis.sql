@@ -8,9 +8,15 @@ depends:
   - int_win_loss
 @bruin */
 
--- Lifetime stats at player grain. High scores / points use recorded_total
--- (the grand total written on the card). Wins stay on int_win_loss, which
--- compares computed_total so a totals mismatch cannot silently flip a result.
+-- Lifetime stats at player grain. High scores, low scores, and points use
+-- recorded_total (the grand total written on the card). Wins stay on
+-- int_win_loss, which compares computed_total so a totals mismatch cannot
+-- silently flip a result.
+--
+-- high_score / low_score are max / min of that single-player total. A tie
+-- does not change the number. high_score_game_seq / low_score_game_seq are
+-- the earliest game_seq among player-games that share the extreme — the same
+-- secondary key as the closest-game and blowout lists (order by …, game_seq).
 
 with ordered as (
     select
@@ -68,13 +74,41 @@ wins as (
     from int_win_loss
     where winner in ('erin', 'jordan')
     group by winner
+),
+score_ranks as (
+    select
+        player_key,
+        game_seq,
+        recorded_total,
+        row_number() over (
+            partition by player_key
+            order by recorded_total desc, game_seq asc
+        ) as high_rank,
+        row_number() over (
+            partition by player_key
+            order by recorded_total asc, game_seq asc
+        ) as low_rank
+    from fact_games
+),
+score_extremes as (
+    select
+        player_key,
+        max(case when high_rank = 1 then recorded_total end)::integer as high_score,
+        max(case when high_rank = 1 then game_seq end)::integer       as high_score_game_seq,
+        max(case when low_rank = 1 then recorded_total end)::integer  as low_score,
+        max(case when low_rank = 1 then game_seq end)::integer        as low_score_game_seq
+    from score_ranks
+    group by player_key
 )
 select
     f.player_key,
     f.display_name,
     count(*)::integer                                              as games_played,
     coalesce(max(w.wins), 0)::integer                              as wins,
-    max(f.recorded_total)::integer                                 as high_score,
+    max(sx.high_score)                                             as high_score,
+    max(sx.high_score_game_seq)                                    as high_score_game_seq,
+    max(sx.low_score)                                              as low_score,
+    max(sx.low_score_game_seq)                                     as low_score_game_seq,
     sum(f.recorded_total)::integer                                 as lifetime_points,
     round(avg(f.recorded_total), 1)                                as avg_score,
     median(f.recorded_total)::integer                              as median_score,
@@ -89,6 +123,8 @@ select
     coalesce(max(c.current_win_streak), 0)::integer                as current_win_streak,
     coalesce(max(l.longest_win_streak), 0)::integer                as longest_win_streak
 from fact_games f
+left join score_extremes sx
+    on f.player_key = sx.player_key
 left join wins w
     on f.player_key = w.player_key
 left join current c

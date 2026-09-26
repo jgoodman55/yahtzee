@@ -11,10 +11,14 @@ depends:
 
 -- Single-row headline for Overview metric widgets.
 --
--- Score choice: high_score, lifetime_points, avg/median use recorded_total
--- (max/sum/avg of the grand total written on the card). Wins, margin, and
--- winner still come from int_win_loss (computed_total). Seed game 2 Erin is
--- the known mismatch: recorded 180 vs computed 175.
+-- Score choice: high_score, low_score, lifetime_points, avg/median use
+-- recorded_total (max/min/sum/avg of the grand total written on the card).
+-- Wins, margin, and winner still come from int_win_loss (computed_total).
+-- Seed game 2 Erin is the known mismatch: recorded 180 vs computed 175.
+--
+-- Low score is the per-player minimum, picked the same way as high score
+-- (the per-player maximum). Game pointers break ties on earliest game_seq;
+-- see mart_player_kpis.
 --
 -- Yahtzees: 1 when the yahtzee box is 50, plus yahtzee_bonus / 100.
 -- Multi-yahtzee player-games: total_yahtzees >= 2 (yahtzee_bonus >= 100).
@@ -26,6 +30,12 @@ select
     j.wins                                                         as jordan_wins,
     e.high_score                                                   as erin_high_score,
     j.high_score                                                   as jordan_high_score,
+    e.low_score                                                    as erin_low_score,
+    j.low_score                                                    as jordan_low_score,
+    e.high_score_game_seq                                          as erin_high_score_game_seq,
+    j.high_score_game_seq                                          as jordan_high_score_game_seq,
+    e.low_score_game_seq                                           as erin_low_score_game_seq,
+    j.low_score_game_seq                                           as jordan_low_score_game_seq,
     (e.total_yahtzees + j.total_yahtzees)::integer                 as total_yahtzees,
     e.upper_bonus_hits                                             as erin_upper_bonuses,
     j.upper_bonus_hits                                             as jordan_upper_bonuses,

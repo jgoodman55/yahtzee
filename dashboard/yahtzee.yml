@@ -287,6 +287,16 @@ queries:
       from mart_strategy_rescue
       where miss = 'Large straight = 0'
         and consolation in ('Has Yahtzee', 'Has both')
+  location_win_rates:
+    sql: |
+      select location, 'Erin' as player,
+        erin_wins::double / games as win_rate, games
+      from mart_location_stats
+      union all
+      select location, 'Jordan',
+        jordan_wins::double / games, games
+      from mart_location_stats
+      order by location = 'Unknown', location, player
 
 rows:
   - tab: Overview
@@ -1818,11 +1828,14 @@ rows:
         type: text
         col: 12
         content: |
-          Venues are a **separate grain** from games — there is no game-to-pub join.
+          Chase visits stay a separate log. From new sheets onward, the header
+          `<pub> - <games>` is stored in `seed_game_locations` and joined to
+          `seed_pubs` on the canonical pub name. Older games are **Unknown**.
 
           **[Open the interactive Leaflet map](http://localhost:8765/pub_map.html)**
           (Boroughs / Pubs layers, same-size pint pins coloured by unique-day
-          visits, light-gray canvas tiles). Click a borough to zoom to its pubs.
+          visits, light-gray canvas tiles). Pins for logged games with no
+          statement visits still appear. Click a borough to zoom to its pubs.
 
           DAC cannot embed Leaflet or MapKit. Serve the map beside this dashboard:
 
@@ -1830,6 +1843,80 @@ rows:
 
           or open `dashboard/pub_map.html` directly. After `bruin run`, refresh
           pins with `python3 dashboard/scripts/export_pub_map.py`.
+
+  - tab: Pubs
+    height: 280
+    widgets:
+      - name: Win rate by location
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Share of games each player won where a scorecard named the pub. Unknown has no written location.
+        query: location_win_rates
+        spec:
+          height: 200
+          padding: { top: 8, left: 8, right: 16, bottom: 8 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: location
+              type: nominal
+              title: null
+              sort: ["The Butcher's Hook", "The Queen's Arms", "Unknown"]
+              axis: { labelAngle: 0 }
+            y:
+              field: win_rate
+              type: quantitative
+              title: Win rate
+              axis: { format: ".0%" }
+              scale: { domain: [0, 1] }
+            xOffset: { field: player, type: nominal }
+            color: *player_color
+          mark: { type: bar, cornerRadiusEnd: 2 }
+
+  - tab: Pubs
+    widgets:
+      - name: Games by location
+        type: table
+        col: 12
+        sql: |
+          select
+            location,
+            games,
+            erin_wins,
+            jordan_wins,
+            ties,
+            round(100.0 * erin_wins / games, 1) as erin_win_pct,
+            round(100.0 * jordan_wins / games, 1) as jordan_win_pct
+          from mart_location_stats
+          order by location = 'Unknown', games desc, location
+        columns:
+          - name: location
+            label: Location
+          - name: games
+            label: Games
+            number: number
+            align: right
+          - name: erin_wins
+            label: Erin wins
+            number: number
+            align: right
+          - name: jordan_wins
+            label: Jordan wins
+            number: number
+            align: right
+          - name: ties
+            label: Ties
+            number: number
+            align: right
+          - name: erin_win_pct
+            label: Erin win %
+            number: number
+            align: right
+          - name: jordan_win_pct
+            label: Jordan win %
+            number: number
+            align: right
 
   - tab: Pubs
     widgets:

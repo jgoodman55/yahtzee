@@ -48,7 +48,7 @@ Full HEIC sheets are large and stay out of git (`dashboard/scorecards/photos/`).
 
 1. Download `IMG_2885`–`IMG_2918` from
    https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
-   (`IMG_2919`–`IMG_2921` are later sheets, vendored as sample JPGs)
+   (`IMG_2919`–`IMG_2922` are later sheets, vendored as sample JPGs)
 2. Drop `IMG_####.HEIC` or `.jpg` into `dashboard/scorecards/photos/`
 3. Re-run `export_scorecards.py`
 

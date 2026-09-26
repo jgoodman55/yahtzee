@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2921 (111 games from 37 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2922 (114 games from 38 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -306,4 +306,27 @@ Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2921.jpg`.
 - game 3 (`111`), jordan, three_of_a_kind: hard to read; **11**. Lower total **155** = 11+27+25+30+40+22.
 - game 3 (`111`), erin, recorded_total: written grand **288** overwritten on the sheet. Upper 102 (faces 67 + bonus 35) + lower 186 = 288.
 - game 3 (`111`), jordan: category sum matches written grand **255** (upper 100 = faces 65 + bonus 35; lower 155).
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+- No pub written on this sheet. Games 109–111 stay Unknown in `seed_game_locations`.
+
+## part7_flags.md
+
+# part7 extraction flags — IMG_2922 (games 112–114)
+
+One sheet after IMG_2921. Conceptual name `IMG_2922`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **112, 113, 114**.
+`recorded_total` equals `sum(score)` on every player-game.
+
+No photo file arrived with this follow-up (uploads still only had the
+IMG_2921 JPEG), so there was no EXIF date to read. Sheet date for this
+note is **2026-09-26**. `raw_games.csv` still has no date column. The
+sample JPG for `IMG_2922` is not vendored until that photo is in the repo.
+
+Header, in column order: **Butcher's Hook - 1** then **Queen's Arms - 2**,
+with **Pimlico** under Queen's Arms.
+
+- game 1 (`112`): Butcher's Hook. Grands **E 258 / J 188**.
+- game 2 (`113`) and game 3 (`114`): The Queen's Arms, Pimlico. Grands **E 192 / J 198** and **E 153 / J 215**.
+- game 3 (`114`), erin, upper_bonus: written like **65**. Upper faces 3+8+6+12+20+18 = 67, and the written upper total is **102**, so the bonus is **35** (67+35). Stored 35, not 65.
+- Locations: `seed_game_locations` pub names are **The Butcher's Hook** and **The Queen's Arms** (the `seed_pubs` rows). Games 1–111 have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

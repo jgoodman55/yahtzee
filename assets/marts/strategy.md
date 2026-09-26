@@ -16,14 +16,14 @@ Oak / chance are intentionally absent — weak signals, not strategy.
 Games where **exactly one** player has the binary feature. Rate = that
 holder's win rate.
 
-| Feature | Seed (n=111, 0 ties) |
+| Feature | Seed (n=114, 0 ties) |
 |---|---|
 | Yahtzee bonus > 0 | 13/13 = 100% (small n) |
-| Upper bonus (35) | 48/56 ≈ 86% |
-| Yahtzee = 50 | 50/59 ≈ 85% |
-| Large straight = 40 | 27/37 ≈ 73% |
-| Large straight = 0 | 10/37 ≈ 27% |
-| Full house = 0 | 9/21 ≈ 43% |
+| Upper bonus (35) | 48/57 ≈ 84% |
+| Yahtzee = 50 | 51/60 = 85% |
+| Large straight = 40 | 28/38 ≈ 74% |
+| Large straight = 0 | 10/38 ≈ 26% |
+| Full house = 0 | 9/22 ≈ 41% |
 | Small straight = 0 | 1/4 = 25% — **n < 10, grey on the chart** |
 
 ## `mart_strategy_rescue`
@@ -52,10 +52,10 @@ Grain: holder × outcome. Two bars (Erin alone / Jordan alone), each
 stacked **Holder won** vs **Upset** (holder lost). The Strategy chart
 Y-axis is that holder's outcome **share (0–100%)**; labels keep raw W/L.
 Combined exclusive holder rate is the swing-factor Yahtzee = 50 row
-(50/59 ≈ 85%) — not a separate dashboard visual.
+(51/60 = 85%) — not a separate dashboard visual.
 
-| Holder | Seed (n=111, 0 ties) |
+| Holder | Seed (n=114, 0 ties) |
 |---|---|
-| Erin alone | 26W / 8L of 34 ≈ 76% |
+| Erin alone | 27W / 8L of 35 ≈ 77% |
 | Jordan alone | 24W / 1L of 25 ≈ 96% |
-| Combined | 50 / 59 ≈ 85% |
+| Combined | 51 / 60 = 85% |

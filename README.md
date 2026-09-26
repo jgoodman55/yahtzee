@@ -22,9 +22,14 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   `multi_yahtzee`, `zero_yahtzee`, `totals_mismatch`).
 - `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs. One visit-log
   row per unique calendar day at a venue (`visit_count` on `mart_pub_locations`
-  is that unique-day count per merchant, summed on proximity-dedup). Not
-  joined to games. Rebuild Chase days with
+  is that unique-day count per merchant, summed on proximity-dedup). Chase
+  visits are not inferred from games. Rebuild Chase days with
   `assets/python/build_pub_visits.py --chase Chase7977_Activity_20260830.csv`.
+- `seed_game_locations.csv` — optional location per `game_seq`
+  (`pub_name` matches `seed_pubs.pub_name`, plus the handwritten
+  `sheet_label`). Taken from the top of the sheet: `<pub> - <number of
+  games>`, in column order. Games with no row are Unknown.
+  `mart_location_stats` is games and win rate by that pub.
 - `sheet_game_crosswalk.csv` — `game_seq` → Drive sheet `IMG_####` +
   `game_on_sheet` (feeds the Scorecards sidecar).
 
@@ -55,8 +60,9 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   win rates, miss × consolation rescue matrix, exclusive Yahtzee
   holder-won vs upset). Cohort definitions: `assets/marts/strategy.md`.
 - `mart_pub_locations` — seed-only pub list (lat/lng from `seed_pubs.csv`,
-  proximity-deduped; unresolved merchants flagged) — standalone, not
-  joined to games.
+  proximity-deduped; unresolved merchants flagged). Statement visits stay
+  separate from games. `mart_location_stats` joins `seed_game_locations`
+  to those canonical pub names.
 
 ## 2. Scorecard ingestion (OCR)
 
@@ -124,7 +130,8 @@ simple → deep:
 6. **Scorecards** — path to side-by-side original photo + seed-rendered card
    (Chance before Yahtzee). DAC 0.15 cannot click table cells; the sidecar
    HTML on port 8765 is the comparison UX (see `dashboard/scorecards.md`).
-7. **Pubs** — link to the standalone Leaflet map (not joined to games)
+7. **Pubs** — win rate by logged location, plus the Leaflet map (statement
+   visits, and a pin when a scorecard named that pub)
 
 Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`, `mart_strategy_swing`,
@@ -166,7 +173,7 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 6. Animation script
 7. Wire everything into `pipeline.yml`, validate, run
 
-See `/assets` for the Bruin pipeline (111 photographed games in
+See `/assets` for the Bruin pipeline (114 photographed games in
 `raw_games.csv`; `recorded_total` was recomputed from category sums after
 Jordan's review, and `fact_games.totals_match` remains the spot-check),
 `/docs/scorecard_ingest.md` for the Grok + score-rule loop, and
@@ -229,8 +236,8 @@ directly:
 duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
-`assets/seeds/raw_games.csv` already holds the 111 games from sheets
-`IMG_2885`–`IMG_2921`. Re-run after appending more sheets (Grok extract,
+`assets/seeds/raw_games.csv` already holds the 114 games from sheets
+`IMG_2885`–`IMG_2922`. Re-run after appending more sheets (Grok extract,
 then score-rule tests). See `docs/scorecard_ingest.md`.
 
 **Migrating an older two-file seed:** if you still have a separate

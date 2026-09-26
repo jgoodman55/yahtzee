@@ -11,7 +11,7 @@ Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
 | **Strategy** | Player-blind exclusive-feature swing bars, miss × consolation rescue matrix, exclusive Yahtzee holder-won vs upset (Erin alone / Jordan alone). Oak/chance stay off this tab. Cohort notes: [`../assets/marts/strategy.md`](../assets/marts/strategy.md). |
 | **Deep cuts** | Lifetime points on their own row, then Erin/Jordan Avg and Median (`recorded_total`), rates, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), win margins and `recorded_total` distributions split by player, closest/blowouts colored by winner, commentary (with Erin/Jordan scores), clickable scorecard links. KPI figures use the same pink / blue / white Vega-Lite marks as Overview, centered in the widget. |
 | **Scorecards** | Sidecar link + sample composite + catalog. Photo \| seed card (Chance before Yahtzee). See [`scorecards.md`](scorecards.md). |
-| **Pubs** | Link to the standalone Leaflet map + venue table. Not joined to games. |
+| **Pubs** | Win rate by logged scorecard location, plus the Leaflet map and the statement-visit table. |
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`, `mart_strategy_swing` /

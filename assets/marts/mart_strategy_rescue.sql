@@ -19,16 +19,16 @@ depends:
 --     has neither      = no natural 50 and no upper 35
 --
 -- This is not "exactly one player has miss M, then split by what they
--- still have". That exclusive-miss cut of LS=0 + any Yahtzee is 8/18.
+-- still have". That exclusive-miss cut of LS=0 + any Yahtzee is 9/19.
 -- Exclusive (LS=0 AND has Yahtzee) — yz-only + both, any opponent LS —
--- is the grounded 12/22 ≈ 55% (includes 4 games where both missed LS
+-- is the grounded 13/23 ≈ 57% (includes 4 games where both missed LS
 -- but only one also had Yahtzee).
 --
 -- Rows are miss types, not unique games: one game can appear in several
 -- cells if the same player uniquely holds more than one miss+consolation.
 -- n < 10 cells are noisy (small straight in particular).
 --
--- Seed grounding: exclusive LS=0 + any Yahtzee = 12/22 ≈ 55%.
+-- Seed grounding: exclusive LS=0 + any Yahtzee = 13/23 ≈ 57%.
 
 with miss_defs as (
     select 1 as miss_ord, 'Large straight = 0' as miss

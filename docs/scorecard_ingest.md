@@ -36,13 +36,14 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 - Google Drive folder: https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
 - Folder id: `1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo`
-- 36 sheets: `IMG_2885` through `IMG_2920` (Drive still has 2885–2918; 2919–2920 are the two new photos)
+- 38 sheets: `IMG_2885` through `IMG_2922` (Drive still has 2885–2918; 2919–2922 are the later photos, vendored as sample JPGs)
 - Filename ascending = game order
 - Each sheet is a standard Hasbro card: up to 3 Erin/Jordan games (`E J` column pairs, left to right)
+- Location, when written, is at the **top of the sheet** as `<pub> - <number of games>`, in column order. Example: `Butcher's Hook - 1` then `Queen's Arms - 2` means game 1 of that sheet is at Butcher's Hook and the next two games are at Queen's Arms. Store the canonical `seed_pubs.pub_name` in `seed_game_locations.csv` (`game_seq`, `pub_name`, `sheet_label`). Games with no header stay out of that file and show up as **Unknown**. Do not infer a pub from Chase transactions.
 
 ## Numbering
 
-- `game_seq` is continuous **1–108**
+- `game_seq` is continuous **1–114**
 - Mapping of sequence → photo → column group is in `assets/seeds/sheet_game_crosswalk.csv`
 - `IMG_2890` game 3 is included as `game_seq` **18** (Erin recorded_total **173**, Jordan **224**). Later sheets continue at 19.
 
@@ -50,8 +51,9 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 | File | Role |
 |---|---|
-| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 108 games = 3240 data rows). Players are `jordan` / `erin`. |
+| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 114 games = 3420 data rows). Players are `jordan` / `erin`. |
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
+| `assets/seeds/seed_game_locations.csv` | Optional pub per `game_seq` (`pub_name` matches `seed_pubs`). Missing rows are Unknown. |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
 | `assets/seeds/known_score_rule_violations.csv` | Leftover impossible scores still under photo review (allowlist for `raw_games_score_rules`; empty by policy) |
 

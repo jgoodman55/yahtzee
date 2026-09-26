@@ -283,7 +283,7 @@
   <div class="chrome">
     <header class="card">
       <h1>Yahtzee pub map</h1>
-      <p id="tagline">Same-size pint pins, coloured by unique-day visits. Confirmed venues from <code>mart_pub_locations</code> only — not joined to games.</p>
+      <p id="tagline">Same-size pint pins, coloured by unique-day visits. Statement venues from <code>mart_pub_locations</code>, plus pubs with a logged scorecard location.</p>
       <div class="seg" role="group" aria-label="Map layer">
         <button type="button" id="btn-boroughs" aria-pressed="false">Boroughs</button>
         <button type="button" id="btn-pubs" aria-pressed="true">Pubs</button>
@@ -348,7 +348,24 @@
       }
 
       function visitsOf(feature) {
-        return Number(feature.properties && feature.properties.visit_count) || 1;
+        var raw = feature.properties && feature.properties.visit_count;
+        if (raw === 0 || raw === "0") return 0;
+        var n = Number(raw);
+        return n > 0 ? n : 1;
+      }
+
+      function visitLabel(n) {
+        if (n === 0) return "No statement visits";
+        return n === 1 ? "1 visit" : n + " visits";
+      }
+
+      function gamesBlurb(props) {
+        var n = Number(props && props.games_played);
+        if (!n) return "";
+        var erin = Number(props.erin_wins) || 0;
+        var jordan = Number(props.jordan_wins) || 0;
+        var games = n === 1 ? "1 Yahtzee game" : n + " Yahtzee games";
+        return games + " · Erin " + erin + "W · Jordan " + jordan + "W";
       }
 
       function lerp(a, b, t) {
@@ -575,8 +592,10 @@
       }
 
       function pubPopupHtml(props) {
-        var visits = Number(props.visit_count) || 1;
-        var visitLabel = visits === 1 ? "1 visit" : visits + " visits";
+        var visits = visitsOf({ properties: props });
+        var meta = visitLabel(visits);
+        var games = gamesBlurb(props);
+        if (games) meta += "<br>" + games;
         var photo = "";
         if (isSafePhotoUrl(props.photo_url)) {
           photo =
@@ -595,7 +614,7 @@
           '<p class="popup-title">' +
           escapeHtml(props.name || "Pub") +
           "</p><p class=\"popup-meta\">" +
-          visitLabel +
+          meta +
           "</p>";
         if (props.note) {
           html += '<p class="popup-note">' + escapeHtml(props.note) + "</p>";
@@ -953,7 +972,7 @@
           } else {
             crumb.classList.remove("is-on");
             tagline.textContent =
-              "Same-size pint pins, coloured by unique-day visits. Confirmed venues from mart_pub_locations only — not joined to games.";
+              "Same-size pint pins, coloured by unique-day visits. Statement venues, plus pubs with a logged scorecard location.";
             heading.textContent = "Venues";
             if (!skipFit) {
               if (londonBounds.isValid()) {
@@ -1014,8 +1033,9 @@
             '<span class="row"><span class="pint-pin"></span><span class="name"></span></span><span class="meta"></span>';
           btn.querySelector(".pint-pin").innerHTML = pintSvg(beerColor(visits), 14, 18);
           btn.querySelector(".name").textContent = props.name || "Pub";
-          btn.querySelector(".meta").textContent =
-            visits === 1 ? "1 visit" : visits + " visits";
+          var meta = visitLabel(visits);
+          var games = gamesBlurb(props);
+          btn.querySelector(".meta").textContent = games ? meta + " · " + games : meta;
           btn.addEventListener("click", function () {
             var latlng = item.marker.getLatLng();
             var targetZoom = Math.max(map.getZoom(), 14);

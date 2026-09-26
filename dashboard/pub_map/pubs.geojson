@@ -946,15 +946,59 @@
         "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Zetland+Arms+51.493427%2C-0.175945"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1890569,
+          51.4801902
+        ]
+      },
+      "properties": {
+        "name": "The Butcher's Hook",
+        "merchant_name_raw": "BUTCHERS HOOK",
+        "source": "game_location",
+        "visit_count": 0,
+        "note": "477 Fulham Road, Fulham, London SW6 1HL — OSM amenity=pub The Butcher's Hook (Greene King / CAMRA). Logged from a scorecard header, not a Chase visit.",
+        "games_played": 1,
+        "erin_wins": 1,
+        "jordan_wins": 0,
+        "ties": 0,
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Butcher%27s+Hook+51.4801902%2C-0.1890569"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1391752,
+          51.4925913
+        ]
+      },
+      "properties": {
+        "name": "The Queen's Arms",
+        "merchant_name_raw": "QUEENS ARMS PIMLICO",
+        "source": "game_location",
+        "visit_count": 0,
+        "note": "11 Warwick Way, Pimlico, London SW1V 1QT — OSM amenity=pub The Queen's Arms (Brunning & Price). Logged from a scorecard header, not a Chase visit.",
+        "games_played": 2,
+        "erin_wins": 0,
+        "jordan_wins": 2,
+        "ties": 0,
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Queen%27s+Arms+51.4925913%2C-0.1391752"
+      }
     }
   ],
   "metadata": {
-    "grain": "mart_pub_locations (standalone — not joined to games)",
+    "grain": "mart_pub_locations plus seed_game_locations pubs",
     "default_center": {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 43,
+    "confirmed_pub_count": 45,
     "photo_count": 43
   }
 }

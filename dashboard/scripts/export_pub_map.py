@@ -71,6 +71,84 @@ def _table_columns(con, table: str) -> set[str]:
     return {r[0] for r in rows}
 
 
+def load_location_stats(con) -> dict[str, dict]:
+    """Yahtzee games logged against a canonical pub_name. Unknown is omitted."""
+    if "mart_location_stats" not in {
+        r[0]
+        for r in con.execute(
+            "select lower(table_name) from information_schema.tables"
+        ).fetchall()
+    }:
+        return {}
+    rows = con.execute(
+        """
+        select location, games, erin_wins, jordan_wins, ties
+        from mart_location_stats
+        where location <> 'Unknown'
+        """
+    ).fetchall()
+    return {
+        location: {
+            "games_played": int(games),
+            "erin_wins": int(erin_wins),
+            "jordan_wins": int(jordan_wins),
+            "ties": int(ties),
+        }
+        for location, games, erin_wins, jordan_wins, ties in rows
+    }
+
+
+def seed_pubs_by_name() -> dict[str, dict]:
+    by_name: dict[str, dict] = {}
+    if not SEED_PUBS.exists():
+        return by_name
+    with SEED_PUBS.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            name = _seed_cell(row, "pub_name")
+            if name and name not in by_name:
+                by_name[name] = row
+    return by_name
+
+
+def attach_game_stats(pubs: list[dict], stats: dict[str, dict]) -> None:
+    for pub in pubs:
+        extra = stats.get(pub.get("name") or "")
+        if extra:
+            pub.update(extra)
+
+
+def append_game_location_pubs(pubs: list[dict], stats: dict[str, dict]) -> None:
+    """Pins for pubs that have logged games but no Chase visit row.
+
+    visit_count stays 0 so statement-visit colouring is not invented.
+    """
+    have = {pub.get("name") for pub in pubs}
+    seeds = seed_pubs_by_name()
+    for name in sorted(stats):
+        if name in have:
+            continue
+        row = seeds.get(name)
+        if not row:
+            continue
+        lat = _seed_cell(row, "lat")
+        lng = _seed_cell(row, "lng")
+        if not lat or not lng:
+            continue
+        pubs.append(
+            {
+                "name": name,
+                "merchant_name_raw": _seed_cell(row, "merchant_name_raw"),
+                "lat": float(lat),
+                "lng": float(lng),
+                "source": "game_location",
+                "visit_count": 0,
+                "merged_from": None,
+                "note": _seed_cell(row, "note"),
+                **stats[name],
+            }
+        )
+
+
 def load_confirmed_pubs(con) -> list[dict]:
     cols = _table_columns(con, "mart_pub_locations")
     if not cols:
@@ -247,6 +325,11 @@ def to_feature_collection(pubs: list[dict]) -> dict:
             props["note"] = pub["note"]
         if pub.get("merged_from"):
             props["merged_from"] = pub["merged_from"]
+        if pub.get("games_played"):
+            props["games_played"] = int(pub["games_played"])
+            props["erin_wins"] = int(pub.get("erin_wins") or 0)
+            props["jordan_wins"] = int(pub.get("jordan_wins") or 0)
+            props["ties"] = int(pub.get("ties") or 0)
         for key in OPTIONAL_PHOTO_KEYS:
             if pub.get(key):
                 props[key] = pub[key]
@@ -266,7 +349,7 @@ def to_feature_collection(pubs: list[dict]) -> dict:
         "type": "FeatureCollection",
         "features": features,
         "metadata": {
-            "grain": "mart_pub_locations (standalone — not joined to games)",
+            "grain": "mart_pub_locations plus seed_game_locations pubs",
             "default_center": {"lng": LONDON_CENTER[0], "lat": LONDON_CENTER[1]},
             "confirmed_pub_count": len(features),
             "photo_count": photo_count,
@@ -310,9 +393,12 @@ def main() -> None:
     con = _connect(args.db)
     try:
         pubs = load_confirmed_pubs(con)
+        location_stats = load_location_stats(con)
     finally:
         con.close()
 
+    attach_game_stats(pubs, location_stats)
+    append_game_location_pubs(pubs, location_stats)
     attach_seed_notes(pubs)
     photo_stats = attach_photos(pubs)
     collection = to_feature_collection(pubs)

@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus two new sheets IMG_2919→IMG_2920 (108 games from 36 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2922 (114 games from 38 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -271,8 +271,8 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 
 ## IMG_2920 (`game_seq` 106–108)
 
-- game 1, erin, yahtzee_bonus: marks in the bonus boxes were read as two extras (200). Jordan: there was **no double Yahtzee bonus game** → scored **0**. Category sum **305** (was 505).
-- game 1: Jordan category sum matches written grand **227**. Erin recorded_total is the category sum **305** (written grand was 505 with the mistaken +200).
+- game 1, erin, yahtzee_bonus: two bonus boxes marked **XX** → **200** (an earlier pass stored 100, and an earlier note zeroed the boxes). Upper faces 1+4+15+12+15+18 = 65, plus upper bonus 35 = written upper **100**. Lower boxes 21+15+25+30+40+24+50 = 205, plus 200 = written lower **405**. Grand **505** = 100+405. `recorded_total` stays 505, and `sum(score)` now matches it.
+- game 1: Jordan category sum matches written grand **227**.
 - game 2: category sums match written grands **E 240 / J 264**.
 - game 3, erin, small_straight / large_straight: written **40 / 30** with a handwritten arrow swapping the boxes. Jordan: she switched them — digitize the intended scores **SS=30, LS=40**. Sum unchanged (70). Flagged here only; not a score-rule leftover after correction.
 - game 3, erin, ones: written with a slash through the digit. Jordan: store **3** (upper 3+8+12+12+20+18=73 + bonus 35 = 108, matches written upper).
@@ -280,3 +280,54 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 - game 3, erin, recorded_total: category sum **321** matches written grand (108+213).
 - game 3, jordan, fours: Jordan photo-review → **16** (was 10). Upper faces 2+4+6+16+10+24=62; matches written upper 62. Bonus still 0 (62 < 63).
 - game 3, jordan, recorded_total: category sum **277** matches written grand (62+215).
+
+## part6_flags.md
+
+# part6 extraction flags — IMG_2921 (games 109–111)
+
+One new sheet after IMG_2920. Conceptual name `IMG_2921`. Columns on the
+card are `E J E J E J` (Erin, Jordan), left to right = game_on_sheet 1, 2, 3
+→ `game_seq` **109, 110, 111**. Players are `erin` / `jordan`. `recorded_total`
+is the written grand total, and it equals `sum(score)` on every player-game.
+
+Photo EXIF has no capture date (only pixel dimensions 4284×5712). Sheet date
+for this note is **2026-09-26**. `raw_games.csv` has no date column
+(games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2921.jpg`.
+
+## IMG_2921 (`game_seq` 109–111)
+
+- game 1 (`109`): category sums match written grands **E 207 / J 195**. Upper bonus slash → 0 (faces 56 and 54, both under 63).
+- game 2 (`110`), erin, three_of_a_kind: hard to read; **26**. Lower total **204** only works with 26 (not a nearby 20/28).
+- game 2 (`110`), erin, four_of_a_kind: hard to read; **16**. Same lower total 204 (23+10 would not reach it; 26+16+25+30+40+17+50=204).
+- game 2 (`110`): Jordan category sum matches written grand **208**. Erin grand **266** = upper 62 + lower 204.
+- game 3 (`111`), erin, full_house: **25** scribbled over on the sheet. Fixed box; lower total 186 requires 25.
+- game 3 (`111`), jordan, three_of_a_kind: hard to read; **11**. Lower total **155** = 11+27+25+30+40+22.
+- game 3 (`111`), erin, recorded_total: written grand **288** overwritten on the sheet. Upper 102 (faces 67 + bonus 35) + lower 186 = 288.
+- game 3 (`111`), jordan: category sum matches written grand **255** (upper 100 = faces 65 + bonus 35; lower 155).
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+- No pub written on this sheet. Games 109–111 stay Unknown in `seed_game_locations`.
+
+## part7_flags.md
+
+# part7 extraction flags — IMG_2922 (games 112–114)
+
+One sheet after IMG_2921. Conceptual name `IMG_2922`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **112, 113, 114**.
+`recorded_total` equals `sum(score)` on every player-game.
+
+Photo EXIF has no capture date (only pixel dimensions 4284×5712). Sheet date
+for this note is **2026-09-26**. `raw_games.csv` still has no date column
+(games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2922.jpg`.
+
+Header, in column order: **Butcher's Hook - 1** then **Queen's Arms - 2**,
+with **Pimlico** under Queen's Arms.
+
+- game 1 (`112`): Butcher's Hook. Grands **E 258 / J 188**.
+- game 2 (`113`) and game 3 (`114`): The Queen's Arms, Pimlico. Grands **E 192 / J 198** and **E 153 / J 215**.
+- game 3 (`114`), erin, upper_bonus: written like **65**. Upper faces 3+8+6+12+20+18 = 67, and the written upper total is **102**, so the bonus is **35** (67+35). Stored 35, not 65.
+- Locations: `seed_game_locations` pub names are **The Butcher's Hook** and **The Queen's Arms** (the `seed_pubs` rows). Games 1–111 have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

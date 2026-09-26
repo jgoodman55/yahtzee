@@ -12,12 +12,12 @@ depends:
 -- Cohort: games where exactly one of Erin/Jordan scored Yahtzee = 50
 -- (yz_matchup = 'one'). None / both are excluded from this mart.
 -- Grain: holder × outcome (Holder won / Upset).
--- Rate: that holder's win rate. Combined exclusive holder is 47/56 ≈ 84%.
+-- Rate: that holder's win rate. Combined exclusive holder is 51/60 = 85%.
 --
--- Seed grounding (n=108, 0 ties) — verify after rebuild:
---   Erin alone   23W / 8L  of 31  ≈ 74%
+-- Seed grounding (n=114, 0 ties) — verify after rebuild:
+--   Erin alone   27W / 8L  of 35  ≈ 77%
 --   Jordan alone 24W / 1L  of 25  ≈ 96%
---   combined     47 / 56         ≈ 84%
+--   combined     51 / 60         = 85%
 
 with exclusive as (
     select

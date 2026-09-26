@@ -186,7 +186,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
         for ft in features
         if not ft["properties"].get("photo_url")
     }
-    assert names_without == set()
+    assert names_without == {"The Butcher's Hook", "The Queen's Arms"}
     gone = {
         "Diogenes the Dog",
         "The Chalk Freehouse",

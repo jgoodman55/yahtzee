@@ -15,6 +15,11 @@ score, recorded_total`). The **Grand Total** on the card is
 - The sheet is split into two physical sections (upper "Number Combos" and
   lower "Special Combos"), each with its own subtotal row, plus a final
   "Grand Total" row at the very bottom of the lower section.
+- Location, when they wrote one, sits at the **top of the sheet** as
+  `<pub> - <number of games>`, applied to columns left to right. A note
+  under the pub name (for example "Pimlico") disambiguates which pub.
+  That becomes `seed_game_locations.csv`, not a column on every category
+  row. Sheets with no header have no location.
 
 ## Row order (top to bottom)
 

@@ -1,7 +1,11 @@
 # Pub map
 
-Venues stay **standalone** from games. We only kept `game_seq`, not dates, so
-there is no reliable game-to-pub join. Do not invent one.
+Chase statement visits stay **separate** from games. Do not infer a pub
+from a transaction. When a scorecard header names a pub (`<pub> - <number
+of games>`, left to right), that game is in `seed_game_locations` and joins
+`seed_pubs` on the canonical `pub_name`. The map adds a pin for those pubs
+even with no statement visits, and the popup includes games played and
+each player's wins. Games with no header stay Unknown.
 
 ## What DAC 0.15 can (and cannot) do
 

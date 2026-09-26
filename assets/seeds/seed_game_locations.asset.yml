@@ -1,0 +1,18 @@
+name: seed_game_locations
+type: duckdb.seed
+parameters:
+  path: seed_game_locations.csv
+columns:
+  - name: game_seq
+    type: integer
+    checks:
+      - name: not_null
+      - name: unique
+  - name: pub_name
+    type: string
+    checks:
+      - name: not_null
+  - name: sheet_label
+    type: string
+    checks:
+      - name: not_null

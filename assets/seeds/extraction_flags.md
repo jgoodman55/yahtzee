@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus two new sheets IMG_2919→IMG_2920 (108 games from 36 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2921 (111 games from 37 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -280,3 +280,30 @@ Two new sheets photographed after IMG_2918. Conceptual names `IMG_2919`
 - game 3, erin, recorded_total: category sum **321** matches written grand (108+213).
 - game 3, jordan, fours: Jordan photo-review → **16** (was 10). Upper faces 2+4+6+16+10+24=62; matches written upper 62. Bonus still 0 (62 < 63).
 - game 3, jordan, recorded_total: category sum **277** matches written grand (62+215).
+
+## part6_flags.md
+
+# part6 extraction flags — IMG_2921 (games 109–111)
+
+One new sheet after IMG_2920. Conceptual name `IMG_2921`. Columns on the
+card are `E J E J E J` (Erin, Jordan), left to right = game_on_sheet 1, 2, 3
+→ `game_seq` **109, 110, 111**. Players are `erin` / `jordan`. `recorded_total`
+is the written grand total, and it equals `sum(score)` on every player-game.
+
+Photo EXIF has no capture date (only pixel dimensions 4284×5712). Sheet date
+for this note is **2026-09-26**. `raw_games.csv` has no date column
+(games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2921.jpg`.
+
+## IMG_2921 (`game_seq` 109–111)
+
+- game 1 (`109`): category sums match written grands **E 207 / J 195**. Upper bonus slash → 0 (faces 56 and 54, both under 63).
+- game 2 (`110`), erin, three_of_a_kind: hard to read; **26**. Lower total **204** only works with 26 (not a nearby 20/28).
+- game 2 (`110`), erin, four_of_a_kind: hard to read; **16**. Same lower total 204 (23+10 would not reach it; 26+16+25+30+40+17+50=204).
+- game 2 (`110`): Jordan category sum matches written grand **208**. Erin grand **266** = upper 62 + lower 204.
+- game 3 (`111`), erin, full_house: **25** scribbled over on the sheet. Fixed box; lower total 186 requires 25.
+- game 3 (`111`), jordan, three_of_a_kind: hard to read; **11**. Lower total **155** = 11+27+25+30+40+22.
+- game 3 (`111`), erin, recorded_total: written grand **288** overwritten on the sheet. Upper 102 (faces 67 + bonus 35) + lower 186 = 288.
+- game 3 (`111`), jordan: category sum matches written grand **255** (upper 100 = faces 65 + bonus 35; lower 155).
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

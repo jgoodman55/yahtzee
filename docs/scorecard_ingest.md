@@ -36,13 +36,13 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 - Google Drive folder: https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
 - Folder id: `1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo`
-- 36 sheets: `IMG_2885` through `IMG_2920` (Drive still has 2885–2918; 2919–2920 are the two new photos)
+- 37 sheets: `IMG_2885` through `IMG_2921` (Drive still has 2885–2918; 2919–2921 are the later photos, vendored as sample JPGs)
 - Filename ascending = game order
 - Each sheet is a standard Hasbro card: up to 3 Erin/Jordan games (`E J` column pairs, left to right)
 
 ## Numbering
 
-- `game_seq` is continuous **1–108**
+- `game_seq` is continuous **1–111**
 - Mapping of sequence → photo → column group is in `assets/seeds/sheet_game_crosswalk.csv`
 - `IMG_2890` game 3 is included as `game_seq` **18** (Erin recorded_total **173**, Jordan **224**). Later sheets continue at 19.
 
@@ -50,7 +50,7 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 | File | Role |
 |---|---|
-| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 108 games = 3240 data rows). Players are `jordan` / `erin`. |
+| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 111 games = 3330 data rows). Players are `jordan` / `erin`. |
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
 | `assets/seeds/known_score_rule_violations.csv` | Leftover impossible scores still under photo review (allowlist for `raw_games_score_rules`; empty by policy) |

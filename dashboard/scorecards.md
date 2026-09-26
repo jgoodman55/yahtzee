@@ -2,22 +2,22 @@
 
 Jordan validated the seed by putting the **original sheet photo** next to a
 **digitized scorecard** (Chance before Yahtzee; Erin pink / Jordan blue).
-DAC 0.15 cannot host that comparison inside a table cell.
+DAC 0.21.0 cannot host that comparison inside a table cell.
 
-## What DAC 0.15 can do
+## What DAC 0.21.0 can do
 
 Checked against [widgets](https://getbruin.com/docs/dac/dashboards/widgets.html)
-and the table renderer (`TableWidget` has labels / number / format — no
+and the table renderer (labels / number / format / image thumbnails — no
 markdown, no `href` on cells):
 
-| Approach | Works in DAC 0.15? | Notes |
+| Approach | Works in DAC 0.21.0? | Notes |
 |---|---|---|
 | Markdown links in **text** widgets | Yes | Same as the Pubs Leaflet link |
-| `image` widget (`src` URL) | Yes | Static URL; no Jinja on `src` |
+| `image` widget | Yes | Data-driven since 0.18. `src`, `alt`, `title`, and `caption` name columns from `sql`, `query`, or inline `data`. A bare URL in `src` fails validation (`one of query, sql, or data is required`). The Scorecards sample uses `data` so the Game 1 composite still renders. |
 | Filters (`select` / `text`) | Yes | Dashboard-wide — would clutter Overview |
-| Table cell markdown / `<a>` | No | Cells are formatted text only |
+| Table cell markdown / `<a>` | No | Cells are formatted text or image thumbnails only |
 | Vega-Lite `href` on a text mark | Yes (used here) | Clickable “Game N” lists on Deep cuts. Vega-Lite has no `target` encoding; we set `usermeta.embedOptions.loader.target: _blank`. On DAC 0.17 that opens the :8765 viewer in a **new tab**. Image widgets cannot do this. |
-| Image widget click / `href` | No | `src` + `alt` only. Cannot open a scorecard (new tab or same tab) from an image widget. |
+| Image widget click / `href` | No | No click target on the image itself. A markdown `caption` column can link out. |
 | Arbitrary HTML / iframe in a widget | No | Same limit as the pub map |
 | Sidecar static HTML next to `dac serve` | **Yes** | This page — port 8765 |
 

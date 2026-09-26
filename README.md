@@ -128,7 +128,7 @@ simple → deep:
    `recorded_total` after Winner). KPI figures use the same pink / blue /
    white Vega-Lite marks as Overview, centered in the widget.
 6. **Scorecards** — path to side-by-side original photo + seed-rendered card
-   (Chance before Yahtzee). DAC 0.15 cannot click table cells; the sidecar
+   (Chance before Yahtzee). DAC 0.21.0 cannot click table cells; the sidecar
    HTML on port 8765 is the comparison UX (see `dashboard/scorecards.md`).
 7. **Pubs** — win rate by logged location, plus the Leaflet map (statement
    visits, and a pin when a scorecard named that pub)
@@ -140,7 +140,7 @@ Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 
 Standalone Leaflet map (`dashboard/pub_map.html`) — same-size pint pins
 coloured by unique-day visits, plus a London borough choropleth with
-drill-down, from `mart_pub_locations`. DAC 0.15 cannot embed Leaflet/MapKit;
+drill-down, from `mart_pub_locations`. DAC 0.21.0 cannot embed Leaflet/MapKit;
 the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 (no API key). See `dashboard/pub_map.md`.
 
@@ -208,6 +208,8 @@ the first `bruin` / `dac` command.
 Then serve the dashboard (after `bruin run` has built the marts):
 
 ```bash
+# DAC is pinned to 0.21.0 so the laptop and the VPS match:
+# curl -LsSf https://getbruin.com/install/dac | sh -s -- v0.21.0
 dac validate --dir dashboard
 dac check --dir dashboard
 dac serve --dir dashboard --template yahtzee-dark --open

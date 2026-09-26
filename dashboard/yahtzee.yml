@@ -211,7 +211,7 @@ queries:
     sql: |
       select jordan_recorded_total as recorded_total
       from mart_game_trends
-  # DAC 0.15 table cells are plain text (no markdown / <a>). Vega-Lite href
+  # DAC 0.21.0 table cells are plain text (no markdown / <a>). Vega-Lite href
   # marks are the in-dashboard click path; the sidecar HTML is the comparison UX.
   closest_scorecard_links:
     sql: |
@@ -354,7 +354,7 @@ rows:
           shows **Erin / Jordan total yahtzees** from `mart_player_kpis`.
 
           Game-level tables link to side-by-side scorecards (photo | seed card)
-          on the **Scorecards** tab — DAC 0.15 cannot make table cells clickable.
+          on the **Scorecards** tab — DAC 0.21.0 cannot make table cells clickable.
 
   - tab: Overview
     height: 120
@@ -1557,7 +1557,7 @@ rows:
         type: text
         col: 12
         content: |
-          DAC 0.15 **tables do not render markdown or `<a>` cells**. The Scorecard
+          DAC 0.21.0 **tables do not render markdown or `<a>` cells**. The Scorecard
           column is the URL pattern once the sidecar is up.
 
           **Click a game** in the lists below (Vega-Lite `href`) or
@@ -1867,9 +1867,10 @@ rows:
           sheet photo** | **digitized card** from `raw_games` (Chance before
           Yahtzee; Erin `#FF2D92` / Jordan `#2D9CFF`).
 
-          DAC 0.15 can do Markdown links in **text** widgets, `image` URLs, and
-          Vega-Lite `href`. It cannot embed arbitrary HTML, and table cells are
-          not clickable. Same sidecar pattern as the pub map:
+          DAC 0.21.0 can do Markdown links in **text** widgets, data-driven
+          `image` widgets, and Vega-Lite `href`. It cannot embed arbitrary
+          HTML, and table cells are not clickable. Same sidecar pattern as
+          the pub map:
 
           1. After `bruin run`: `python3 dashboard/scripts/export_scorecards.py`
           2. `python3 -m http.server 8765 --directory dashboard`
@@ -1887,8 +1888,17 @@ rows:
       - name: Sample — Game 1 (IMG_2885)
         type: image
         col: 12
-        src: http://localhost:8765/scorecards/samples/game_1.png
-        alt: Game 1 original photo beside the seed-rendered scorecard
+        fit: contain
+        # 0.21 image widgets are data-driven: src/alt/title name columns.
+        data:
+          columns: [photo_url, alt_text, heading]
+          rows:
+            - - http://localhost:8765/scorecards/samples/game_1.png
+              - Game 1 original photo beside the seed-rendered scorecard
+              - Game 1 (IMG_2885)
+        src: photo_url
+        alt: alt_text
+        title: heading
 
   - tab: Scorecards
     widgets:

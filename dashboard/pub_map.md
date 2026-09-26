@@ -7,7 +7,7 @@ of games>`, left to right), that game is in `seed_game_locations` and joins
 even with no statement visits, and the popup includes games played and
 each player's wins. Games with no header stay Unknown.
 
-## What DAC 0.15 can (and cannot) do
+## What DAC 0.21.0 can (and cannot) do
 
 Checked against [DAC widgets](https://getbruin.com/docs/dac/dashboards/widgets.html),
 [TSX](https://getbruin.com/docs/dac/dashboards/tsx.html),
@@ -15,9 +15,9 @@ Checked against [DAC widgets](https://getbruin.com/docs/dac/dashboards/widgets.h
 [dac import](https://getbruin.com/docs/dac/commands/import.html) (`map` cards
 from Metabase are converted to **tables**).
 
-| Approach | Works in DAC 0.15? | Notes |
+| Approach | Works in DAC 0.21.0? | Notes |
 |---|---|---|
-| Native map widget | No | Widget types are `metric`, `chart`, `table`, `text`, `image`, `divider`. No `map`. |
+| Native map widget | No | Widget types include `metric`, `chart`, `table`, `pivot_table`, `text`, `image`, `divider`, and `tabs`. No `map`. |
 | Leaflet / MapLibre / MapKit HTML | No | `text` is Markdown only (no `<iframe>` / `<script>`). |
 | TSX custom React map | No | TSX is compiled in Go (`goja`) and flattened to the same widget model as YAML. It is not a runtime React tree. |
 | Vega-Lite lon/lat | Yes (fallback) | Projected pin plot only. DAC rejects remote tile/GeoJSON `data.url`. |

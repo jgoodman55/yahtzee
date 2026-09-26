@@ -18,7 +18,7 @@ Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_strategy_rescue` / `mart_yz_matchup`, plus `mart_head_to_head` /
 `mart_pub_locations`).
 
-DAC 0.15 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (Esri
+DAC 0.21.0 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (Esri
 World Light Gray tiles, no API key): Boroughs / Pubs layers, pint pins
 coloured by unique-day visits. See `pub_map.md` for regenerate / serve /
 `dac build`.
@@ -38,7 +38,8 @@ From the repo root:
 ```shell
 # Bruin + DAC CLIs (https://getbruin.com/docs/dac/getting-started/quickstart.html)
 # curl -LsSf https://getbruin.com/install/cli | sh
-# curl -LsSf https://getbruin.com/install/dac | sh
+# DAC pinned to 0.21.0 (same release as the VPS — docs/hosting-vps.md)
+# curl -LsSf https://getbruin.com/install/dac | sh -s -- v0.21.0
 
 cp -n ../.bruin.yml.example ../.bruin.yml   # if .bruin.yml is missing
 pip install -r ../assets/python/requirements.txt

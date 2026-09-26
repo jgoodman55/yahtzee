@@ -39,6 +39,7 @@ Earlier dark-redesign captures:
 Scorecard drill-down (Overview yahtzees + photo|seed sidecar):
 
 - `overview_yahtzee_kpis.png` — Overview with Erin / Jordan total yahtzees (pink / blue)
+- `overview_high_low_scores.png` — Overview high and low scores side by side (Erin 505 / 125, Jordan 509 / 135)
 - `deep_cuts_scorecard_links.png` — Deep cuts clickable closest / blowout scorecard lists (colored by winner)
 - `deep_cuts_commentary.png` — Deep cuts commentary table with Erin score / Jordan score after Winner
 - `scorecards_tab.png` — Scorecards tab (sidecar links + sample composite)

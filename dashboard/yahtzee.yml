@@ -1,6 +1,6 @@
 schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
-description: Erin (pink) vs Jordan (blue) — dark analytics. High scores use recorded_total.
+description: Erin (pink) vs Jordan (blue) — dark analytics. High and low scores use recorded_total.
 connection: local_duckdb
 
 # Colors used on every series: Erin #FF2D92, Jordan #2D9CFF.
@@ -35,6 +35,30 @@ x-kpi-jordan-mark: &jordan_mark
   x: { expr: "width / 2" }
   y: { expr: "height / 2" }
   color: "#2D9CFF"
+
+# High / low score figures are the same centered marks, plus a pointer cursor
+# because the number is a scorecard link (photo | seed, new tab).
+x-kpi-erin-link-mark: &erin_link_mark
+  type: text
+  fontSize: 32
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width / 2" }
+  y: { expr: "height / 2" }
+  color: "#FF2D92"
+  cursor: pointer
+
+x-kpi-jordan-link-mark: &jordan_link_mark
+  type: text
+  fontSize: 32
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width / 2" }
+  y: { expr: "height / 2" }
+  color: "#2D9CFF"
+  cursor: pointer
 
 x-kpi-neutral-mark: &neutral_mark
   type: text
@@ -84,7 +108,11 @@ queries:
       select
         h.*,
         (select total_yahtzees from mart_player_kpis where player_key = 'erin') as erin_total_yahtzees,
-        (select total_yahtzees from mart_player_kpis where player_key = 'jordan') as jordan_total_yahtzees
+        (select total_yahtzees from mart_player_kpis where player_key = 'jordan') as jordan_total_yahtzees,
+        'http://localhost:8765/scorecards/viewer.html?game=' || h.erin_high_score_game_seq as erin_high_score_url,
+        'http://localhost:8765/scorecards/viewer.html?game=' || h.jordan_high_score_game_seq as jordan_high_score_url,
+        'http://localhost:8765/scorecards/viewer.html?game=' || h.erin_low_score_game_seq as erin_low_score_url,
+        'http://localhost:8765/scorecards/viewer.html?game=' || h.jordan_low_score_game_seq as jordan_low_score_url
       from mart_headline_kpis h
   races:
     sql: |
@@ -289,13 +317,16 @@ queries:
         and consolation in ('Has Yahtzee', 'Has both')
   location_win_rates:
     sql: |
-      select location, 'Erin' as player,
-        erin_wins::double / games as win_rate, games
-      from mart_location_stats
-      union all
-      select location, 'Jordan',
-        jordan_wins::double / games, games
-      from mart_location_stats
+      select location, player, win_rate, games
+      from (
+        select location, 'Erin' as player,
+          erin_wins::double / games as win_rate, games
+        from mart_location_stats
+        union all
+        select location, 'Jordan',
+          jordan_wins::double / games, games
+        from mart_location_stats
+      ) rates
       order by location = 'Unknown', location, player
 
 rows:
@@ -307,9 +338,16 @@ rows:
         content: |
           **Erin** is electric pink (`#FF2D92`). **Jordan** is electric blue (`#2D9CFF`).
 
-          High scores, lifetime points, and averages use **`recorded_total`** — the grand
-          total written on the card. Wins and margins use `computed_total` from
+          High scores, low scores, lifetime points, and averages use **`recorded_total`** — the grand
+          total written on the card. A high score is `max(recorded_total)` for that player; a low
+          score is `min(recorded_total)`, the same single-player grain. If several cards share
+          the extreme, the link uses the earliest `game_seq` (same secondary key as closest
+          games and blowouts). Wins and margins use `computed_total` from
           `int_win_loss` (sum of the 15 boxes).
+
+          Click a high or low score to open that game's photo | seed scorecard in a new tab
+          (`viewer.html?game=N` on port 8765), same Vega-Lite `href` + `target: _blank` pattern
+          as the Deep cuts scorecard lists.
 
           Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
           player-game is `total_yahtzees >= 2` (bonus ≥ 100). Overview also
@@ -369,13 +407,47 @@ rows:
       - name: Erin high score
         type: chart
         chart: vega-lite
-        col: 4
-        description: max(recorded_total) for Erin
+        col: 3
+        description: max(recorded_total) for Erin. Click opens that game's photo | seed card (earliest game_seq on a tie).
         query: headline
         spec:
-          mark: *erin_mark
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          mark: *erin_link_mark
           encoding:
             text: { field: erin_high_score, type: quantitative, format: ",.0f" }
+            href: { field: erin_high_score_url, type: nominal }
+            tooltip:
+              - field: erin_high_score_game_seq
+                type: quantitative
+                title: Game
+                format: d
+          width: container
+          height: 40
+          padding: 0
+
+      - name: Erin low score
+        type: chart
+        chart: vega-lite
+        col: 3
+        description: min(recorded_total) for Erin. Click opens that game's photo | seed card (earliest game_seq on a tie).
+        query: headline
+        spec:
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          mark: *erin_link_mark
+          encoding:
+            text: { field: erin_low_score, type: quantitative, format: ",.0f" }
+            href: { field: erin_low_score_url, type: nominal }
+            tooltip:
+              - field: erin_low_score_game_seq
+                type: quantitative
+                title: Game
+                format: d
           width: container
           height: 40
           padding: 0
@@ -383,17 +455,54 @@ rows:
       - name: Jordan high score
         type: chart
         chart: vega-lite
-        col: 4
-        description: max(recorded_total) for Jordan
+        col: 3
+        description: max(recorded_total) for Jordan. Click opens that game's photo | seed card (earliest game_seq on a tie).
         query: headline
         spec:
-          mark: *jordan_mark
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          mark: *jordan_link_mark
           encoding:
             text: { field: jordan_high_score, type: quantitative, format: ",.0f" }
+            href: { field: jordan_high_score_url, type: nominal }
+            tooltip:
+              - field: jordan_high_score_game_seq
+                type: quantitative
+                title: Game
+                format: d
           width: container
           height: 40
           padding: 0
 
+      - name: Jordan low score
+        type: chart
+        chart: vega-lite
+        col: 3
+        description: min(recorded_total) for Jordan. Click opens that game's photo | seed card (earliest game_seq on a tie).
+        query: headline
+        spec:
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          mark: *jordan_link_mark
+          encoding:
+            text: { field: jordan_low_score, type: quantitative, format: ",.0f" }
+            href: { field: jordan_low_score_url, type: nominal }
+            tooltip:
+              - field: jordan_low_score_game_seq
+                type: quantitative
+                title: Game
+                format: d
+          width: container
+          height: 40
+          padding: 0
+
+  - tab: Overview
+    height: 120
+    widgets:
       - name: Total yahtzees
         type: chart
         chart: vega-lite
@@ -408,13 +517,10 @@ rows:
           height: 40
           padding: 0
 
-  - tab: Overview
-    height: 120
-    widgets:
       - name: Erin total yahtzees
         type: chart
         chart: vega-lite
-        col: 6
+        col: 4
         description: Natural 50s plus yahtzee_bonus/100 for Erin
         query: headline
         spec:
@@ -428,7 +534,7 @@ rows:
       - name: Jordan total yahtzees
         type: chart
         chart: vega-lite
-        col: 6
+        col: 4
         description: Natural 50s plus yahtzee_bonus/100 for Jordan
         query: headline
         spec:
@@ -1625,6 +1731,7 @@ rows:
             games_played,
             wins,
             high_score,
+            low_score,
             lifetime_points,
             avg_score,
             median_score,
@@ -1652,6 +1759,10 @@ rows:
             align: right
           - name: high_score
             label: High
+            number: number
+            align: right
+          - name: low_score
+            label: Low
             number: number
             align: right
           - name: lifetime_points

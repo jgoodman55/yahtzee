@@ -93,7 +93,8 @@ Places photo fetch, no `--refresh-photos`, and no API key.
 
 Add `photo_url` or `image_url` on the `seed_pubs.csv` row. Relative paths are
 resolved from `dashboard/pub_map.html` (so `pub_map/photos/….jpg` works on
-`file://` and the port-8765 static server). `https://` URLs work too. Optional
+`file://` and when Caddy serves `/pub_map.html` from `dashboard/`). `https://`
+URLs work too. Optional
 `photo_attribution` is shown under the address (needed for Commons / CC
 licenses). Most confirmed pins now have a vendored Commons / Geograph
 preview under `dashboard/pub_map/photos/` (small JPEG, ~400 px). Churchill
@@ -153,20 +154,19 @@ visit log without invented coordinates.
 # 1) Double-click / open in a browser (file://). Esri light-gray tiles still load.
 open dashboard/pub_map.html   # macOS; or just open the file
 
-# 2) Tiny static server (needed for the DAC Markdown link on :8765)
-python3 -m http.server 8765 --directory dashboard
-# then http://localhost:8765/pub_map.html
-# Layers: http://localhost:8765/pub_map.html#pubs
-#         http://localhost:8765/pub_map.html#boroughs
-# Drill:  http://localhost:8765/pub_map.html#borough=Southwark
+# 2) Hosted site — Caddy serves /pub_map.html from dashboard/
+# https://yahtzee.jginfo.xyz/pub_map.html
+# Layers: https://yahtzee.jginfo.xyz/pub_map.html#pubs
+#         https://yahtzee.jginfo.xyz/pub_map.html#boroughs
+# Drill:  https://yahtzee.jginfo.xyz/pub_map.html#borough=Southwark
 
-# 3) DAC itself (widgets only — it will not serve pub_map.html)
-dac serve --dir dashboard --open
-# Pubs tab → "Open the interactive Leaflet map"
+# 3) Locally, dac serve does not publish pub_map.html. Use the Caddyfile
+# in docs/hosting-vps.md (port 8080) so the dashboard's /pub_map.html link works.
+# http://127.0.0.1:8080/pub_map.html
 ```
 
-`dac serve` does not publish extra HTML. Keep the sidecar on port 8765 if you
-want the dashboard link to work, or open the file directly.
+`dac serve` does not publish extra HTML. The hosted site and the local
+Caddyfile both serve `/pub_map.html` from `dashboard/` and proxy the DAC app.
 
 ### `dac build` static export
 

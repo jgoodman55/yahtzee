@@ -18,6 +18,8 @@
 # Deploy only runs when VPS_HOST, VPS_USER, and VPS_SSH_KEY are set.
 # Missing secrets (forks, or before the VPS exists): this job skips green.
 # Adhoc rebuild: Actions → Deploy VPS → Run workflow (always resets to origin/main).
+# The same steps live in scripts/yahtzee-rebuild.sh (~/bin/yahtzee-rebuild).
+# Do not run that script while this job is in progress.
 #
 # Remote Bruin flag: --config-file points at .bruin.yml (connections + DuckDB path).
 # Same file as DAC's --config. DuckDB paths in that file should be absolute.
@@ -30,6 +32,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# One deploy at a time. The next run waits; it does not cancel a bruin run
+# that might be mid-write. The remote script also flocks so a manual
+# ~/bin/yahtzee-rebuild cannot overlap this job.
 concurrency:
   group: deploy-vps
   cancel-in-progress: false
@@ -78,29 +83,37 @@ jobs:
 
             DEPLOY_PATH="${DEPLOY_PATH:-$HOME/yahtzee}"
             BRUIN_CONFIG_FILE="${BRUIN_CONFIG_FILE:-$DEPLOY_PATH/.bruin.yml}"
+            if [ -x "$HOME/.venvs/yahtzee/bin/python" ]; then
+              PYTHON="$HOME/.venvs/yahtzee/bin/python"
+            else
+              PYTHON=python3
+            fi
 
             cd "$DEPLOY_PATH"
+
+            # Shared with scripts/yahtzee-rebuild.sh. Take the lock before
+            # git reset so a manual rebuild cannot run bruin against a tree
+            # this job is about to replace. DuckDB is single-writer.
+            exec 9>/tmp/yahtzee-rebuild.lock
+            if ! flock -n 9; then
+              echo "Another yahtzee rebuild holds /tmp/yahtzee-rebuild.lock." >&2
+              exit 1
+            fi
+
             git fetch origin
             git reset --hard origin/main
 
             # DuckDB is single-writer: stop DAC before bruin run.
             # The host binary is pinned to DAC 0.21.0 (docs/hosting-vps.md). This job does not install it.
-            # Placeholder — no-op until the user unit is enabled (docs/hosting-vps.md).
             if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
               systemctl --user stop yahtzee-dac.service
             fi
+            # A failed bruin run or export must still bring the site back.
+            trap 'systemctl --user start yahtzee-dac.service || true' EXIT
 
             # --config-file: path to .bruin.yml (DuckDB connections). --workers 1 avoids file locks.
-            # OFFLINE_TEST=1: skip Nominatim/Places until seed-only pubs land on main (PR #25).
-            # After that merge, drop the env var; no geocoding keys are required either way.
-            OFFLINE_TEST=1 bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"
+            bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"
 
-            python3 dashboard/scripts/export_scorecards.py
-            python3 dashboard/scripts/export_pub_map.py
-
-            # Placeholder reload: restart DAC so widgets see the new DuckDB file.
-            # Sidecar (python -m http.server / nginx) reads files from disk — no restart needed.
-            # Alternative: touch a reload file if you wire one up.
-            if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
-              systemctl --user start yahtzee-dac.service
-            fi
+            "$PYTHON" dashboard/scripts/export_scorecards.py
+            "$PYTHON" dashboard/scripts/export_pub_map.py
+            # EXIT trap starts DAC. Caddy reads /pub_map and /scorecards from disk.

@@ -109,10 +109,10 @@ queries:
         h.*,
         (select total_yahtzees from mart_player_kpis where player_key = 'erin') as erin_total_yahtzees,
         (select total_yahtzees from mart_player_kpis where player_key = 'jordan') as jordan_total_yahtzees,
-        'http://localhost:8765/scorecards/viewer.html?game=' || h.erin_high_score_game_seq as erin_high_score_url,
-        'http://localhost:8765/scorecards/viewer.html?game=' || h.jordan_high_score_game_seq as jordan_high_score_url,
-        'http://localhost:8765/scorecards/viewer.html?game=' || h.erin_low_score_game_seq as erin_low_score_url,
-        'http://localhost:8765/scorecards/viewer.html?game=' || h.jordan_low_score_game_seq as jordan_low_score_url
+        '/scorecards/viewer.html?game=' || h.erin_high_score_game_seq as erin_high_score_url,
+        '/scorecards/viewer.html?game=' || h.jordan_high_score_game_seq as jordan_high_score_url,
+        '/scorecards/viewer.html?game=' || h.erin_low_score_game_seq as erin_low_score_url,
+        '/scorecards/viewer.html?game=' || h.jordan_low_score_game_seq as jordan_low_score_url
       from mart_headline_kpis h
   races:
     sql: |
@@ -219,7 +219,7 @@ queries:
         game_seq,
         winner,
         'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
-        'http://localhost:8765/scorecards/viewer.html?game=' || game_seq as url
+        '/scorecards/viewer.html?game=' || game_seq as url
       from mart_game_trends
       order by margin asc, game_seq
       limit 8
@@ -229,7 +229,7 @@ queries:
         game_seq,
         winner,
         'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
-        'http://localhost:8765/scorecards/viewer.html?game=' || game_seq as url
+        '/scorecards/viewer.html?game=' || game_seq as url
       from mart_game_trends
       order by margin desc, game_seq
       limit 8
@@ -346,7 +346,7 @@ rows:
           `int_win_loss` (sum of the 15 boxes).
 
           Click a high or low score to open that game's photo | seed scorecard in a new tab
-          (`viewer.html?game=N` on port 8765), same Vega-Lite `href` + `target: _blank` pattern
+          (`/scorecards/viewer.html?game=N` on this site), same Vega-Lite `href` + `target: _blank` pattern
           as the Deep cuts scorecard lists.
 
           Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
@@ -655,7 +655,7 @@ rows:
           picture stays readable as the seed grows toward ~100 games. Native DAC
           line tooltips cannot open a URL — look up that `game_seq` on
           **Scorecards** or
-          [viewer.html?game=N](http://localhost:8765/scorecards/viewer.html).
+          [viewer.html?game=N](/scorecards/viewer.html).
 
   - tab: Races
     height: 360
@@ -1558,17 +1558,16 @@ rows:
         col: 12
         content: |
           DAC 0.21.0 **tables do not render markdown or `<a>` cells**. The Scorecard
-          column is the URL pattern once the sidecar is up.
+          column is the path Caddy serves from `dashboard/` on disk.
 
           **Click a game** in the lists below (Vega-Lite `href`) or
-          **[browse every scorecard](http://localhost:8765/scorecards/index.html)**
-          (`python3 -m http.server 8765 --directory dashboard`). Each page is
+          **[browse every scorecard](/scorecards/index.html)**. Each page is
           original photo | seed-rendered card (Chance before Yahtzee).
 
           Image widgets are display-only (`src` / `alt` — no click URL). The
           lists use Vega-Lite `href` plus `usermeta.embedOptions.loader.target:
-          _blank` so the :8765 viewer opens in a **new tab** when the DAC
-          viewer honors it (verified on DAC 0.17). If a click stays in-tab,
+          _blank` so the viewer opens in a **new tab** when the DAC
+          viewer honors it. If a click stays in-tab,
           Shift/ctrl-click or the Scorecards tab still works.
 
   - tab: Deep cuts
@@ -1578,7 +1577,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the :8765 viewer in a new tab when DAC honors embed target=_blank.
+        description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
         query: closest_scorecard_links
         spec:
           height: 200
@@ -1616,7 +1615,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the :8765 viewer in a new tab when DAC honors embed target=_blank.
+        description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
         query: blowout_scorecard_links
         spec:
           height: 200
@@ -1662,7 +1661,7 @@ rows:
             margin,
             erin_computed_total as erin,
             jordan_computed_total as jordan,
-            '[Game ' || game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
+            '[Game ' || game_seq || '](/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
           from mart_game_trends
           order by margin asc, game_seq
           limit 8
@@ -1696,7 +1695,7 @@ rows:
             margin,
             erin_computed_total as erin,
             jordan_computed_total as jordan,
-            '[Game ' || game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
+            '[Game ' || game_seq || '](/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
           from mart_game_trends
           order by margin desc, game_seq
           limit 8
@@ -1829,7 +1828,7 @@ rows:
             h.yahtzee_comment,
             h.bonus_comment,
             h.streak_comment,
-            '[Game ' || h.game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || h.game_seq || ')' as scorecard
+            '[Game ' || h.game_seq || '](/scorecards/viewer.html?game=' || h.game_seq || ')' as scorecard
           from mart_head_to_head h
           inner join mart_game_trends t using (game_seq)
           order by h.game_seq desc
@@ -1869,15 +1868,21 @@ rows:
 
           DAC 0.21.0 can do Markdown links in **text** widgets, data-driven
           `image` widgets, and Vega-Lite `href`. It cannot embed arbitrary
-          HTML, and table cells are not clickable. Same sidecar pattern as
-          the pub map:
+          HTML, and table cells are not clickable. On
+          [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves
+          `/scorecards` and `/pub_map.html` straight from `dashboard/` on disk.
+          Everything else is reverse-proxied to `dac serve` on 127.0.0.1:8321.
+          Ports 8321 and 8765 are not public, and there is no `http.server` sidecar.
 
           1. After `bruin run`: `python3 dashboard/scripts/export_scorecards.py`
-          2. `python3 -m http.server 8765 --directory dashboard`
-          3. **[Open the scorecard index](http://localhost:8765/scorecards/index.html)**
-             or a game, e.g. [Game 1](http://localhost:8765/scorecards/viewer.html?game=1),
-             [Game 47](http://localhost:8765/scorecards/viewer.html?game=47) (1-pt),
-             [Game 100](http://localhost:8765/scorecards/viewer.html?game=100) (blowout).
+          2. **[Open the scorecard index](/scorecards/index.html)**
+             or a game, e.g. [Game 1](/scorecards/viewer.html?game=1),
+             [Game 47](/scorecards/viewer.html?game=47) (1-pt),
+             [Game 100](/scorecards/viewer.html?game=100) (blowout).
+
+          Locally, `dac serve` does not publish those files. Serve `dashboard/`
+          in front of it (the local Caddyfile in `docs/hosting-vps.md`) so these
+          root-relative links resolve.
 
           Full Drive HEICs stay out of git. Copy `IMG_####.jpg` / `.HEIC` into
           `dashboard/scorecards/photos/` (see `docs/scorecard_ingest.md`) and
@@ -1893,7 +1898,7 @@ rows:
         data:
           columns: [photo_url, alt_text, heading]
           rows:
-            - - http://localhost:8765/scorecards/samples/game_1.png
+            - - /scorecards/samples/game_1.png
               - Game 1 original photo beside the seed-rendered scorecard
               - Game 1 (IMG_2885)
         src: photo_url
@@ -1914,7 +1919,7 @@ rows:
             t.margin,
             t.erin_computed_total as erin,
             t.jordan_computed_total as jordan,
-            '[Game ' || t.game_seq || '](http://localhost:8765/scorecards/viewer.html?game=' || t.game_seq || ')' as scorecard
+            '[Game ' || t.game_seq || '](/scorecards/viewer.html?game=' || t.game_seq || ')' as scorecard
           from mart_game_trends t
           left join sheet_game_crosswalk c
             on c.game_seq = t.game_seq
@@ -1953,17 +1958,15 @@ rows:
           `<pub> - <games>` is stored in `seed_game_locations` and joined to
           `seed_pubs` on the canonical pub name. Older games are **Unknown**.
 
-          **[Open the interactive Leaflet map](http://localhost:8765/pub_map.html)**
+          **[Open the interactive Leaflet map](/pub_map.html)**
           (Boroughs / Pubs layers, same-size pint pins coloured by unique-day
           visits, light-gray canvas tiles). Pins for logged games with no
           statement visits still appear. Click a borough to zoom to its pubs.
 
-          DAC cannot embed Leaflet or MapKit. Serve the map beside this dashboard:
-
-          `python3 -m http.server 8765 --directory dashboard`
-
-          or open `dashboard/pub_map.html` directly. After `bruin run`, refresh
-          pins with `python3 dashboard/scripts/export_pub_map.py`.
+          DAC cannot embed Leaflet or MapKit. Caddy serves `/pub_map.html` from
+          `dashboard/` on disk (same origin as this dashboard). After `bruin run`,
+          refresh pins with `python3 dashboard/scripts/export_pub_map.py`.
+          `file://` still works for the HTML on its own.
 
   - tab: Pubs
     height: 280

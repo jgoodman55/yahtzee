@@ -69,11 +69,16 @@ After `bruin run`, refresh the GeoJSON the Leaflet page reads:
 
 ```shell
 python3 scripts/export_pub_map.py
-python3 -m http.server 8765 --directory .
-# http://localhost:8765/pub_map.html
 ```
 
-Or open `pub_map.html` as a local file. Optional MapTiler streets:
+On [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves
+`/pub_map.html` and `/scorecards` from this directory. `dac serve` does not
+publish them, and ports 8321 and 8765 are not open on the droplet.
+
+To click those links on a laptop, run `dac serve` on 127.0.0.1:8321 and the
+local Caddyfile in [`../docs/hosting-vps.md`](../docs/hosting-vps.md) so
+root-relative paths resolve (`http://127.0.0.1:8080/pub_map.html`). Opening
+`pub_map.html` as a local file still works. Optional MapTiler streets:
 `?maptiler=YOUR_KEY` — not required.
 
 ## Connection

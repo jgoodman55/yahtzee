@@ -18,10 +18,11 @@ Refresh after `bruin run` or seed edits:
   python3 dashboard/scripts/export_scorecards.py
   python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 
-Then serve beside DAC:
+Then open the pages on the hosted site (Caddy serves dashboard/ at
+/scorecards) or locally behind the Caddyfile in docs/hosting-vps.md:
 
-  python3 -m http.server 8765 --directory dashboard
-  # http://localhost:8765/scorecards/viewer.html?game=12
+  # https://yahtzee.jginfo.xyz/scorecards/viewer.html?game=12
+  # http://127.0.0.1:8080/scorecards/viewer.html?game=12
 """
 
 from __future__ import annotations

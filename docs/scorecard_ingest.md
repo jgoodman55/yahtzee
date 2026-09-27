@@ -36,7 +36,7 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 - Google Drive folder: https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
 - Folder id: `1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo`
-- 38 sheets: `IMG_2885` through `IMG_2922` (Drive still has 2885–2918; 2919–2922 are the later photos, vendored as sample JPGs)
+- 38 sheets: `IMG_2885` through `IMG_2922`. Web JPEGs for all of them are in `dashboard/scorecards/samples/photos/`. Drive still has the 2885–2918 originals; 2919–2922 were later sheets already vendored the same way.
 - Filename ascending = game order
 - Each sheet is a standard Hasbro card: up to 3 Erin/Jordan games (`E J` column pairs, left to right)
 - Location, when written, is at the **top of the sheet** as `<pub> - <number of games>`, in column order. Example: `Butcher's Hook - 1` then `Queen's Arms - 2` means game 1 of that sheet is at Butcher's Hook and the next two games are at Queen's Arms. Store the canonical `seed_pubs.pub_name` in `seed_game_locations.csv` (`game_seq`, `pub_name`, `sheet_label`). Games with no header stay out of that file and show up as **Unknown**. Do not infer a pub from Chase transactions.
@@ -94,8 +94,9 @@ python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 ```
 
 Drop Drive originals into `dashboard/scorecards/photos/` as `IMG_2885.HEIC`
-(or `.jpg`). Those files are gitignored. A few downscaled sample JPGs ship
-under `dashboard/scorecards/samples/photos/`. Details: `dashboard/scorecards.md`.
+(or `.jpg`). Those files are gitignored. Web-sized JPEGs for every sheet
+(`IMG_2885`–`IMG_2922`) ship under `dashboard/scorecards/samples/photos/`,
+and `games.js` prefers those. Details: `dashboard/scorecards.md`.
 
 ## Pipeline
 

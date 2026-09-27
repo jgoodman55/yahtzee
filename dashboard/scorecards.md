@@ -45,19 +45,24 @@ Locally, put the same routes in front of `dac serve` (Caddyfile in
 `docs/hosting-vps.md`) so root-relative dashboard links resolve, or open the
 HTML directly (`file://` works — `games.js` is inlined like `pub_map/pubs.js`).
 
-## Photos from Drive
+## Photos
 
-Full HEIC sheets are large and stay out of git (`dashboard/scorecards/photos/`).
+Full-resolution HEIC sheets stay out of git (`dashboard/scorecards/photos/`).
+Every sheet the crosswalk names (`IMG_2885`–`IMG_2922`) is committed as a
+web JPEG under `dashboard/scorecards/samples/photos/` (about 1200×1600,
+EXIF/GPS stripped). `resolve_photo` in `export_scorecards.py` checks that
+directory before `photos/`, so `games.js` points at the committed files and
+the hosted site can show a sheet for every game.
 
-1. Download `IMG_2885`–`IMG_2918` from
+`viewer.html` still tries `photos/` first, so a local full-resolution copy
+wins when you have one:
+
+1. Download originals from
    https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
-   (`IMG_2919`–`IMG_2922` are later sheets, vendored as sample JPGs)
 2. Drop `IMG_####.HEIC` or `.jpg` into `dashboard/scorecards/photos/`
-3. Re-run `export_scorecards.py`
+3. Re-run `export_scorecards.py` (sample JPGs still win in `games.js`)
 
-This repo ships a few downscaled sample JPGs under
-`dashboard/scorecards/samples/photos/` plus PNG composites for games 1, 47,
-and 100 so the Scorecards tab image and the viewer work without Drive.
+PNG composites for games 1, 47, and 100 are the Scorecards tab sample.
 
 Crosswalk: `assets/seeds/sheet_game_crosswalk.csv` (`game_seq` → sheet +
 `game_on_sheet`).

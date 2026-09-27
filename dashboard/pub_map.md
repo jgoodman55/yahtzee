@@ -153,20 +153,21 @@ visit log without invented coordinates.
 # 1) Double-click / open in a browser (file://). Esri light-gray tiles still load.
 open dashboard/pub_map.html   # macOS; or just open the file
 
-# 2) Tiny static server (needed for the DAC Markdown link on :8765)
+# 2) Tiny static server (same origin as DAC, so /pub_map.html resolves)
 python3 -m http.server 8765 --directory dashboard
-# then http://localhost:8765/pub_map.html
-# Layers: http://localhost:8765/pub_map.html#pubs
-#         http://localhost:8765/pub_map.html#boroughs
-# Drill:  http://localhost:8765/pub_map.html#borough=Southwark
+# then /pub_map.html
+# Layers: /pub_map.html#pubs
+#         /pub_map.html#boroughs
+# Drill:  /pub_map.html#borough=Southwark
 
 # 3) DAC itself (widgets only — it will not serve pub_map.html)
 dac serve --dir dashboard --open
 # Pubs tab → "Open the interactive Leaflet map"
 ```
 
-`dac serve` does not publish extra HTML. Keep the sidecar on port 8765 if you
-want the dashboard link to work, or open the file directly.
+`dac serve` does not publish extra HTML. The dashboard link is root-relative
+(`/pub_map.html`), so serve this folder on the same origin as DAC, or open
+the file directly.
 
 ### `dac build` static export
 

@@ -218,8 +218,8 @@ dac serve --dir dashboard --template yahtzee-dark --open
 python3 dashboard/scripts/export_pub_map.py
 python3 dashboard/scripts/export_scorecards.py
 python3 -m http.server 8765 --directory dashboard
-# http://localhost:8765/pub_map.html
-# http://localhost:8765/scorecards/viewer.html?game=1
+# /pub_map.html
+# /scorecards/viewer.html?game=1
 ```
 
 The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,

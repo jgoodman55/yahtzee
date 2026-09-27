@@ -89,7 +89,7 @@ After `bruin run`, refresh the photo | seed-card pages:
 python3 dashboard/scripts/export_scorecards.py
 python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 python3 -m http.server 8765 --directory dashboard
-# http://localhost:8765/scorecards/viewer.html?game=1
+# /scorecards/viewer.html?game=1
 ```
 
 Drop Drive originals into `dashboard/scorecards/photos/` as `IMG_2885.HEIC`

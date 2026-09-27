@@ -70,7 +70,7 @@ After `bruin run`, refresh the GeoJSON the Leaflet page reads:
 ```shell
 python3 scripts/export_pub_map.py
 python3 -m http.server 8765 --directory .
-# http://localhost:8765/pub_map.html
+# /pub_map.html
 ```
 
 Or open `pub_map.html` as a local file. Optional MapTiler streets:

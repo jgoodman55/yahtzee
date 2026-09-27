@@ -34,13 +34,14 @@ viewer and index are static HTML.
 
 ```bash
 python3 -m http.server 8765 --directory dashboard
-# http://localhost:8765/scorecards/index.html
-# http://localhost:8765/scorecards/viewer.html?game=12
+# /scorecards/index.html
+# /scorecards/viewer.html?game=12
 ```
 
-`dac serve` does **not** publish these files. Keep the sidecar on 8765 so
-dashboard Markdown / Vega-Lite links work, or open the HTML directly
-(`file://` works — `games.js` is inlined like `pub_map/pubs.js`).
+`dac serve` does **not** publish these files. Dashboard links are root-relative
+(`/scorecards/...`), so they resolve when this folder is served on the same
+origin as DAC. Opening the HTML directly also works (`file://` — `games.js`
+is inlined like `pub_map/pubs.js`).
 
 ## Photos from Drive
 

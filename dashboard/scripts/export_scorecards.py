@@ -21,7 +21,7 @@ Refresh after `bruin run` or seed edits:
 Then serve beside DAC:
 
   python3 -m http.server 8765 --directory dashboard
-  # http://localhost:8765/scorecards/viewer.html?game=12
+  # /scorecards/viewer.html?game=12
 """
 
 from __future__ import annotations

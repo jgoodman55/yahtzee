@@ -365,7 +365,7 @@ queries:
         case when n < 5 then 'low_n' else 'ok' end as tone,
         label
       from mart_strategy_swing
-      order by feature_ord
+      order by holder_win_rate desc, n desc, feature
   strategy_rescue:
     sql: |
       select
@@ -1455,7 +1455,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: Average dice on each face. The grey line is par. 3 of every face is 63, which earns the upper bonus.
+        description: Average dice on each face. 3 of every face is 63, which earns the upper bonus.
         query: upper_avg_dice
         spec:
           width: container
@@ -1500,13 +1500,6 @@ rows:
                   axis: null
                 text: { field: value, type: quantitative, format: ".1f" }
                 color: { value: "#F3F6FA" }
-            - mark:
-                type: rule
-                color: "#6D7889"
-                strokeDash: [4, 3]
-                strokeWidth: 1.5
-              encoding:
-                y: { datum: 3 }
 
   - tab: Odds
     height: "420"
@@ -1532,14 +1525,7 @@ rows:
                 y:
                   field: feature_label
                   type: nominal
-                  sort:
-                    - Yahtzee bonus
-                    - Upper bonus
-                    - Yahtzee
-                    - Large straight
-                    - No large straight
-                    - No full house
-                    - No small straight
+                  sort: null
                   title: null
                   axis:
                     labelFontSize: 11
@@ -1578,14 +1564,7 @@ rows:
                 y:
                   field: feature_label
                   type: nominal
-                  sort:
-                    - Yahtzee bonus
-                    - Upper bonus
-                    - Yahtzee
-                    - Large straight
-                    - No large straight
-                    - No full house
-                    - No small straight
+                  sort: null
                 x:
                   field: holder_win_rate
                   type: quantitative

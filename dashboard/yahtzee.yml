@@ -219,11 +219,47 @@ queries:
       order by b.bucket_ord, p.player
   scratch_dist:
     sql: |
-      select 'Erin' as player, erin_zeros::integer as scratches
-      from mart_game_trends
-      union all
-      select 'Jordan', jordan_zeros::integer
-      from mart_game_trends
+      with raw as (
+        select 'Erin' as player, erin_zeros::integer as scratches
+        from mart_game_trends
+        union all
+        select 'Jordan', jordan_zeros::integer
+        from mart_game_trends
+      ),
+      counts as (
+        select player, scratches, count(*)::integer as n
+        from raw
+        group by player, scratches
+      ),
+      totals as (
+        select player, count(*)::integer as total
+        from raw
+        group by player
+      ),
+      buckets as (
+        select * from (values (0), (1), (2), (3), (4), (5)) t(scratches)
+      )
+      select
+        p.player,
+        b.scratches,
+        coalesce(c.n, 0) as n,
+        t.total,
+        coalesce(c.n, 0)::double / t.total as share,
+        case
+          when coalesce(c.n, 0) = 0 then ''
+          else round(100.0 * c.n / t.total)::integer || '%'
+        end as pct_label,
+        case
+          when coalesce(c.n, 0) = 0 then ''
+          else '(' || c.n || '/' || t.total || ')'
+        end as count_label
+      from (select distinct player from raw) p
+      cross join buckets b
+      inner join totals t on t.player = p.player
+      left join counts c
+        on c.player = p.player
+       and c.scratches = b.scratches
+      order by p.player, b.scratches
   conversion_miss:
     sql: |
       select
@@ -329,7 +365,7 @@ queries:
         case when n < 5 then 'low_n' else 'ok' end as tone,
         label
       from mart_strategy_swing
-      order by feature_ord
+      order by holder_win_rate desc, n desc, feature
   strategy_rescue:
     sql: |
       select
@@ -756,61 +792,122 @@ rows:
           Jordan: { color: "#2D9CFF" }
 
   - tab: Score
-    height: "340"
+    height: "300"
     widgets:
-      - name: Win margins
+      - name: Erin margins
         type: chart
         chart: vega-lite
         col: 6
-        description: Points the winner was ahead, from the sum of the boxes.
+        description: Points Erin was ahead. Bins match Jordan's chart.
         query: score_margins
         spec:
           width: container
-          height: 210
+          height: 180
           autosize: { type: fit, contains: padding, resize: true }
           padding: { top: 8, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Erin'"
           encoding:
             x:
               field: margin
               type: quantitative
-              bin: { maxbins: 8 }
+              bin: { extent: [0, 300], step: 50 }
               title: Margin
+              axis: { labelAngle: 0, labelFontSize: 10 }
             y:
               aggregate: count
               type: quantitative
               title: Games
               scale: { domainMin: 0 }
-            xOffset: { field: player }
-            color: *player_color
-          mark: { type: bar }
+          mark: { type: bar, color: "#FF2D92" }
 
-      - name: Score distribution
+      - name: Jordan margins
         type: chart
         chart: vega-lite
         col: 6
-        description: Total written on the card. Same bins for both players.
-        query: score_totals
+        description: Points Jordan was ahead. Bins match Erin's chart.
+        query: score_margins
         spec:
           width: container
-          height: 210
+          height: 180
           autosize: { type: fit, contains: padding, resize: true }
           padding: { top: 8, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Jordan'"
+          encoding:
+            x:
+              field: margin
+              type: quantitative
+              bin: { extent: [0, 300], step: 50 }
+              title: Margin
+              axis: { labelAngle: 0, labelFontSize: 10 }
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          mark: { type: bar, color: "#2D9CFF" }
+
+  - tab: Score
+    height: "300"
+    widgets:
+      - name: Erin scores
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Totals written on Erin's card. Bins match Jordan's chart.
+        query: score_totals
+        spec:
+          width: container
+          height: 180
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Erin'"
           encoding:
             x:
               field: recorded_total
               type: quantitative
               bin: { extent: [100, 550], step: 50 }
               title: Points
+              axis: { labelAngle: -40, labelAlign: right, labelFontSize: 10 }
             y:
               aggregate: count
               type: quantitative
               title: Games
               scale: { domainMin: 0 }
-            xOffset: { field: player }
-            color: *player_color
-          mark: { type: bar }
+          mark: { type: bar, color: "#FF2D92" }
+
+      - name: Jordan scores
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Totals written on Jordan's card. Bins match Erin's chart.
+        query: score_totals
+        spec:
+          width: container
+          height: 180
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Jordan'"
+          encoding:
+            x:
+              field: recorded_total
+              type: quantitative
+              bin: { extent: [100, 550], step: 50 }
+              title: Points
+              axis: { labelAngle: -40, labelAlign: right, labelFontSize: 10 }
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+          mark: { type: bar, color: "#2D9CFF" }
 
   - tab: Score
     height: "340"
@@ -886,11 +983,11 @@ rows:
   - tab: Roll
     height: "320"
     widgets:
-      - name: Count per game
+      - name: Count of Yahtzees per Game
         type: chart
         chart: vega-lite
         col: 12
-        description: How many Yahtzees each player scored in a single game.
+        description: How many Yahtzees each player scored in a single game, including bonus Yahtzees.
         query: yahtzee_dist
         spec:
           width: container
@@ -952,7 +1049,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: When only one player scored a Yahtzee, how often they won. The grey line is a coin flip.
+        description: When only one player scored a Yahtzee, how often they won.
         query: yz_matchup
         spec:
           width: container
@@ -1007,13 +1104,6 @@ rows:
                   - { field: n, type: quantitative, title: Games }
                   - { field: share, type: quantitative, title: Share, format: ".0%" }
                   - { field: label, type: nominal, title: Rate }
-            - mark:
-                type: rule
-                color: "#6D7889"
-                strokeDash: [4, 3]
-                strokeWidth: 1.5
-              encoding:
-                y: { datum: 0.5 }
             - mark:
                 type: text
                 fontSize: 11
@@ -1102,35 +1192,107 @@ rows:
                 text: { field: value, type: quantitative, format: ".0%" }
 
   - tab: Roll
-    height: "320"
+    height: "340"
     widgets:
-      - name: Scratches
+      - name: Erin scratches
         type: chart
         chart: vega-lite
-        col: 12
-        description: How many boxes were scored zero in that game. Bonuses are not counted.
+        col: 6
+        description: Share of Erin's games with that many boxes at zero. Bonuses are not counted.
         query: scratch_dist
         spec:
           width: container
-          height: 200
+          height: 210
           autosize: { type: fit, contains: padding, resize: true }
-          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          padding: { top: 22, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Erin'"
           encoding:
             x:
               field: scratches
               type: ordinal
               title: Boxes scratched
               sort: [0, 1, 2, 3, 4, 5]
-              axis: { labelAngle: 0 }
+              axis: { labelAngle: 0, labelFontSize: 11 }
             y:
-              aggregate: count
+              field: share
               type: quantitative
-              title: Games
-              scale: { domainMin: 0 }
-            xOffset: { field: player }
-            color: *player_color
-          mark: { type: bar }
+              title: Percent
+              axis: { format: ".0%" }
+              scale: { domain: [0, 0.5] }
+          layer:
+            - mark: { type: bar, color: "#FF2D92" }
+            - mark:
+                type: text
+                dy: -14
+                fontSize: 10
+                fontWeight: 600
+                align: center
+                baseline: bottom
+              encoding:
+                text: { field: pct_label, type: nominal }
+                color: { value: "#F3F6FA" }
+            - mark:
+                type: text
+                dy: -2
+                fontSize: 9
+                fontWeight: 600
+                align: center
+                baseline: bottom
+              encoding:
+                text: { field: count_label, type: nominal }
+                color: { value: "#F3F6FA" }
+
+      - name: Jordan scratches
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Share of Jordan's games with that many boxes at zero. Bonuses are not counted.
+        query: scratch_dist
+        spec:
+          width: container
+          height: 210
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 22, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
+          transform:
+            - filter: "datum.player === 'Jordan'"
+          encoding:
+            x:
+              field: scratches
+              type: ordinal
+              title: Boxes scratched
+              sort: [0, 1, 2, 3, 4, 5]
+              axis: { labelAngle: 0, labelFontSize: 11 }
+            y:
+              field: share
+              type: quantitative
+              title: Percent
+              axis: { format: ".0%" }
+              scale: { domain: [0, 0.5] }
+          layer:
+            - mark: { type: bar, color: "#2D9CFF" }
+            - mark:
+                type: text
+                dy: -14
+                fontSize: 10
+                fontWeight: 600
+                align: center
+                baseline: bottom
+              encoding:
+                text: { field: pct_label, type: nominal }
+                color: { value: "#F3F6FA" }
+            - mark:
+                type: text
+                dy: -2
+                fontSize: 9
+                fontWeight: 600
+                align: center
+                baseline: bottom
+              encoding:
+                text: { field: count_label, type: nominal }
+                color: { value: "#F3F6FA" }
 
   - tab: Roll
     widgets:
@@ -1156,7 +1318,6 @@ rows:
               when 'yahtzee' then 'Yahtzee'
               else category
             end as category,
-            case section when 'upper' then 'Upper' else 'Lower' end as section,
             games,
             zero_count,
             miss_rate,
@@ -1168,14 +1329,12 @@ rows:
             label: Player
           - name: category
             label: Box
-          - name: section
-            label: Section
-          - name: games
-            label: Games
-            number: number
-            align: right
           - name: zero_count
             label: Zeros
+            number: number
+            align: right
+          - name: games
+            label: Games
             number: number
             align: right
           - name: miss_rate
@@ -1203,7 +1362,7 @@ rows:
 
           A dash is no such games, including pairs that cannot happen together
           (no Yahtzee, and also a Yahtzee). Faded cells and grey bars are fewer
-          than 5 games. The grey line is a coin flip.
+          than 5 games.
 
           How the groups are defined:
           [strategy notes](https://github.com/jgoodman55/yahtzee/blob/main/assets/marts/strategy.md).
@@ -1215,7 +1374,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 6
-        description: Times the upper section reached 63. The small line is the share of games.
+        description: Share of games the upper section reached 63, and how many games that was.
         query: headline
         spec:
           width: container
@@ -1228,18 +1387,36 @@ rows:
             - mark: *name_jordan
               encoding:
                 text: { value: Jordan }
-            - mark: *num_erin
+            - mark:
+                type: text
+                fontSize: 16
+                fontWeight: 600
+                align: center
+                baseline: middle
+                x: { expr: "width * 0.28" }
+                y: { expr: "height * 0.55" }
+                color: "#FF2D92"
+                limit: 150
+              transform:
+                - calculate: "round(datum.erin_upper_bonuses / datum.total_games * 100) + '% (' + format(datum.erin_upper_bonuses, '.0f') + '/' + format(datum.total_games, '.0f') + ')'"
+                  as: erin_bonus_label
               encoding:
-                text: { field: erin_upper_bonuses, type: quantitative, format: ",.0f" }
-            - mark: *num_jordan
+                text: { field: erin_bonus_label, type: nominal }
+            - mark:
+                type: text
+                fontSize: 16
+                fontWeight: 600
+                align: center
+                baseline: middle
+                x: { expr: "width * 0.72" }
+                y: { expr: "height * 0.55" }
+                color: "#2D9CFF"
+                limit: 150
+              transform:
+                - calculate: "round(datum.jordan_upper_bonuses / datum.total_games * 100) + '% (' + format(datum.jordan_upper_bonuses, '.0f') + '/' + format(datum.total_games, '.0f') + ')'"
+                  as: jordan_bonus_label
               encoding:
-                text: { field: jordan_upper_bonuses, type: quantitative, format: ",.0f" }
-            - mark: *sub_erin
-              encoding:
-                text: { field: erin_bonus_rate, type: quantitative, format: ".0%" }
-            - mark: *sub_jordan
-              encoding:
-                text: { field: jordan_bonus_rate, type: quantitative, format: ".0%" }
+                text: { field: jordan_bonus_label, type: nominal }
 
       - name: Upper average
         type: chart
@@ -1278,7 +1455,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: Average dice on each face. The grey line is par. 3 of every face is 63, which earns the upper bonus.
+        description: Average dice on each face. 3 of every face is 63, which earns the upper bonus.
         query: upper_avg_dice
         spec:
           width: container
@@ -1306,12 +1483,23 @@ rows:
                   scale: { domain: [0, 5] }
                 color: *player_color
             - mark:
-                type: rule
-                color: "#6D7889"
-                strokeDash: [4, 3]
-                strokeWidth: 1.5
+                type: text
+                dy: -8
+                fontSize: 10
+                fontWeight: 600
               encoding:
-                y: { datum: 3 }
+                x:
+                  field: face
+                  type: nominal
+                  sort: [Ones, Twos, Threes, Fours, Fives, Sixes]
+                xOffset: { field: player }
+                y:
+                  field: value
+                  type: quantitative
+                  scale: { domain: [0, 5] }
+                  axis: null
+                text: { field: value, type: quantitative, format: ".1f" }
+                color: { value: "#F3F6FA" }
 
   - tab: Odds
     height: "420"
@@ -1320,7 +1508,7 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: When only one player had this, how often they won. Past the grey line beats a coin flip. Grey bars are under 5 games.
+        description: When only one player had this, how often they won. Grey bars are under 5 games.
         query: strategy_swing
         spec:
           width: container
@@ -1337,14 +1525,7 @@ rows:
                 y:
                   field: feature_label
                   type: nominal
-                  sort:
-                    - Yahtzee bonus
-                    - Upper bonus
-                    - Yahtzee
-                    - Large straight
-                    - No large straight
-                    - No full house
-                    - No small straight
+                  sort: null
                   title: null
                   axis:
                     labelFontSize: 11
@@ -1373,13 +1554,6 @@ rows:
                   - { field: label, type: nominal, title: Win rate }
                   - { field: n, type: quantitative, title: Games }
             - mark:
-                type: rule
-                color: "#6D7889"
-                strokeDash: [4, 3]
-                strokeWidth: 1.5
-              encoding:
-                x: { datum: 0.5 }
-            - mark:
                 type: text
                 align: left
                 dx: 4
@@ -1390,14 +1564,7 @@ rows:
                 y:
                   field: feature_label
                   type: nominal
-                  sort:
-                    - Yahtzee bonus
-                    - Upper bonus
-                    - Yahtzee
-                    - Large straight
-                    - No large straight
-                    - No full house
-                    - No small straight
+                  sort: null
                 x:
                   field: holder_win_rate
                   type: quantitative

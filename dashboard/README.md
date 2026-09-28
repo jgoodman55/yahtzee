@@ -10,9 +10,9 @@ does not move.
 | Tab | What’s on it |
 |---|---|
 | **Top** | Seven Erin-vs-Jordan comparisons: wins, average, median, high and low score (click opens that game), Yahtzees, and the solo-Yahtzee win rate. |
-| **Score** | Streaks next to the wins race, win-margin and total-score distributions, sum-box averages. |
-| **Roll** | Per-game rate, 0/1/2/3+ distribution, cumulative races, the solo-Yahtzee matchup, scratch rates (including four of a kind), scratches per game. |
-| **Odds** | Upper bonus and upper average, dice-per-face with a par line at 3, swing bars with a 50% line, rescue matrix. Plain labels. |
+| **Score** | Streaks next to the wins race, separate Erin and Jordan histograms for margins and totals, sum-box averages. |
+| **Roll** | Per-game rate, Yahtzee count distribution, cumulative races, the solo-Yahtzee matchup, scratch rates (including four of a kind), scratches as a percent of games. |
+| **Odds** | Upper bonus as a percent with the count, upper average, dice-per-face with value labels, swing bars ordered by win rate, rescue matrix. Plain labels. |
 | **Game** | Commentary (newest first, comment up front), clickable closest games and blowouts, a sample card, the full game list. |
 | **Pub** | Link to the Leaflet map, win rate by location with n on the label, games table, venue list. |
 

@@ -8,13 +8,13 @@ Strategy tab (108 games, 0 ties) after `dac serve --template yahtzee-dark`:
 
 102-game captures from `dac serve --template yahtzee-dark` after Overview KPI colors landed on main:
 
-- `overview_kpis.png` — Overview (102 games; Erin pink, Jordan blue, combined white)
+- `overview_kpis.png` — Overview (102 games; Erin, Jordan, combined white)
 - `overview_kpi_colors.png` — same Overview capture (alias)
 - `races_cumulative.png` — Races tab (cumulative wins / yahtzees through game 102)
 - `races_cumulative_wins.png` — same Races capture (alias)
 - `zeros_conversion.png` — Zeros tab (per-game zeros + miss rates with bar labels)
 - `deep_cuts.png` — Deep cuts charts (upper dice-count + lower sum-box averages; Erin/Jordan win-margin and recorded_total histograms)
-- `deep_cuts_kpi_colors.png` — Deep cuts KPI figures (lifetime points row; Avg + Median row; Erin pink, Jordan blue, ties white; values centered)
+- `deep_cuts_kpi_colors.png` — Deep cuts KPI figures (lifetime points row; Avg + Median row; Erin, Jordan, ties white; values centered)
 - `deep_cuts_points_histograms.png` — Deep cuts win-margin + recorded_total histograms
 - `pubs_tab_leaflet_link.png` — Pubs tab (Leaflet link + venue table)
 - `leaflet_pub_map_anchor_bar.png` — standalone Leaflet map, Anchor Bar popup (3 visits)
@@ -38,7 +38,7 @@ Earlier dark-redesign captures:
 
 Scorecard drill-down (Overview yahtzees + photo|seed sidecar):
 
-- `overview_yahtzee_kpis.png` — Overview with Erin / Jordan total yahtzees (pink / blue)
+- `overview_yahtzee_kpis.png` — Overview with Erin / Jordan total yahtzees
 - `overview_high_low_scores.png` — Overview high and low scores side by side (Erin 505 / 125, Jordan 509 / 135)
 - `deep_cuts_scorecard_links.png` — Deep cuts clickable closest / blowout scorecard lists (colored by winner)
 - `deep_cuts_commentary.png` — Deep cuts commentary table with Erin score / Jordan score after Winner

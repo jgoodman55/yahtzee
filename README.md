@@ -108,13 +108,12 @@ Popup photos are the same: seed `photo_url` / vendored
 ## 4. Dashboard (Bruin DAC)
 
 Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
-electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Grey is a
-coin-flip line or a sample under 5 games. The name stays
-`Yahtzee Head-to-Head`. Six tabs, short enough to fit a 390px screen
-(DAC pads each tab by 16px a side):
+`#FF2D92`, Jordan is `#2D9CFF`. Grey is a coin-flip line or a sample under
+5 games. The name stays `Yahtzee Head-to-Head`. Six tabs, short enough to
+fit a 390px screen (DAC pads each tab by 16px a side):
 
 1. **Top** — seven paired comparisons (wins, average, median, high, low,
-   Yahtzees, solo-Yahtzee win rate), plus a SQL headline above every tab.
+   Yahtzees, solo-Yahtzee win rate).
 2. **Score** — streaks, cumulative wins, margin and total distributions,
    sum-box averages.
 3. **Roll** — distribution, cumulative races, solo-Yahtzee matchup,

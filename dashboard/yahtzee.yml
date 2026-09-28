@@ -1,14 +1,14 @@
 schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
-description: Erin (pink) vs Jordan (blue). Who is ahead, and which boxes turn into wins.
+description: Who is ahead, and which boxes turn into wins.
 connection: local_duckdb
 
 # Colors: Erin #FF2D92, Jordan #2D9CFF, grey #6D7889 for a coin-flip line,
 # an upset, or a sample under 5 games. Serve with --template yahtzee-dark.
 # Row heights are quoted strings. DAC 0.21 turns a bare number into CSS that
-# crushes stacked cards below 640px. Definitions that are not the story
-# (recorded_total vs computed_total, the Vega href pattern, DAC 0.21 limits)
-# live in dashboard/README.md.
+# crushes stacked cards below 640px. Field definitions (recorded_total vs
+# computed_total, the Vega href pattern, DAC 0.21 limits) live in
+# dashboard/README.md.
 
 x-vl-dark: &vl_dark
   background: transparent
@@ -147,114 +147,6 @@ queries:
         '/scorecards/viewer.html?game=' || h.erin_low_score_game_seq as erin_low_score_url,
         '/scorecards/viewer.html?game=' || h.jordan_low_score_game_seq as jordan_low_score_url
       from mart_headline_kpis h
-  headline_story:
-    sql: |
-      with h as (
-        select * from mart_headline_kpis
-      ),
-      players as (
-        select
-          max(case when player_key = 'erin' then total_yahtzees end) as erin_yz,
-          max(case when player_key = 'jordan' then total_yahtzees end) as jordan_yz
-        from mart_player_kpis
-      ),
-      fh as (
-        select
-          max(case when player_key = 'erin' then miss_rate end) as erin_fh,
-          max(case when player_key = 'jordan' then miss_rate end) as jordan_fh
-        from mart_category_stats
-        where category = 'full_house'
-      ),
-      alone as (
-        select
-          max(case when holder = 'Erin' then holder_win_rate end) as erin_rate,
-          max(case when holder = 'Jordan' then holder_win_rate end) as jordan_rate
-        from mart_yz_matchup
-      ),
-      base as (
-        select
-          h.total_games,
-          h.erin_wins,
-          h.jordan_wins,
-          h.erin_bonus_rate,
-          h.jordan_bonus_rate,
-          p.erin_yz,
-          p.jordan_yz,
-          fh.erin_fh,
-          fh.jordan_fh,
-          a.erin_rate,
-          a.jordan_rate
-        from h
-        cross join players p
-        cross join fh
-        cross join alone a
-      )
-      select ord, 6 - ord as ypos, line
-      from (
-        select
-          1 as ord,
-          case
-            when jordan_wins > erin_wins then
-              'Jordan leads ' || jordan_wins || '-' || erin_wins
-                || ' after ' || total_games || ' games.'
-            when erin_wins > jordan_wins then
-              'Erin leads ' || erin_wins || '-' || jordan_wins
-                || ' after ' || total_games || ' games.'
-            else
-              'Tied ' || erin_wins || '-' || jordan_wins
-                || ' after ' || total_games || ' games.'
-          end as line
-        from base
-        union all
-        select
-          2,
-          case
-            when erin_yz > jordan_yz then
-              'Erin rolls more Yahtzees (' || erin_yz || ' vs ' || jordan_yz || ').'
-            when jordan_yz > erin_yz then
-              'Jordan rolls more Yahtzees (' || jordan_yz || ' vs ' || erin_yz || ').'
-            else
-              'Same Yahtzee total (' || erin_yz || ' each).'
-          end
-        from base
-        union all
-        select
-          3,
-          case
-            when jordan_bonus_rate >= erin_bonus_rate then
-              'Upper bonus: Jordan ' || round(100.0 * jordan_bonus_rate)::integer
-                || '%, Erin ' || round(100.0 * erin_bonus_rate)::integer || '%.'
-            else
-              'Upper bonus: Erin ' || round(100.0 * erin_bonus_rate)::integer
-                || '%, Jordan ' || round(100.0 * jordan_bonus_rate)::integer || '%.'
-          end
-        from base
-        union all
-        select
-          4,
-          case
-            when jordan_fh <= erin_fh then
-              'Full-house misses: Jordan ' || round(100.0 * jordan_fh)::integer
-                || '%, Erin ' || round(100.0 * erin_fh)::integer || '%.'
-            else
-              'Full-house misses: Erin ' || round(100.0 * erin_fh)::integer
-                || '%, Jordan ' || round(100.0 * jordan_fh)::integer || '%.'
-          end
-        from base
-        union all
-        select
-          5,
-          case
-            when jordan_rate >= erin_rate then
-              'Solo Yahtzee: Jordan ' || round(100.0 * jordan_rate)::integer
-                || '%, Erin ' || round(100.0 * erin_rate)::integer || '%.'
-            else
-              'Solo Yahtzee: Erin ' || round(100.0 * erin_rate)::integer
-                || '%, Jordan ' || round(100.0 * jordan_rate)::integer || '%.'
-          end
-        from base
-      ) lines
-      order by ord
   solo_yahtzee:
     sql: |
       select
@@ -496,47 +388,6 @@ queries:
       order by games desc, location, player
 
 rows:
-  # No tab: DAC shows this row above the tab bar on every tab.
-  - height: "210"
-    widgets:
-      - name: The story
-        type: chart
-        chart: vega-lite
-        col: 12
-        description: Wins, Yahtzees, and where they turn into wins.
-        query: headline_story
-        spec:
-          width: container
-          height: 128
-          autosize: { type: fit, contains: padding, resize: true }
-          padding: { top: 2, left: 2, right: 2, bottom: 2 }
-          background: transparent
-          view: { stroke: null }
-          mark:
-            type: text
-            align: left
-            baseline: middle
-            fontWeight: 600
-            limit: 340
-            x: { expr: "2" }
-          encoding:
-            y:
-              field: ypos
-              type: quantitative
-              axis: null
-              scale: { domain: [0.4, 5.6], nice: false }
-            text: { field: line, type: nominal }
-            color:
-              condition:
-                test: "datum.ord === 1"
-                value: "#F3F6FA"
-              value: "#C5CEDA"
-            size:
-              condition:
-                test: "datum.ord === 1"
-                value: 16
-              value: 13
-
   - tab: Top
     height: "168"
     widgets:
@@ -783,8 +634,8 @@ rows:
         col: 12
         content: |
           Wins compare the sum of the boxes. High scores, low scores, and
-          averages are the totals written on the card. Pink is Erin, blue is
-          Jordan. Grey is a coin-flip line or a sample of fewer than 5 games.
+          averages are the totals written on the card. Grey is a coin-flip
+          line or a sample of fewer than 5 games.
 
   - tab: Score
     height: "160"

@@ -1,7 +1,7 @@
 # Scorecards (photo | seed)
 
 Jordan validated the seed by putting the **original sheet photo** next to a
-**digitized scorecard** (Chance before Yahtzee; Erin pink / Jordan blue).
+**digitized scorecard** (Chance before Yahtzee).
 DAC 0.21.0 cannot host that comparison inside a table cell.
 
 ## What DAC 0.21.0 can do

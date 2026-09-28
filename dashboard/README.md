@@ -1,12 +1,10 @@
 # Yahtzee DAC dashboard
 
 One DAC app, six short tabs. Dark theme (`yahtzee-dark`):
-Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
+Erin is `#FF2D92`, Jordan is `#2D9CFF`.
 Grey (`#6D7889`) is a coin-flip line, an upset, or a sample under 5 games.
 
-A row with no `tab` (the story) sits above the tab bar on every tab. Its
-numbers come from SQL, because DAC text widgets are not templated. The
-dashboard name stays `Yahtzee Head-to-Head`, so `/d/Yahtzee%20Head-to-Head`
+The dashboard name stays `Yahtzee Head-to-Head`, so `/d/Yahtzee%20Head-to-Head`
 does not move.
 
 | Tab | What’s on it |
@@ -121,7 +119,7 @@ dac serve --dir dashboard --template yahtzee-dark --open --config /c/Users/jorda
 ```
 
 `--template yahtzee-dark` loads `themes/yahtzee-dark.yml` (extends `bruin-dark`,
-pink/blue chart tokens). The viewer still has a light/dark toggle; start from
+Erin and Jordan chart tokens). The viewer still has a light/dark toggle; start from
 dark.
 
 The dashboard is served at `http://localhost:8321`.

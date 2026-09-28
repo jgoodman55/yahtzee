@@ -16,10 +16,10 @@ markdown, no `href` on cells):
 | `image` widget | Yes | Data-driven since 0.18. `src`, `alt`, `title`, and `caption` name columns from `sql`, `query`, or inline `data`. A bare URL in `src` fails validation (`one of query, sql, or data is required`). The Scorecards sample uses `data` so the Game 1 composite still renders. |
 | Filters (`select` / `text`) | Yes | Dashboard-wide — would clutter Overview |
 | Table cell markdown / `<a>` | No | Cells are formatted text or image thumbnails only |
-| Vega-Lite `href` on a text mark | Yes (used here) | Clickable “Game N” lists on Deep cuts. Vega-Lite has no `target` encoding; we set `usermeta.embedOptions.loader.target: _blank`. On DAC 0.17 that opens the :8765 viewer in a **new tab**. Image widgets cannot do this. |
+| Vega-Lite `href` on a text mark | Yes (used here) | Clickable “Game N” lists on Deep cuts. Vega-Lite has no `target` encoding; we set `usermeta.embedOptions.loader.target: _blank`. A root-relative `href` (`/scorecards/viewer.html?game=N`) opens the viewer in a **new tab** when DAC honors that target. Image widgets cannot do this. |
 | Image widget click / `href` | No | No click target on the image itself. A markdown `caption` column can link out. |
 | Arbitrary HTML / iframe in a widget | No | Same limit as the pub map |
-| Sidecar static HTML next to `dac serve` | **Yes** | This page — port 8765 |
+| Static HTML beside `dac serve` | **Yes** | Caddy `file_server` for `/scorecards` and `/pub_map.html` from `dashboard/`. DAC does not publish these files. |
 
 ## Refresh after `bruin run`
 
@@ -32,16 +32,18 @@ python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 Writes `dashboard/scorecards/games.js` (and optional PNG composites). The
 viewer and index are static HTML.
 
-```bash
-python3 -m http.server 8765 --directory dashboard
-# /scorecards/index.html
-# /scorecards/viewer.html?game=12
+On [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves this folder
+at `/scorecards` (and `/scorecards/*`). `dac serve` does **not** publish
+these files, and there is no `python -m http.server` sidecar.
+
+```text
+https://yahtzee.jginfo.xyz/scorecards/index.html
+https://yahtzee.jginfo.xyz/scorecards/viewer.html?game=12
 ```
 
-`dac serve` does **not** publish these files. Dashboard links are root-relative
-(`/scorecards/...`), so they resolve when this folder is served on the same
-origin as DAC. Opening the HTML directly also works (`file://` — `games.js`
-is inlined like `pub_map/pubs.js`).
+Locally, put the same routes in front of `dac serve` (Caddyfile in
+`docs/hosting-vps.md`) so root-relative dashboard links resolve, or open the
+HTML directly (`file://` works — `games.js` is inlined like `pub_map/pubs.js`).
 
 ## Photos from Drive
 

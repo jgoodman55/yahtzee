@@ -1,0 +1,39 @@
+# Local stand-in for the production site block in docs/hosting-vps.md.
+# From the repo root, with DAC already listening on 127.0.0.1:8321:
+#   caddy run --config scripts/Caddyfile.local
+# Then open http://127.0.0.1:8080/
+:8080 {
+	handle /yahtzee.yml {
+		respond "Not found" 404
+	}
+	handle /.bruin.yml {
+		respond "Not found" 404
+	}
+	handle /data {
+		respond "Not found" 404
+	}
+	handle /data/* {
+		respond "Not found" 404
+	}
+
+	handle /pub_map.html {
+		root * dashboard
+		file_server
+	}
+	handle /pub_map/* {
+		root * dashboard
+		file_server
+	}
+	handle /scorecards {
+		root * dashboard
+		file_server
+	}
+	handle /scorecards/* {
+		root * dashboard
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:8321
+	}
+}

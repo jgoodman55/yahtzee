@@ -1,34 +1,69 @@
-# Hosting Yahtzee on a small VPS
+# Hosting Yahtzee on the DigitalOcean droplet
 
-After merge, GitHub Actions **SSHs to a VPS and runs Bruin on the box**.
+The live site is [https://yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz).
+After merge, GitHub Actions **SSHs to the droplet and runs Bruin on the box**.
 Grok stays the OCR step; CI score-rule tests are the validation alert.
 
-Do **not** provision a VPS from this repo. This is a runbook for a box you
-create by hand (~£5/mo).
+Do **not** provision a VPS from this repo. This is the runbook for the box
+that is already running.
 
 | Workflow | File | When |
 |---|---|---|
 | PR validation | [`.github/workflows/scorecard-validation.yml`](../.github/workflows/scorecard-validation.yml) | PRs that touch seeds / audit / tests (or manual `workflow_dispatch`) |
 | Deploy | [`.github/workflows/deploy-vps.yml`](../.github/workflows/deploy-vps.yml) | `push` to `main`, or Actions → **Deploy VPS** → Run workflow |
 
-## 1. Create a ~£5 Ubuntu VPS
+## What is running
 
-Any small Ubuntu 24.04 box is enough (1 vCPU, 1–2 GB RAM, 20 GB disk):
+Ubuntu 24.04 droplet, SSH user `ubuntu`. The app checkout is
+`/home/ubuntu/yahtzee`.
 
-- [Hetzner Cloud](https://www.hetzner.com/cloud/) — CX22 / CAX11
-- [DigitalOcean](https://www.digitalocean.com/pricing/droplets) — Basic droplet
+**ufw** allows only 22, 80, and 443. `dac serve` listens on
+`127.0.0.1:8321`. Nothing listens on 8765. Neither port is open to the
+internet, and there is no `python -m http.server` sidecar.
 
-Add your personal SSH key at create time. Open 22 (SSH). For the dashboard,
-either open 8321 + 8765 or put nginx on 80/443 in front (step 5).
+**Caddy** (official apt repo) terminates HTTPS for `yahtzee.jginfo.xyz` and
+also answers plain HTTP on the droplet IP (`46.101.81.198`). It serves
+`/pub_map.html`, `/pub_map/*`, `/scorecards`, and `/scorecards/*` from
+`/home/ubuntu/yahtzee/dashboard` on disk. Every other path is reverse-proxied
+to DAC. `/yahtzee.yml`, `/.bruin.yml`, and `/data/*` are 404s.
 
-## 2. Install tools
+**DAC 0.21.0** is a systemd **user** unit (`yahtzee-dac.service`) with linger,
+so it stays up after logout. It is bound to `--host 127.0.0.1 --port 8321`
+and `--config` points at the absolute `.bruin.yml`.
 
-SSH in as the deploy user (often `ubuntu`):
+A **2 GB swapfile** is on so `bruin run` has headroom on a small droplet.
+
+Python dependencies live in a virtualenv at `~/.venvs/yahtzee`. Ubuntu 24.04
+marks the system interpreter as externally managed (PEP 668), so
+`pip install --user` fails.
+
+## 1. Droplet, firewall, swap
+
+Any small Ubuntu 24.04 droplet is enough (1 vCPU, 1–2 GB RAM). Add your
+personal SSH key at create time.
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y git python3 python3-pip python3-venv
+sudo apt-get install -y git python3 python3-pip python3-venv ufw
 
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+sudo ufw status
+
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+Do not open 8321 or 8765.
+
+## 2. Install Bruin, DAC 0.21.0, and the venv
+
+```bash
 # Bruin + DAC CLIs land in ~/.local/bin
 curl -LsSf https://getbruin.com/install/cli | sh
 # Pin DAC so this box matches the laptop (do not install floating latest).
@@ -36,9 +71,8 @@ curl -LsSf https://getbruin.com/install/dac | sh -s -- v0.21.0
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.profile
 export PATH="$HOME/.local/bin:$PATH"
 
-python3 -m pip install --user -U pip
-# duckdb is required by dashboard/scripts/export_pub_map.py;
-# pandas/requests are required by Bruin Python assets.
+python3 -m venv "$HOME/.venvs/yahtzee"
+"$HOME/.venvs/yahtzee/bin/pip" install -U pip
 ```
 
 Confirm `bruin version` and `dac version` (`dac version` must print `0.21.0`).
@@ -49,8 +83,14 @@ Confirm `bruin version` and `dac version` (`dac version` must print `0.21.0`).
 git clone https://github.com/jgoodman55/yahtzee.git "$HOME/yahtzee"
 cd "$HOME/yahtzee"
 cp .bruin.yml.example .bruin.yml
-python3 -m pip install --user -r assets/python/requirements.txt
+"$HOME/.venvs/yahtzee/bin/pip" install -r assets/python/requirements.txt
 ```
+
+`assets/python/requirements.txt` is what Bruin's Python assets import
+(`pandas`, `duckdb`, `bruin-sdk`). `dashboard/scripts/export_pub_map.py`
+imports `duckdb` from the same venv. The deploy workflow and
+`scripts/yahtzee-rebuild.sh` pick `$HOME/.venvs/yahtzee/bin/python` when it
+exists, and fall back to `python3`.
 
 Edit `.bruin.yml` so both DuckDB connections use an **absolute** path.
 Relative `yahtzee.duckdb` breaks when systemd starts DAC from another cwd,
@@ -71,23 +111,21 @@ environments:
           read_only: true
 ```
 
-Replace `/home/ubuntu/yahtzee` with the real clone path.
-
 ## 4. One-time `bruin run` and `dac serve` as a systemd user service
 
-DuckDB allows one writer. Until seed-only pubs land on `main`
-([PR #25](https://github.com/jgoodman55/yahtzee/pull/25)), skip live
-Nominatim / Google Places so the box needs **no geocoding keys**:
+The pipeline is seed-only: games, commentary, and pub locations come from
+CSVs. No Nominatim, no Google Places, no API key.
 
 ```bash
 cd "$HOME/yahtzee"
-OFFLINE_TEST=1 bruin run --workers 1 --config-file "$HOME/yahtzee/.bruin.yml"
+bruin run --workers 1 --config-file "$HOME/yahtzee/.bruin.yml"
+"$HOME/.venvs/yahtzee/bin/python" dashboard/scripts/export_scorecards.py
+"$HOME/.venvs/yahtzee/bin/python" dashboard/scripts/export_pub_map.py
 ```
 
-`--config-file` is the Bruin flag for `.bruin.yml` (connections). After #25
-merges, drop `OFFLINE_TEST=1`; still no Places / Nominatim keys.
+`--config-file` is the Bruin flag for `.bruin.yml` (connections).
 
-Enable lingering so user units survive logout, then install DAC:
+Enable lingering so the user unit survives logout, then install DAC:
 
 ```bash
 sudo loginctl enable-linger "$USER"
@@ -107,7 +145,8 @@ WorkingDirectory=/home/ubuntu/yahtzee
 Environment=HOME=/home/ubuntu
 Environment=PATH=/home/ubuntu/.local/bin:/usr/bin
 # --config must point at .bruin.yml (Jordan's laptop lesson). Same file as bruin --config-file.
-ExecStart=/home/ubuntu/.local/bin/dac serve --dir dashboard --template yahtzee-dark --host 0.0.0.0 --port 8321 --config /home/ubuntu/yahtzee/.bruin.yml
+# Bound to loopback. Caddy is the only public listener.
+ExecStart=/home/ubuntu/.local/bin/dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321 --config /home/ubuntu/yahtzee/.bruin.yml
 Restart=on-failure
 
 [Install]
@@ -117,55 +156,95 @@ WantedBy=default.target
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable --now yahtzee-dac.service
-# http://<vps-ip>:8321
 ```
 
 Stop `dac serve` before a manual `bruin run` (DuckDB cannot mix a writer with
-open readers). The deploy workflow does this automatically.
+open readers). The deploy workflow and `~/bin/yahtzee-rebuild` do this, and
+restart DAC on the way out even when `bruin run` or an export fails.
 
-## 5. Sidecar for pub map / scorecards
+## 5. Caddy
 
-DAC 0.21.0 does not publish `dashboard/pub_map.html` or
-`dashboard/scorecards/`. Export, then serve the `dashboard/` directory.
-
-```bash
-python3 dashboard/scripts/export_scorecards.py
-python3 dashboard/scripts/export_pub_map.py
-```
-
-### Option A — second systemd unit (`python -m http.server`)
-
-`~/.config/systemd/user/yahtzee-sidecar.service`:
-
-```ini
-[Unit]
-Description=Yahtzee pub map / scorecards static files
-After=network.target
-
-[Service]
-Type=simple
-WorkingDirectory=/home/ubuntu/yahtzee
-ExecStart=/usr/bin/python3 -m http.server 8765 --directory dashboard
-Restart=on-failure
-
-[Install]
-WantedBy=default.target
-```
+Caddy comes from the [official apt repo](https://caddyserver.com/docs/install#debian-ubuntu-raspbian),
+not Ubuntu's older package.
 
 ```bash
-systemctl --user enable --now yahtzee-sidecar.service
-# http://<vps-ip>:8765/pub_map.html
-# http://<vps-ip>:8765/scorecards/viewer.html?game=1
+sudo apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt-get update
+sudo apt-get install -y caddy
 ```
 
-The sidecar reads files from disk; a deploy that only regenerates GeoJSON /
-`games.js` does **not** need a sidecar restart.
+Caddy runs as the `caddy` user. `/home/ubuntu` is typically mode `750`, so
+the service cannot traverse it into the checkout. Others need execute on the
+home directory (not read). Files under the repo stay world-readable, which
+a normal `git clone` already is.
 
-### Option B — nginx
+```bash
+sudo chmod o+x /home/ubuntu
+```
 
-Point a `server` at `dashboard/` (port 80/443, optional TLS via certbot).
-No extra process; still run the two `export_*.py` scripts after each
-`bruin run`. Restart nginx only if you change the site config.
+`/etc/caddy/Caddyfile`:
+
+```caddyfile
+(yahtzee) {
+	handle /yahtzee.yml {
+		respond "Not found" 404
+	}
+	handle /.bruin.yml {
+		respond "Not found" 404
+	}
+	handle /data {
+		respond "Not found" 404
+	}
+	handle /data/* {
+		respond "Not found" 404
+	}
+
+	handle /pub_map.html {
+		root * /home/ubuntu/yahtzee/dashboard
+		file_server
+	}
+	handle /pub_map/* {
+		root * /home/ubuntu/yahtzee/dashboard
+		file_server
+	}
+	handle /scorecards {
+		root * /home/ubuntu/yahtzee/dashboard
+		file_server
+	}
+	handle /scorecards/* {
+		root * /home/ubuntu/yahtzee/dashboard
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:8321
+	}
+}
+
+# Automatic HTTPS (certificate for this hostname).
+yahtzee.jginfo.xyz {
+	import yahtzee
+}
+
+# Plain HTTP when someone hits the droplet IP. No certificate.
+http://46.101.81.198 {
+	import yahtzee
+}
+```
+
+```bash
+sudo systemctl reload caddy
+```
+
+`/scorecards` redirects to `/scorecards/` and serves `index.html`. Nested
+files such as `/scorecards/samples/game_1.png` match `/scorecards/*`.
+Dashboard links are root-relative (`/scorecards/...`, `/pub_map.html`), so
+they hit this site block rather than DAC.
+
+Caddy reads those files from disk. A deploy that only regenerates GeoJSON
+or `games.js` does not need a Caddy reload.
 
 ## 6. Deploy SSH key → GitHub Actions secrets
 
@@ -223,15 +302,38 @@ the secret is stored, or lock them down.
 4. [`.github/workflows/deploy-vps.yml`](../.github/workflows/deploy-vps.yml)
    SSHs in, `git fetch` + `reset --hard origin/main`, stops DAC, runs
    `bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"`, exports
-   scorecards + pub map, starts DAC again.
+   scorecards + pub map with the venv Python, and starts DAC again from an
+   `EXIT` trap so a failed `bruin run` or export does not leave the site down.
 
-## 8. Adhoc rebuild
+The workflow's `concurrency` group is `deploy-vps` (`cancel-in-progress: false`),
+so two Actions deploys never overlap. See also the lock in the next section.
+
+## 8. Ad hoc rebuild
 
 GitHub → **Actions** → **Deploy VPS** → **Run workflow**.
 
 That always deploys `origin/main`, even if you started the run from another
 branch. Use it after a manual fix on the box, a failed run, or a first-time
 secrets check.
+
+On the droplet, the same sequence is `~/bin/yahtzee-rebuild`, committed as
+[`scripts/yahtzee-rebuild.sh`](../scripts/yahtzee-rebuild.sh):
+
+```bash
+mkdir -p "$HOME/bin"
+ln -sfn "$HOME/yahtzee/scripts/yahtzee-rebuild.sh" "$HOME/bin/yahtzee-rebuild"
+# ~/.profile should have $HOME/bin on PATH
+~/bin/yahtzee-rebuild
+```
+
+The script `git fetch`es, `git reset --hard origin/main`, stops DAC, runs
+`bruin run --workers 1 --config-file`, runs both `dashboard/scripts/export_*.py`,
+and restarts DAC from `trap 'systemctl --user start yahtzee-dac.service || true' EXIT`.
+
+Do not run `~/bin/yahtzee-rebuild` while the deploy workflow is in progress,
+and do not start a second manual rebuild over the first. Both take
+`flock` on `/tmp/yahtzee-rebuild.lock` and the second one exits before it
+stops DAC. DuckDB still allows only one writer.
 
 ## 9. `dac serve` / `dac check` need `--config`
 
@@ -241,19 +343,33 @@ On a laptop that failed when the working tree layout or cwd did not match
 
 ```bash
 dac check --dir dashboard --config /home/ubuntu/yahtzee/.bruin.yml
-dac serve --dir dashboard --template yahtzee-dark --config /home/ubuntu/yahtzee/.bruin.yml
+dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321 --config /home/ubuntu/yahtzee/.bruin.yml
 ```
 
 Bruin's equivalent flag is `--config-file` (or `BRUIN_CONFIG_FILE`). The
 systemd unit and the deploy workflow both pass the absolute path.
 
-## 10. Pubs / geocoding keys
+## 10. Local proxy (laptop)
 
-On current `main`, `mart_pub_locations` can still call Nominatim / Google
-Places unless `OFFLINE_TEST=1`. The deploy workflow sets that env var, so
-the VPS does **not** need `GOOGLE_PLACES_API_KEY`.
+`dac serve` does not publish `pub_map.html` or `scorecards/`. Root-relative
+links in the dashboard only resolve when something in front of DAC serves
+those paths from `dashboard/`, the way Caddy does on the droplet.
 
-If [PR #25](https://github.com/jgoodman55/yahtzee/pull/25) (seed-only pubs)
-has merged, you can drop `OFFLINE_TEST=1`; locations and photos are seed-only
-and still need no geocoding keys. Leaflet tiles load in the **browser**, not
-during `bruin run`.
+From the repo root, with DAC on loopback:
+
+```bash
+dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321
+caddy run --config scripts/Caddyfile.local
+# http://127.0.0.1:8080/
+# http://127.0.0.1:8080/scorecards/viewer.html?game=1
+# http://127.0.0.1:8080/pub_map.html
+```
+
+[`scripts/Caddyfile.local`](../scripts/Caddyfile.local) is the same routes as
+the production snippet, rooted at `./dashboard` and listening on `:8080`.
+
+## 11. Map tiles
+
+Leaflet tiles (Esri World Light Gray / OSM) load in the **browser** when you
+open `/pub_map.html`. They are not part of `bruin run`, and the pipeline does
+not call Nominatim or Google Places.

@@ -128,8 +128,9 @@ simple → deep:
    `recorded_total` after Winner). KPI figures use the same pink / blue /
    white Vega-Lite marks as Overview, centered in the widget.
 6. **Scorecards** — path to side-by-side original photo + seed-rendered card
-   (Chance before Yahtzee). DAC 0.21.0 cannot click table cells; the sidecar
-   HTML on port 8765 is the comparison UX (see `dashboard/scorecards.md`).
+   (Chance before Yahtzee). DAC 0.21.0 cannot click table cells. Caddy serves
+   the comparison pages from `dashboard/scorecards/` at `/scorecards`
+   (see `dashboard/scorecards.md`).
 7. **Pubs** — win rate by logged location, plus the Leaflet map (statement
    visits, and a pin when a scorecard named that pub)
 
@@ -155,8 +156,11 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 ## 6. Hosting
 
 - Local: `bruin run` + DAC dev server, DuckDB file on disk — zero cost.
-- VPS: after merge, GitHub Actions SSHs to a small Ubuntu box (~£5/mo) and
-  runs Bruin there. Runbook: [`docs/hosting-vps.md`](docs/hosting-vps.md).
+- VPS: [https://yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz) on a DigitalOcean
+  Ubuntu droplet. Caddy serves `/pub_map.html`, `/pub_map/*`, `/scorecards`,
+  and `/scorecards/*` from `dashboard/` and reverse-proxies everything else
+  to `dac serve` on 127.0.0.1:8321. Ports 8321 and 8765 are not public.
+  Runbook: [`docs/hosting-vps.md`](docs/hosting-vps.md).
   - **PR validation** — [`.github/workflows/scorecard-validation.yml`](.github/workflows/scorecard-validation.yml)
     (impossible scores; no secrets). Grok stays OCR; CI is the alert.
   - **Deploy** — [`.github/workflows/deploy-vps.yml`](.github/workflows/deploy-vps.yml)
@@ -214,12 +218,15 @@ dac validate --dir dashboard
 dac check --dir dashboard
 dac serve --dir dashboard --template yahtzee-dark --open
 
-# Interactive pub map + scorecards (not inside DAC — open beside it)
+# Interactive pub map + scorecards. Production Caddy serves these from
+# dashboard/ at /pub_map.html and /scorecards; dac serve does not publish them.
 python3 dashboard/scripts/export_pub_map.py
 python3 dashboard/scripts/export_scorecards.py
-python3 -m http.server 8765 --directory dashboard
-# /pub_map.html
-# /scorecards/viewer.html?game=1
+
+# Locally, serve dashboard/ in front of dac serve so root-relative links
+# resolve. The short Caddyfile in docs/hosting-vps.md listens on :8080:
+#   http://127.0.0.1:8080/pub_map.html
+#   http://127.0.0.1:8080/scorecards/viewer.html?game=1
 ```
 
 The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,

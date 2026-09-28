@@ -357,7 +357,7 @@ rows:
           on the **Scorecards** tab — DAC 0.21.0 cannot make table cells clickable.
 
   - tab: Overview
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Total games
         type: chart
@@ -370,7 +370,6 @@ rows:
           encoding:
             text: { field: total_games, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin wins
@@ -384,7 +383,6 @@ rows:
           encoding:
             text: { field: erin_wins, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan wins
@@ -398,11 +396,10 @@ rows:
           encoding:
             text: { field: jordan_wins, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Overview
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin high score
         type: chart
@@ -425,7 +422,6 @@ rows:
                 title: Game
                 format: d
           width: container
-          height: 40
           padding: 0
 
       - name: Erin low score
@@ -449,7 +445,6 @@ rows:
                 title: Game
                 format: d
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan high score
@@ -473,7 +468,6 @@ rows:
                 title: Game
                 format: d
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan low score
@@ -497,11 +491,10 @@ rows:
                 title: Game
                 format: d
           width: container
-          height: 40
           padding: 0
 
   - tab: Overview
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Total yahtzees
         type: chart
@@ -514,7 +507,6 @@ rows:
           encoding:
             text: { field: total_yahtzees, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin total yahtzees
@@ -528,7 +520,6 @@ rows:
           encoding:
             text: { field: erin_total_yahtzees, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan total yahtzees
@@ -542,11 +533,10 @@ rows:
           encoding:
             text: { field: jordan_total_yahtzees, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Overview
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin upper bonuses
         type: chart
@@ -559,7 +549,6 @@ rows:
           encoding:
             text: { field: erin_upper_bonuses, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan upper bonuses
@@ -573,7 +562,6 @@ rows:
           encoding:
             text: { field: jordan_upper_bonuses, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Multi-yahtzee player-games
@@ -587,11 +575,10 @@ rows:
           encoding:
             text: { field: multi_yahtzee_player_games, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Overview
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin current streak
         type: chart
@@ -603,7 +590,6 @@ rows:
           encoding:
             text: { field: erin_current_streak, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan current streak
@@ -616,7 +602,6 @@ rows:
           encoding:
             text: { field: jordan_current_streak, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin longest streak
@@ -629,7 +614,6 @@ rows:
           encoding:
             text: { field: erin_longest_streak, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan longest streak
@@ -642,7 +626,6 @@ rows:
           encoding:
             text: { field: jordan_longest_streak, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Races
@@ -688,7 +671,7 @@ rows:
           Jordan: { color: "#2D9CFF" }
 
   - tab: Races
-    height: 300
+    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Yahtzees per game
         type: chart
@@ -838,7 +821,7 @@ rows:
           this tab. Cohort definitions: [`assets/marts/strategy.md`](../assets/marts/strategy.md).
 
   - tab: Strategy
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Exclusive Yahtzee holder
         type: chart
@@ -851,7 +834,6 @@ rows:
           encoding:
             text: { field: label, type: nominal }
           width: container
-          height: 40
           padding: 0
 
       - name: Exclusive upper bonus holder
@@ -867,7 +849,6 @@ rows:
           encoding:
             text: { field: kpi_label, type: nominal }
           width: container
-          height: 40
           padding: 0
 
       - name: LS=0 + Yahtzee rescue
@@ -881,7 +862,6 @@ rows:
           encoding:
             text: { field: label, type: nominal }
           width: container
-          height: 40
           padding: 0
 
   - tab: Strategy
@@ -1132,7 +1112,7 @@ rows:
                 color: { value: "#F3F6FA" }
 
   - tab: Deep cuts
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin Lifetime Points
         type: chart
@@ -1145,7 +1125,6 @@ rows:
           encoding:
             text: { field: erin_lifetime_points, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan Lifetime Points
@@ -1159,11 +1138,10 @@ rows:
           encoding:
             text: { field: jordan_lifetime_points, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Deep cuts
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin Avg
         type: chart
@@ -1176,7 +1154,6 @@ rows:
           encoding:
             text: { field: erin_avg_score, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan Avg
@@ -1190,7 +1167,6 @@ rows:
           encoding:
             text: { field: jordan_avg_score, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin Median
@@ -1204,7 +1180,6 @@ rows:
           encoding:
             text: { field: erin_median_score, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan Median
@@ -1218,11 +1193,10 @@ rows:
           encoding:
             text: { field: jordan_median_score, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Deep cuts
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin bonus rate
         type: chart
@@ -1234,7 +1208,6 @@ rows:
           encoding:
             text: { field: erin_bonus_rate, type: quantitative, format: ".0%" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan bonus rate
@@ -1247,7 +1220,6 @@ rows:
           encoding:
             text: { field: jordan_bonus_rate, type: quantitative, format: ".0%" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin yahtzees / game
@@ -1260,7 +1232,6 @@ rows:
           encoding:
             text: { field: erin_yahtzees_per_game, type: quantitative, format: ".2f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan yahtzees / game
@@ -1273,11 +1244,10 @@ rows:
           encoding:
             text: { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Deep cuts
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin upper avg (pre-bonus)
         type: chart
@@ -1290,7 +1260,6 @@ rows:
           encoding:
             text: { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan upper avg (pre-bonus)
@@ -1303,7 +1272,6 @@ rows:
           encoding:
             text: { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Erin chance avg
@@ -1316,7 +1284,6 @@ rows:
           encoding:
             text: { field: erin_avg_chance, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
       - name: Jordan chance avg
@@ -1329,11 +1296,10 @@ rows:
           encoding:
             text: { field: jordan_avg_chance, type: quantitative, format: ",.1f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Deep cuts
-    height: 120
+    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Ties
         type: chart
@@ -1345,7 +1311,6 @@ rows:
           encoding:
             text: { field: ties, type: quantitative, format: ",.0f" }
           width: container
-          height: 40
           padding: 0
 
   - tab: Deep cuts
@@ -1369,7 +1334,7 @@ rows:
           distributions line up.
 
   - tab: Deep cuts
-    height: 320
+    height: "320"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Upper section — avg dice count
         type: chart
@@ -1438,7 +1403,7 @@ rows:
                 text: { field: value, type: quantitative, format: ".1f" }
 
   - tab: Deep cuts
-    height: 300
+    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin win margins
         type: chart
@@ -1495,7 +1460,7 @@ rows:
                 text: { aggregate: count, format: "d" }
 
   - tab: Deep cuts
-    height: 300
+    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Erin total points
         type: chart
@@ -1571,7 +1536,7 @@ rows:
           Shift/ctrl-click or the Scorecards tab still works.
 
   - tab: Deep cuts
-    height: 240
+    height: "240"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
       - name: Open closest games
         type: chart

@@ -276,6 +276,43 @@
       color: var(--muted);
       font-size: 0.9rem;
     }
+    .list-toggle {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .list-toggle:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+    /* Phone: the header, 42vh venue list, and legend otherwise cover most of the map. */
+    @media (max-width: 640px) {
+      .chrome { max-width: calc(100vw - 24px); }
+      header.card { padding: 10px 12px 10px; }
+      header h1 { font-size: 1.02rem; }
+      header p { font-size: 0.75rem; }
+      .basemap-note { display: none; }
+      .list-toggle { display: block; }
+      #side-list:not(.is-open) { display: none; }
+      .list { max-height: 25vh; }
+      .legend {
+        right: 12px;
+        bottom: 12px;
+        padding: 6px 8px;
+        font-size: 0.68rem;
+        max-width: min(168px, calc(100vw - 72px));
+      }
+      .legend strong { margin-bottom: 2px; }
+      .legend .hint { display: none; }
+      .swatch { gap: 6px; }
+      .swatch + .swatch { margin-top: 2px; }
+    }
   </style>
 </head>
 <body>
@@ -293,6 +330,7 @@
         <span id="crumb-label"></span>
       </div>
       <p class="basemap-note">Esri World Light Gray · ONS boroughs (OGL v3.0). Optional MapTiler: <code>?maptiler=KEY</code>.</p>
+      <button type="button" class="list-toggle" id="list-toggle" aria-expanded="false" aria-controls="side-list">Show venues</button>
     </header>
     <section class="card list" id="side-list" hidden>
       <h2 id="list-heading">Venues</h2>
@@ -985,6 +1023,18 @@
         }
         renderList(mode, filter);
         renderLegend(mode);
+        syncListToggle();
+      }
+
+      function syncListToggle() {
+        var toggle = document.getElementById("list-toggle");
+        var list = document.getElementById("side-list");
+        var heading = document.getElementById("list-heading");
+        if (!toggle || !list) return;
+        var open = list.classList.contains("is-open");
+        var name = (heading && heading.textContent) ? heading.textContent : "Venues";
+        toggle.textContent = (open ? "Hide " : "Show ") + name.toLowerCase();
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
       }
 
       function renderList(mode, filter) {
@@ -1106,6 +1156,10 @@
       });
       document.getElementById("btn-back").addEventListener("click", function () {
         setView("boroughs", null);
+      });
+      document.getElementById("list-toggle").addEventListener("click", function () {
+        document.getElementById("side-list").classList.toggle("is-open");
+        syncListToggle();
       });
       window.addEventListener("hashchange", function () {
         var parsed = parseHash();

@@ -112,7 +112,7 @@ nav.links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.9rem; }
   font-size: 0.85em;
 }
 
-.card-scroll { overflow-x: auto; padding: 12px; }
+.card-scroll { overflow-x: auto; padding: 12px; max-width: 100%; }
 
 table.scorecard {
   border-collapse: collapse;

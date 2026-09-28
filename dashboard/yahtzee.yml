@@ -820,6 +820,10 @@ rows:
           Oak and chance are weak signals here — they stay on Deep cuts, not
           this tab. Cohort definitions: [`assets/marts/strategy.md`](../assets/marts/strategy.md).
 
+          Swing-chart ticks: **YZ bonus** = Yahtzee bonus > 0, **UB** = upper
+          bonus (35), **YZ=50** = Yahtzee, **LS=40 / LS=0** = large straight,
+          **FH=0** = full house, **SS=0** = small straight.
+
   - tab: Strategy
     height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
     widgets:
@@ -871,32 +875,55 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: Holder win rate when exactly one player has the feature. Grey = n < 10.
+        description: Holder win rate when exactly one player has the feature. Grey = n < 10. Hover a bar for the full name.
         query: strategy_swing
         spec:
-          height: 280
-          padding: { top: 8, left: 8, right: 80, bottom: 8 }
+          # DAC 0.21 injects width container when omitted; set it here so the
+          # bars track the card. Tick text is abbreviated in the spec, not
+          # mart_strategy_swing — those strings are cohort keys (the upper-bonus
+          # KPI filter still matches "Upper bonus (35)").
+          width: container
+          # Row is 360px. On a phone the title + description sit above this
+          # view, so the SVG has to stay short enough that the x-axis remains
+          # inside the card.
+          height: 240
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 2, right: 76, bottom: 2 }
           config: *vl_dark
+          transform:
+            - calculate: "datum.feature === 'Yahtzee bonus > 0' ? 'YZ bonus' : datum.feature === 'Upper bonus (35)' ? 'UB' : datum.feature === 'Yahtzee = 50' ? 'YZ=50' : datum.feature === 'Large straight = 40' ? 'LS=40' : datum.feature === 'Large straight = 0' ? 'LS=0' : datum.feature === 'Full house = 0' ? 'FH=0' : datum.feature === 'Small straight = 0' ? 'SS=0' : datum.feature"
+              as: feature_short
           encoding:
             y:
-              field: feature
+              field: feature_short
               type: nominal
               # Explicit list, top → bottom (DAC/Vega-Lite puts
               # sort[0] at the top of the y-axis).
               sort:
-                - Yahtzee bonus > 0
-                - Upper bonus (35)
-                - Yahtzee = 50
-                - Large straight = 40
-                - Large straight = 0
-                - Full house = 0
-                - Small straight = 0
+                - YZ bonus
+                - UB
+                - YZ=50
+                - LS=40
+                - LS=0
+                - FH=0
+                - SS=0
               title: null
+              axis:
+                labelFontSize: 10
+                labelPadding: 2
+                labelLimit: 64
             x:
               field: holder_win_rate
               type: quantitative
-              title: Holder win rate
-              axis: { format: ".0%" }
+              title: Win rate
+              axis:
+                format: ".0%"
+                # 20-point ticks collide inside a ~390px card. Quarter steps fit;
+                # bar labels still show the exact rate.
+                values: [0, 0.25, 0.5, 0.75, 1]
+                labelFontSize: 10
+                titleFontSize: 11
+                titlePadding: 2
               scale: { domain: [0, 1] }
           layer:
             - mark: { type: bar, cornerRadiusEnd: 2 }
@@ -908,15 +935,23 @@ rows:
                     domain: [ok, low_n]
                     range: ["#A78BFA", "#6D7889"]
                   legend: null
+                tooltip:
+                  - { field: feature, type: nominal, title: Feature }
+                  - { field: label, type: nominal, title: Holder win rate }
+                  - { field: n, type: quantitative, title: Games }
             - mark:
                 type: text
                 align: left
                 dx: 6
-                fontSize: 11
+                fontSize: 10
                 fontWeight: 600
                 color: "#F3F6FA"
               encoding:
                 text: { field: label }
+                tooltip:
+                  - { field: feature, type: nominal, title: Feature }
+                  - { field: label, type: nominal, title: Holder win rate }
+                  - { field: n, type: quantitative, title: Games }
 
   - tab: Strategy
     widgets:
@@ -934,6 +969,12 @@ rows:
           12/22 ≈ 55% grounding figure. The exclusive-miss cut of the same
           question is 8/18 — do not quote that.
 
+          Chart ticks are short so the heatmap fits a phone. **Missed:**
+          LS=0 large straight, SS=0 small straight, FH=0 full house, No YZ
+          = no Yahtzee. **Still scored:** YZ = Yahtzee only, UB = upper
+          bonus only, Both = Yahtzee and upper bonus, None = neither.
+          Hover a cell for those full names.
+
   - tab: Strategy
     height: 360
     widgets:
@@ -941,28 +982,48 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: Focal-player win rate for exclusive miss × consolation combos
+        description: Focal-player win rate for an exclusive miss × consolation. Hover a cell for the full names.
         query: strategy_rescue
         spec:
-          height: 300
-          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          # Abbreviations stay in the spec. mart_strategy_rescue strings are
+          # the cohort keys for the rates table, the LS+YZ KPI filter, and tests.
+          # Cells already print the rate, so there is no colour legend — a
+          # bottom legend was painting outside this 360px card onto Rescue rates.
+          # Height leaves room for the title and the one-line description.
+          width: container
+          height: 250
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 2, right: 4, bottom: 2 }
           config: *vl_dark
+          transform:
+            - calculate: "datum.consolation === 'Has Yahtzee' ? 'YZ' : datum.consolation === 'Has upper bonus' ? 'UB' : datum.consolation === 'Has both' ? 'Both' : datum.consolation === 'Has neither' ? 'None' : datum.consolation"
+              as: cons_short
+            - calculate: "datum.miss === 'Large straight = 0' ? 'LS=0' : datum.miss === 'Small straight = 0' ? 'SS=0' : datum.miss === 'Full house = 0' ? 'FH=0' : datum.miss === 'No Yahtzee' ? 'No YZ' : datum.miss"
+              as: miss_short
           encoding:
             x:
-              field: consolation
+              field: cons_short
               type: nominal
-              sort:
-                - Has Yahtzee
-                - Has upper bonus
-                - Has both
-                - Has neither
-              title: Consolation still on the card
-              axis: { labelAngle: 0 }
+              sort: { field: cons_ord }
+              title: Still scored
+              axis:
+                labelAngle: 0
+                labelFontSize: 10
+                titleFontSize: 11
+                labelPadding: 2
+                titlePadding: 2
+                labelLimit: 48
             y:
-              field: miss
+              field: miss_short
               type: nominal
               sort: { field: miss_ord }
-              title: What the focal player missed
+              title: Missed
+              axis:
+                labelFontSize: 10
+                titleFontSize: 11
+                labelPadding: 2
+                titlePadding: 4
+                labelLimit: 48
           layer:
             - mark: { type: rect, stroke: "#2A3344", strokeWidth: 1 }
               encoding:
@@ -975,18 +1036,24 @@ rows:
                   scale:
                     domain: [0, 1]
                     range: ["#1B2433", "#34D399"]
-                  legend:
-                    title: Win %
-                    format: ".0%"
-                    orient: bottom
-                    labelColor: "#F3F6FA"
+                  legend: null
+                tooltip:
+                  - { field: miss, type: nominal, title: Missed }
+                  - { field: consolation, type: nominal, title: Still scored }
+                  - { field: label, type: nominal, title: Win rate }
+                  - { field: n, type: quantitative, title: Games }
             - mark:
                 type: text
-                fontSize: 11
+                fontSize: 10
                 fontWeight: 600
                 color: "#F3F6FA"
               encoding:
                 text: { field: label }
+                tooltip:
+                  - { field: miss, type: nominal, title: Missed }
+                  - { field: consolation, type: nominal, title: Still scored }
+                  - { field: label, type: nominal, title: Win rate }
+                  - { field: n, type: quantitative, title: Games }
 
   - tab: Strategy
     widgets:
@@ -1034,8 +1101,9 @@ rows:
           **upset** (holder lost) — not winner-name stacks that ignore
           who had the Yahtzee. The Y-axis is that holder's outcome
           **share (0–100%)** so Erin-alone and Jordan-alone are
-          comparable; bar labels / tooltips keep absolute W/L. None /
-          both games are off this chart.
+          comparable; bar labels / tooltips keep absolute W/L. Axis ticks
+          read **Erin alone** and **Jordan alone** (Yahtzee abbreviated YZ
+          on the axis title). None / both games are off this chart.
 
   - tab: Strategy
     height: 360
@@ -1044,21 +1112,35 @@ rows:
         type: chart
         chart: vega-lite
         col: 12
-        description: Exclusive Yahtzee=50. Y-axis is outcome share (0–100%); labels keep W/L counts.
+        description: Exclusive Yahtzee = 50. Y-axis is outcome share (0–100%); labels keep W/L counts.
         query: yz_matchup
         spec:
-          height: 280
-          padding: { top: 28, left: 8, right: 8, bottom: 8 }
+          # Short ticks in the spec. mart_yz_matchup.holder_label stays the
+          # full "Erin alone has Yahtzee" string for tooltips and the table-free
+          # cohort; tests key off holder, not the tick text.
+          # Keep the Erin won / Jordan won / Upset legend, but stay inside the
+          # 360px card (at 390px a 280px view pushed that legend onto the next row).
+          width: container
+          height: 240
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 22, left: 2, right: 4, bottom: 2 }
           config: *vl_dark
+          transform:
+            - calculate: "datum.holder === 'Erin' ? 'Erin alone' : 'Jordan alone'"
+              as: holder_short
           encoding:
             x:
-              field: holder_label
+              field: holder_short
               type: nominal
-              sort:
-                - Erin alone has Yahtzee
-                - Jordan alone has Yahtzee
-              title: Who has Yahtzee = 50
-              axis: { labelAngle: 0 }
+              sort: { field: holder_ord }
+              title: Who has YZ
+              axis:
+                labelAngle: 0
+                labelFontSize: 10
+                titleFontSize: 11
+                labelPadding: 2
+                titlePadding: 2
+                labelLimit: 72
             y:
               field: share
               type: quantitative
@@ -1105,7 +1187,7 @@ rows:
                     - op: sum
                       field: share
                       as: total
-                  groupby: [holder_label]
+                  groupby: [holder_label, holder_short, holder_ord]
               encoding:
                 y: { field: total, type: quantitative }
                 text: { field: holder_label_pct, type: nominal }

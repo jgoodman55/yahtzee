@@ -108,31 +108,21 @@ Popup photos are the same: seed `photo_url` / vendored
 ## 4. Dashboard (Bruin DAC)
 
 Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
-electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Tabs go
-simple → deep:
+electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`). Grey is a
+coin-flip line or a sample under 5 games. The name stays
+`Yahtzee Head-to-Head`. Six tabs, short enough to fit a 390px screen
+(DAC pads each tab by 16px a side):
 
-1. **Overview** — games, wins, high and low scores (`recorded_total`, per player), yahtzees
-   (Erin / Jordan / combined), upper bonuses, multi-yahtzee player-games,
-   streaks. Big numbers: Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`),
-   combined totals white.
-2. **Races** — cumulative wins / yahtzees and multi-yahtzee trend (`game_seq`)
-3. **Zeros** — zeros per game (bonuses excluded) and lower-section miss rates
-4. **Strategy** — player-blind exclusive-feature swing bars, rescue matrix
-   (miss × consolation), exclusive Yahtzee holder-won vs upset (Erin
-   alone / Jordan alone). Oak/chance are not on this tab. See
-   `assets/marts/strategy.md`.
-5. **Deep cuts** — lifetime points, rates, upper dice-count averages
-   (ones–sixes on a 0–5 scale) and lower sum-box point averages (3oak / 4oak /
-   chance), win margins and `recorded_total` distributions split by player,
-   closest/blowouts (colored by winner) and commentary (Erin/Jordan
-   `recorded_total` after Winner). KPI figures use the same pink / blue /
-   white Vega-Lite marks as Overview, centered in the widget.
-6. **Scorecards** — path to side-by-side original photo + seed-rendered card
-   (Chance before Yahtzee). DAC 0.21.0 cannot click table cells. Caddy serves
-   the comparison pages from `dashboard/scorecards/` at `/scorecards`
-   (see `dashboard/scorecards.md`).
-7. **Pubs** — win rate by logged location, plus the Leaflet map (statement
-   visits, and a pin when a scorecard named that pub)
+1. **Top** — seven paired comparisons (wins, average, median, high, low,
+   Yahtzees, solo-Yahtzee win rate), plus a SQL headline above every tab.
+2. **Score** — streaks, cumulative wins, margin and total distributions,
+   sum-box averages.
+3. **Roll** — distribution, cumulative races, solo-Yahtzee matchup,
+   scratch rates (four of a kind included).
+4. **Odds** — upper section (bonus, average, dice vs par), swing bars,
+   rescue matrix. See `assets/marts/strategy.md`.
+5. **Game** — commentary (newest first), scorecard links, full game list.
+6. **Pub** — win rate by location (n on the label) and the Leaflet map.
 
 Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`, `mart_strategy_swing`,

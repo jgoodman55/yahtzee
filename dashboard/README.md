@@ -1,17 +1,80 @@
 # Yahtzee DAC dashboard
 
-One DAC app, seven tabs that go simple → deep. Dark theme (`yahtzee-dark`):
+One DAC app, six short tabs. Dark theme (`yahtzee-dark`):
 Erin is electric pink (`#FF2D92`), Jordan is electric blue (`#2D9CFF`).
+Grey (`#6D7889`) is a coin-flip line, an upset, or a sample under 5 games.
+
+A row with no `tab` (the story) sits above the tab bar on every tab. Its
+numbers come from SQL, because DAC text widgets are not templated. The
+dashboard name stays `Yahtzee Head-to-Head`, so `/d/Yahtzee%20Head-to-Head`
+does not move.
 
 | Tab | What’s on it |
 |---|---|
-| **Overview** | Headline KPIs: games, wins, high and low scores (`recorded_total`, per player; click opens that game's photo \| seed card), Erin/Jordan/combined yahtzees, upper bonuses, multi-yahtzee player-games, streaks. Big numbers are Erin pink (`#FF2D92`), Jordan blue (`#2D9CFF`), or white for combined totals. |
-| **Races** | Cumulative wins, cumulative yahtzees, yahtzees-per-game + cumulative multi-yahtzee games (`game_seq` on x) |
-| **Zeros** | Zeros per game (bonuses excluded), lower-section miss rates (FH / SS / LS / Yahtzee), category table |
-| **Strategy** | Player-blind exclusive-feature swing bars, miss × consolation rescue matrix, exclusive Yahtzee holder-won vs upset (Erin alone / Jordan alone). Oak/chance stay off this tab. Cohort notes: [`../assets/marts/strategy.md`](../assets/marts/strategy.md). |
-| **Deep cuts** | Lifetime points on their own row, then Erin/Jordan Avg and Median (`recorded_total`), rates, upper avg dice count (ones–sixes, 0–5) vs lower sum-box avg points (3oak / 4oak / chance), win margins and `recorded_total` distributions split by player, closest/blowouts colored by winner, commentary (with Erin/Jordan scores), clickable scorecard links. KPI figures use the same pink / blue / white Vega-Lite marks as Overview, centered in the widget. |
-| **Scorecards** | Sidecar link + sample composite + catalog. Photo \| seed card (Chance before Yahtzee). See [`scorecards.md`](scorecards.md). |
-| **Pubs** | Win rate by logged scorecard location, plus the Leaflet map and the statement-visit table. |
+| **Top** | Seven Erin-vs-Jordan comparisons: wins, average, median, high and low score (click opens that game), Yahtzees, and the solo-Yahtzee win rate. |
+| **Score** | Streaks next to the wins race, win-margin and total-score distributions, sum-box averages. |
+| **Roll** | Per-game rate, 0/1/2/3+ distribution, cumulative races, the solo-Yahtzee matchup, scratch rates (including four of a kind), scratches per game. |
+| **Odds** | Upper bonus and upper average, dice-per-face with a par line at 3, swing bars with a 50% line, rescue matrix. Plain labels. |
+| **Game** | Commentary (newest first, comment up front), clickable closest games and blowouts, a sample card, the full game list. |
+| **Pub** | Link to the Leaflet map, win rate by location with n on the label, games table, venue list. |
+
+DAC’s tab buttons use 16px of padding on each side, so at 390px only about
+23 letters fit across six tabs. The longer names (Overview, Yahtzees,
+Strategy) push Games and Pubs off the bar with no scroll hint, so the
+labels are the short plain words above.
+
+## Methodology
+
+Wins, margins, and the winner compare `computed_total` from `int_win_loss`
+(the sum of the 15 boxes). High scores, low scores, lifetime points, and
+averages use `recorded_total`, the grand total written on the card. A tie
+for high or low uses the earliest `game_seq`.
+
+Yahtzees are the 50-point box plus `yahtzee_bonus / 100`. A multi-Yahtzee
+game has two or more. The upper bonus is 35 points once ones through sixes
+reach 63, which is 3 dice on every face. That 3-dice line is the par mark
+on the upper-dice chart.
+
+Strategy rates are player-blind: exactly one of Erin or Jordan has the
+feature, and the rate is how often that holder won. They are associated
+with winning, not a cause. Cells and bars with fewer than 5 games are
+faded or grey. Cohort keys in the marts stay snake_case and abbreviated;
+the dashboard relabels them. Definitions:
+[`assets/marts/strategy.md`](../assets/marts/strategy.md).
+
+DAC 0.21.0 cannot make a table cell a link, so game tables show the game
+number. Clickable lists are Vega-Lite `href` marks with
+`usermeta.embedOptions.loader.target: _blank`, root-relative
+(`/scorecards/viewer.html?game=N`). Widget `height` values are quoted
+strings (`"168"`). A bare number becomes inline CSS that crushes stacked
+cards below 640px.
+
+## Runbook
+
+These notes used to sit on the dashboard. The live site does not render
+this file.
+
+On [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves
+`/scorecards` and `/pub_map.html` from `dashboard/` on disk and
+reverse-proxies everything else to `dac serve` on 127.0.0.1:8321. Ports
+8321 and 8765 are not public. There is no `http.server` sidecar. The
+Caddyfile is in [`../docs/hosting-vps.md`](../docs/hosting-vps.md).
+
+`dac serve` does not publish the scorecard viewer or the map. Locally, put
+Caddy in front of it, or open `pub_map.html` directly (`file://` works for
+that page on its own).
+
+After `bruin run`:
+
+```shell
+python3 scripts/export_scorecards.py
+python3 scripts/export_pub_map.py
+```
+
+Full-resolution Drive HEICs stay out of git. Copy `IMG_####.jpg` or `.HEIC`
+into `scorecards/photos/` (see [`../docs/scorecard_ingest.md`](../docs/scorecard_ingest.md))
+and re-run the scorecard export. Photo-vs-seed layout: [`scorecards.md`](scorecards.md).
+Map layers: [`pub_map.md`](pub_map.md).
 
 Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_game_trends`, `mart_category_stats`, `mart_strategy_swing` /

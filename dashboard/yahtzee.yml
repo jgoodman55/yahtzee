@@ -217,8 +217,8 @@ queries:
     sql: |
       select
         game_seq,
-        winner,
-        'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
+        upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
+        'Game ' || game_seq || ' · ' || upper(substr(winner, 1, 1)) || substr(winner, 2) || ' by ' || margin as label,
         '/scorecards/viewer.html?game=' || game_seq as url
       from mart_game_trends
       order by margin asc, game_seq
@@ -227,8 +227,8 @@ queries:
     sql: |
       select
         game_seq,
-        winner,
-        'Game ' || game_seq || ' · ' || winner || ' by ' || margin as label,
+        upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
+        'Game ' || game_seq || ' · ' || upper(substr(winner, 1, 1)) || substr(winner, 2) || ' by ' || margin as label,
         '/scorecards/viewer.html?game=' || game_seq as url
       from mart_game_trends
       order by margin desc, game_seq
@@ -634,9 +634,9 @@ rows:
         type: text
         col: 12
         content: |
-          X-axis is **`game_seq`**, not calendar date. Lines are cumulative so the
-          picture stays readable as the seed grows toward ~100 games. Native DAC
-          line tooltips cannot open a URL — look up that `game_seq` on
+          The horizontal axis is the game number, not a calendar date. Lines are
+          cumulative so the race stays readable as more games are added. Native
+          DAC line tooltips cannot open a URL — look that game up on
           **Scorecards** or
           [viewer.html?game=N](/scorecards/viewer.html).
 
@@ -814,11 +814,14 @@ rows:
         content: |
           **Player-blind** rates: when exactly one of Erin or Jordan has a
           feature, how often does **that holder** win? Yahtzee and the upper
-          bonus dominate. Missing a large straight hurts hard. A Yahtzee
-          barely rescues a missed LS (exclusive LS=0 + Yahtzee is ~55%).
+          bonus dominate. Missing a large straight hurts hard. A Yahtzee only
+          partly rescues a missed large straight — the rate is the
+          **LS=0 + Yahtzee rescue** figure (games where exactly one player
+          both missed the large straight and scored a natural Yahtzee).
 
           Oak and chance are weak signals here — they stay on Deep cuts, not
-          this tab. Cohort definitions: [`assets/marts/strategy.md`](../assets/marts/strategy.md).
+          this tab. Cohort definitions:
+          [strategy notes](https://github.com/jgoodman55/yahtzee/blob/main/assets/marts/strategy.md).
 
           Swing-chart ticks: **YZ bonus** = Yahtzee bonus > 0, **UB** = upper
           bonus (35), **YZ=50** = Yahtzee, **LS=40 / LS=0** = large straight,
@@ -965,9 +968,11 @@ rows:
           upper-bonus-only / both / neither). Empty cells are n = 0; n < 10
           is noisy — trust the label.
 
-          Combined **LS=0 + any Yahtzee** (Has Yahtzee + Has both) is the
-          12/22 ≈ 55% grounding figure. The exclusive-miss cut of the same
-          question is 8/18 — do not quote that.
+          Combined **large straight missed + any Yahtzee** (Has Yahtzee + Has
+          both) is the **LS=0 + Yahtzee rescue** figure above. Do not quote a
+          different cut of the same question (for example, “exactly one player
+          missed the large straight, then split by whether they also had a
+          Yahtzee”).
 
           Chart ticks are short so the heatmap fits a phone. **Missed:**
           LS=0 large straight, SS=0 small straight, FH=0 full house, No YZ
@@ -1128,6 +1133,17 @@ rows:
           transform:
             - calculate: "datum.holder === 'Erin' ? 'Erin alone' : 'Jordan alone'"
               as: holder_short
+            # Stack in the same order the bars use (upset at the baseline,
+            # holder-won on top) so the W/L text sits in the middle of its
+            # own segment instead of on the percentage label.
+            - stack: share
+              groupby: [holder_short]
+              sort:
+                - field: outcome_ord
+                  order: descending
+              as: [share_start, share_end]
+            - calculate: "(datum.share_start + datum.share_end) / 2"
+              as: share_mid
           encoding:
             x:
               field: holder_short
@@ -1141,23 +1157,23 @@ rows:
                 labelPadding: 2
                 titlePadding: 2
                 labelLimit: 72
-            y:
-              field: share
-              type: quantitative
-              title: Percent
-              stack: zero
-              axis: { format: ".0%" }
-              scale: { domain: [0, 1] }
-            color:
-              field: stack_key
-              type: nominal
-              scale:
-                domain: [Erin won, Jordan won, Upset]
-                range: ["#FF2D92", "#2D9CFF", "#6D7889"]
-              legend: { title: null, orient: bottom }
           layer:
             - mark: { type: bar }
               encoding:
+                y:
+                  field: share_end
+                  type: quantitative
+                  title: Percent
+                  axis: { format: ".0%" }
+                  scale: { domain: [0, 1] }
+                y2: { field: share_start }
+                color:
+                  field: stack_key
+                  type: nominal
+                  scale:
+                    domain: [Erin won, Jordan won, Upset]
+                    range: ["#FF2D92", "#2D9CFF", "#6D7889"]
+                  legend: { title: null, orient: bottom }
                 tooltip:
                   - { field: holder_label, type: nominal, title: Holder }
                   - { field: outcome, type: nominal, title: Outcome }
@@ -1167,18 +1183,24 @@ rows:
                   - { field: label, type: nominal, title: Rate }
             - mark:
                 type: text
-                color: "#F3F6FA"
                 fontSize: 11
                 fontWeight: 600
                 baseline: middle
               encoding:
+                y:
+                  field: share_mid
+                  type: quantitative
+                  axis: null
+                  scale: { domain: [0, 1] }
                 text: { field: wl_label, type: nominal }
+                # Fixed ink. A mark-level color loses to the stacked bar's
+                # color encoding, which painted these labels pink-on-pink.
+                color: { value: "#F3F6FA" }
             - mark:
                 type: text
                 dy: -12
                 fontSize: 12
                 fontWeight: 600
-                color: "#F3F6FA"
               transform:
                 - aggregate:
                     - op: min
@@ -1189,7 +1211,11 @@ rows:
                       as: total
                   groupby: [holder_label, holder_short, holder_ord]
               encoding:
-                y: { field: total, type: quantitative }
+                y:
+                  field: total
+                  type: quantitative
+                  axis: null
+                  scale: { domain: [0, 1] }
                 text: { field: holder_label_pct, type: nominal }
                 color: { value: "#F3F6FA" }
 
@@ -1604,8 +1630,8 @@ rows:
         type: text
         col: 12
         content: |
-          DAC 0.21.0 **tables do not render markdown or `<a>` cells**. The Scorecard
-          column is the path Caddy serves from `dashboard/` on disk.
+          DAC 0.21.0 **tables do not render markdown or `<a>` cells**, so the
+          tables list the game number. The lists below are the clickable path.
 
           **Click a game** in the lists below (Vega-Lite `href`) or
           **[browse every scorecard](/scorecards/index.html)**. Each page is
@@ -1627,8 +1653,12 @@ rows:
         description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
         query: closest_scorecard_links
         spec:
+          # One label only: the colored text. A y-axis label repeated it in
+          # grey and pushed this text past the right edge of a 390px card.
+          width: container
           height: 200
-          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 4, right: 8, bottom: 4 }
           config: *vl_dark
           usermeta:
             embedOptions:
@@ -1638,22 +1668,23 @@ rows:
             type: text
             align: left
             baseline: middle
-            fontSize: 13
+            fontSize: 12
             fontWeight: 600
             cursor: pointer
+            limit: 320
           encoding:
             y:
               field: label
               type: nominal
               sort: null
               title: null
-              axis: { labelColor: "#A8B3C5", domain: false, ticks: false }
+              axis: null
             text: { field: label }
             color:
               field: winner
               type: nominal
               scale:
-                domain: [erin, jordan, tie]
+                domain: [Erin, Jordan, Tie]
                 range: ["#FF2D92", "#2D9CFF", "#FFFFFF"]
               legend: null
             href: { field: url, type: nominal }
@@ -1665,8 +1696,10 @@ rows:
         description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
         query: blowout_scorecard_links
         spec:
+          width: container
           height: 200
-          padding: { top: 8, left: 8, right: 8, bottom: 8 }
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 4, right: 8, bottom: 4 }
           config: *vl_dark
           usermeta:
             embedOptions:
@@ -1676,22 +1709,23 @@ rows:
             type: text
             align: left
             baseline: middle
-            fontSize: 13
+            fontSize: 12
             fontWeight: 600
             cursor: pointer
+            limit: 320
           encoding:
             y:
               field: label
               type: nominal
               sort: null
               title: null
-              axis: { labelColor: "#A8B3C5", domain: false, ticks: false }
+              axis: null
             text: { field: label }
             color:
               field: winner
               type: nominal
               scale:
-                domain: [erin, jordan, tie]
+                domain: [Erin, Jordan, Tie]
                 range: ["#FF2D92", "#2D9CFF", "#FFFFFF"]
               legend: null
             href: { field: url, type: nominal }
@@ -1704,11 +1738,10 @@ rows:
         sql: |
           select
             game_seq,
-            winner,
+            upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
             margin,
             erin_computed_total as erin,
-            jordan_computed_total as jordan,
-            '[Game ' || game_seq || '](/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
+            jordan_computed_total as jordan
           from mart_game_trends
           order by margin asc, game_seq
           limit 8
@@ -1729,8 +1762,6 @@ rows:
             label: Jordan
             number: number
             align: right
-          - name: scorecard
-            label: Scorecard
 
       - name: Biggest blowouts
         type: table
@@ -1738,11 +1769,10 @@ rows:
         sql: |
           select
             game_seq,
-            winner,
+            upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
             margin,
             erin_computed_total as erin,
-            jordan_computed_total as jordan,
-            '[Game ' || game_seq || '](/scorecards/viewer.html?game=' || game_seq || ')' as scorecard
+            jordan_computed_total as jordan
           from mart_game_trends
           order by margin desc, game_seq
           limit 8
@@ -1763,8 +1793,6 @@ rows:
             label: Jordan
             number: number
             align: right
-          - name: scorecard
-            label: Scorecard
 
   - tab: Deep cuts
     widgets:
@@ -1868,14 +1896,13 @@ rows:
         sql: |
           select
             h.game_seq,
-            h.winner,
+            upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
             t.erin_recorded_total as erin_score,
             t.jordan_recorded_total as jordan_score,
-            h.margin_comment,
-            h.yahtzee_comment,
-            h.bonus_comment,
-            h.streak_comment,
-            '[Game ' || h.game_seq || '](/scorecards/viewer.html?game=' || h.game_seq || ')' as scorecard
+            replace(replace(h.margin_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as margin_comment,
+            replace(replace(h.yahtzee_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as yahtzee_comment,
+            replace(replace(h.bonus_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as bonus_comment,
+            replace(replace(h.streak_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as streak_comment
           from mart_head_to_head h
           inner join mart_game_trends t using (game_seq)
           order by h.game_seq desc
@@ -1900,8 +1927,6 @@ rows:
             label: Bonus
           - name: streak_comment
             label: Streak
-          - name: scorecard
-            label: Scorecard
 
   - tab: Scorecards
     widgets:
@@ -1962,11 +1987,10 @@ rows:
             t.game_seq,
             c.sheet,
             c.game_on_sheet,
-            t.winner,
+            upper(substr(t.winner, 1, 1)) || substr(t.winner, 2) as winner,
             t.margin,
             t.erin_computed_total as erin,
-            t.jordan_computed_total as jordan,
-            '[Game ' || t.game_seq || '](/scorecards/viewer.html?game=' || t.game_seq || ')' as scorecard
+            t.jordan_computed_total as jordan
           from mart_game_trends t
           left join sheet_game_crosswalk c
             on c.game_seq = t.game_seq
@@ -1992,8 +2016,6 @@ rows:
             label: Jordan
             number: number
             align: right
-          - name: scorecard
-            label: Scorecard
 
   - tab: Pubs
     widgets:

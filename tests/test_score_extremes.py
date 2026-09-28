@@ -100,16 +100,24 @@ def test_mart_ranks_high_and_low_the_same_way():
 
 
 def test_overview_places_low_score_beside_high_score():
+    """High and low sit in one Top-tab row, each tile showing both players."""
     dashboard = DASHBOARD.read_text()
-    erin_high = dashboard.index("name: Erin high score")
-    erin_low = dashboard.index("name: Erin low score")
-    jordan_high = dashboard.index("name: Jordan high score")
-    jordan_low = dashboard.index("name: Jordan low score")
-    assert erin_high < erin_low < jordan_high < jordan_low
-    assert "field: erin_low_score" in dashboard
-    assert "field: jordan_low_score" in dashboard
-    assert "field: erin_low_score_url" in dashboard
-    assert "field: jordan_low_score_url" in dashboard
+    high = dashboard.index("name: High score")
+    low = dashboard.index("name: Low score")
+    assert high < low
+    between = dashboard[high:low]
+    assert "\n  - tab:" not in between
+    for field in (
+        "erin_high_score",
+        "jordan_high_score",
+        "erin_low_score",
+        "jordan_low_score",
+        "erin_high_score_url",
+        "jordan_high_score_url",
+        "erin_low_score_url",
+        "jordan_low_score_url",
+    ):
+        assert f"field: {field}" in dashboard
     assert "target: _blank" in dashboard
 
 

@@ -1,78 +1,15 @@
 schema: https://getbruin.com/schemas/dac/dashboard/v1
 name: Yahtzee Head-to-Head
-description: Erin (pink) vs Jordan (blue) — dark analytics. High and low scores use recorded_total.
+description: Erin (pink) vs Jordan (blue). Who is ahead, and which boxes turn into wins.
 connection: local_duckdb
 
-# Colors used on every series: Erin #FF2D92, Jordan #2D9CFF.
-# Serve with --template yahtzee-dark (themes/yahtzee-dark.yml).
-# KPI definitions live in mart_headline_kpis (see SQL comments there).
-#
-# DAC metric widgets always paint the figure with --dac-text-primary (no
-# value.color). Overview and Deep cuts big numbers are Vega-Lite text marks so
-# Erin / Jordan / combined totals can use the brand colors. Labels stay the
-# muted widget name; the figure is centered in the widget. Tables have no
-# cell-color field; charts use series colors or Vega-Lite scales.
+# Colors: Erin #FF2D92, Jordan #2D9CFF, grey #6D7889 for a coin-flip line,
+# an upset, or a sample under 5 games. Serve with --template yahtzee-dark.
+# Row heights are quoted strings. DAC 0.21 turns a bare number into CSS that
+# crushes stacked cards below 640px. Definitions that are not the story
+# (recorded_total vs computed_total, the Vega href pattern, DAC 0.21 limits)
+# live in dashboard/README.md.
 
-# Shared mark styles for Overview / Deep cuts KPI figures (schema allows x-* extensions).
-# Metric-only figures: center the number in the widget (DAC paints the
-# title separately; Vega-Lite text otherwise sits at x=0 / align left).
-x-kpi-erin-mark: &erin_mark
-  type: text
-  fontSize: 32
-  fontWeight: 600
-  align: center
-  baseline: middle
-  x: { expr: "width / 2" }
-  y: { expr: "height / 2" }
-  color: "#FF2D92"
-
-x-kpi-jordan-mark: &jordan_mark
-  type: text
-  fontSize: 32
-  fontWeight: 600
-  align: center
-  baseline: middle
-  x: { expr: "width / 2" }
-  y: { expr: "height / 2" }
-  color: "#2D9CFF"
-
-# High / low score figures are the same centered marks, plus a pointer cursor
-# because the number is a scorecard link (photo | seed, new tab).
-x-kpi-erin-link-mark: &erin_link_mark
-  type: text
-  fontSize: 32
-  fontWeight: 600
-  align: center
-  baseline: middle
-  x: { expr: "width / 2" }
-  y: { expr: "height / 2" }
-  color: "#FF2D92"
-  cursor: pointer
-
-x-kpi-jordan-link-mark: &jordan_link_mark
-  type: text
-  fontSize: 32
-  fontWeight: 600
-  align: center
-  baseline: middle
-  x: { expr: "width / 2" }
-  y: { expr: "height / 2" }
-  color: "#2D9CFF"
-  cursor: pointer
-
-x-kpi-neutral-mark: &neutral_mark
-  type: text
-  fontSize: 32
-  fontWeight: 600
-  align: center
-  baseline: middle
-  x: { expr: "width / 2" }
-  y: { expr: "height / 2" }
-  color: "#FFFFFF"
-
-# Native DAC bar charts have no datalabels field (showValues is heatmap-only).
-# Vega-Lite layered bar + text is the same escape hatch Overview uses for
-# branded KPI figures.
 x-vl-dark: &vl_dark
   background: transparent
   view: { stroke: null }
@@ -102,6 +39,102 @@ x-bar-label: &bar_label
   fontWeight: 600
   color: "#F3F6FA"
 
+x-name-erin: &name_erin
+  type: text
+  fontSize: 12
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.28" }
+  y: { expr: "height * 0.16" }
+  color: "#FF2D92"
+
+x-name-jordan: &name_jordan
+  type: text
+  fontSize: 12
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.72" }
+  y: { expr: "height * 0.16" }
+  color: "#2D9CFF"
+
+x-num-erin: &num_erin
+  type: text
+  fontSize: 26
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.28" }
+  y: { expr: "height * 0.50" }
+  color: "#FF2D92"
+
+x-num-jordan: &num_jordan
+  type: text
+  fontSize: 26
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.72" }
+  y: { expr: "height * 0.50" }
+  color: "#2D9CFF"
+
+x-sub-erin: &sub_erin
+  type: text
+  fontSize: 13
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.28" }
+  y: { expr: "height * 0.82" }
+  color: "#FF2D92"
+
+x-sub-jordan: &sub_jordan
+  type: text
+  fontSize: 13
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width * 0.72" }
+  y: { expr: "height * 0.82" }
+  color: "#2D9CFF"
+
+x-link-erin: &link_erin
+  type: text
+  fontSize: 26
+  fontWeight: 600
+  align: center
+  baseline: middle
+  cursor: pointer
+  x: { expr: "width * 0.28" }
+  y: { expr: "height * 0.50" }
+  color: "#FF2D92"
+
+x-link-jordan: &link_jordan
+  type: text
+  fontSize: 26
+  fontWeight: 600
+  align: center
+  baseline: middle
+  cursor: pointer
+  x: { expr: "width * 0.72" }
+  y: { expr: "height * 0.50" }
+  color: "#2D9CFF"
+
+x-gap: &gap_mark
+  type: text
+  fontSize: 12
+  fontWeight: 600
+  align: center
+  baseline: middle
+  x: { expr: "width / 2" }
+  y: { expr: "height * 0.84" }
+  color: "#A8B3C5"
+
+x-pair-view: &pair_view
+  background: transparent
+  view: { stroke: null }
+
 queries:
   headline:
     sql: |
@@ -114,6 +147,122 @@ queries:
         '/scorecards/viewer.html?game=' || h.erin_low_score_game_seq as erin_low_score_url,
         '/scorecards/viewer.html?game=' || h.jordan_low_score_game_seq as jordan_low_score_url
       from mart_headline_kpis h
+  headline_story:
+    sql: |
+      with h as (
+        select * from mart_headline_kpis
+      ),
+      players as (
+        select
+          max(case when player_key = 'erin' then total_yahtzees end) as erin_yz,
+          max(case when player_key = 'jordan' then total_yahtzees end) as jordan_yz
+        from mart_player_kpis
+      ),
+      fh as (
+        select
+          max(case when player_key = 'erin' then miss_rate end) as erin_fh,
+          max(case when player_key = 'jordan' then miss_rate end) as jordan_fh
+        from mart_category_stats
+        where category = 'full_house'
+      ),
+      alone as (
+        select
+          max(case when holder = 'Erin' then holder_win_rate end) as erin_rate,
+          max(case when holder = 'Jordan' then holder_win_rate end) as jordan_rate
+        from mart_yz_matchup
+      ),
+      base as (
+        select
+          h.total_games,
+          h.erin_wins,
+          h.jordan_wins,
+          h.erin_bonus_rate,
+          h.jordan_bonus_rate,
+          p.erin_yz,
+          p.jordan_yz,
+          fh.erin_fh,
+          fh.jordan_fh,
+          a.erin_rate,
+          a.jordan_rate
+        from h
+        cross join players p
+        cross join fh
+        cross join alone a
+      )
+      select ord, 6 - ord as ypos, line
+      from (
+        select
+          1 as ord,
+          case
+            when jordan_wins > erin_wins then
+              'Jordan leads ' || jordan_wins || '-' || erin_wins
+                || ' after ' || total_games || ' games.'
+            when erin_wins > jordan_wins then
+              'Erin leads ' || erin_wins || '-' || jordan_wins
+                || ' after ' || total_games || ' games.'
+            else
+              'Tied ' || erin_wins || '-' || jordan_wins
+                || ' after ' || total_games || ' games.'
+          end as line
+        from base
+        union all
+        select
+          2,
+          case
+            when erin_yz > jordan_yz then
+              'Erin rolls more Yahtzees (' || erin_yz || ' vs ' || jordan_yz || ').'
+            when jordan_yz > erin_yz then
+              'Jordan rolls more Yahtzees (' || jordan_yz || ' vs ' || erin_yz || ').'
+            else
+              'Same Yahtzee total (' || erin_yz || ' each).'
+          end
+        from base
+        union all
+        select
+          3,
+          case
+            when jordan_bonus_rate >= erin_bonus_rate then
+              'Upper bonus: Jordan ' || round(100.0 * jordan_bonus_rate)::integer
+                || '%, Erin ' || round(100.0 * erin_bonus_rate)::integer || '%.'
+            else
+              'Upper bonus: Erin ' || round(100.0 * erin_bonus_rate)::integer
+                || '%, Jordan ' || round(100.0 * jordan_bonus_rate)::integer || '%.'
+          end
+        from base
+        union all
+        select
+          4,
+          case
+            when jordan_fh <= erin_fh then
+              'Full-house misses: Jordan ' || round(100.0 * jordan_fh)::integer
+                || '%, Erin ' || round(100.0 * erin_fh)::integer || '%.'
+            else
+              'Full-house misses: Erin ' || round(100.0 * erin_fh)::integer
+                || '%, Jordan ' || round(100.0 * jordan_fh)::integer || '%.'
+          end
+        from base
+        union all
+        select
+          5,
+          case
+            when jordan_rate >= erin_rate then
+              'Solo Yahtzee: Jordan ' || round(100.0 * jordan_rate)::integer
+                || '%, Erin ' || round(100.0 * erin_rate)::integer || '%.'
+            else
+              'Solo Yahtzee: Erin ' || round(100.0 * erin_rate)::integer
+                || '%, Jordan ' || round(100.0 * jordan_rate)::integer || '%.'
+          end
+        from base
+      ) lines
+      order by ord
+  solo_yahtzee:
+    sql: |
+      select
+        max(case when holder = 'Erin' then holder_win_rate end) as erin_rate,
+        max(case when holder = 'Jordan' then holder_win_rate end) as jordan_rate,
+        max(case when holder = 'Erin' then holder_wins || '/' || n_holder end) as erin_record,
+        max(case when holder = 'Jordan' then holder_wins || '/' || n_holder end) as jordan_record
+      from mart_yz_matchup
   races:
     sql: |
       select
@@ -130,14 +279,6 @@ queries:
         jordan_cum_yahtzees as "Jordan"
       from mart_game_trends
       order by game_seq
-  yahtzees_per_game:
-    sql: |
-      select
-        game_seq,
-        erin_yahtzees as "Erin",
-        jordan_yahtzees as "Jordan"
-      from mart_game_trends
-      order by game_seq
   multi_yahtzee_cum:
     sql: |
       select
@@ -146,73 +287,125 @@ queries:
         jordan_cum_multi_yahtzee_games as "Jordan"
       from mart_game_trends
       order by game_seq
-  zeros_per_game:
+  yahtzee_dist:
     sql: |
+      with buckets as (
+        select * from (values (1, '0'), (2, '1'), (3, '2'), (4, '3+')) t(bucket_ord, bucket)
+      ),
+      raw as (
+        select
+          'Erin' as player,
+          case
+            when erin_yahtzees >= 3 then '3+'
+            when erin_yahtzees >= 2 then '2'
+            when erin_yahtzees >= 1 then '1'
+            else '0'
+          end as bucket
+        from mart_game_trends
+        union all
+        select
+          'Jordan',
+          case
+            when jordan_yahtzees >= 3 then '3+'
+            when jordan_yahtzees >= 2 then '2'
+            when jordan_yahtzees >= 1 then '1'
+            else '0'
+          end
+        from mart_game_trends
+      )
       select
-        game_seq,
-        erin_zeros as "Erin",
-        jordan_zeros as "Jordan"
+        b.bucket,
+        b.bucket_ord,
+        p.player,
+        count(r.bucket)::integer as games
+      from buckets b
+      cross join (select 'Erin' as player union all select 'Jordan') p
+      left join raw r
+        on r.bucket = b.bucket
+       and r.player = p.player
+      group by b.bucket, b.bucket_ord, p.player
+      order by b.bucket_ord, p.player
+  scratch_dist:
+    sql: |
+      select 'Erin' as player, erin_zeros::integer as scratches
       from mart_game_trends
-      order by game_seq
+      union all
+      select 'Jordan', jordan_zeros::integer
+      from mart_game_trends
   conversion_miss:
     sql: |
       select
-        category,
+        case category
+          when 'four_of_a_kind' then 'Four of a kind'
+          when 'full_house' then 'Full house'
+          when 'small_straight' then 'Small straight'
+          when 'large_straight' then 'Large straight'
+          when 'yahtzee' then 'Yahtzee'
+        end as category,
+        case category
+          when 'four_of_a_kind' then 1
+          when 'full_house' then 2
+          when 'small_straight' then 3
+          when 'large_straight' then 4
+          when 'yahtzee' then 5
+        end as category_ord,
         max(case when player_key = 'erin' then miss_rate end) as "Erin",
         max(case when player_key = 'jordan' then miss_rate end) as "Jordan"
       from mart_category_stats
-      where is_conversion_box
+      where category in (
+        'four_of_a_kind', 'full_house', 'small_straight', 'large_straight', 'yahtzee'
+      )
       group by category
-      order by case category
-        when 'full_house' then 1
-        when 'small_straight' then 2
-        when 'large_straight' then 3
-        when 'yahtzee' then 4
-      end
+      order by category_ord
   upper_avg_dice:
     sql: |
       select
-        category,
+        case category
+          when 'ones' then 'Ones'
+          when 'twos' then 'Twos'
+          when 'threes' then 'Threes'
+          when 'fours' then 'Fours'
+          when 'fives' then 'Fives'
+          when 'sixes' then 'Sixes'
+        end as face,
+        min(category_ord) as face_ord,
         max(case when player_key = 'erin' then avg_dice_count end) as "Erin",
         max(case when player_key = 'jordan' then avg_dice_count end) as "Jordan"
       from mart_category_stats
       where section = 'upper'
       group by category
-      order by min(category_ord)
+      order by face_ord
   lower_sum_avg:
     sql: |
       select
         case category
-          when 'three_of_a_kind' then '3 of a kind'
-          when 'four_of_a_kind' then '4 of a kind'
-          else category
+          when 'three_of_a_kind' then 'Three of a kind'
+          when 'four_of_a_kind' then 'Four of a kind'
+          when 'chance' then 'Chance'
         end as category,
+        min(category_ord) as category_ord,
         max(case when player_key = 'erin' then avg_score end) as "Erin",
         max(case when player_key = 'jordan' then avg_score end) as "Jordan"
       from mart_category_stats
       where is_sum_box
       group by category
-      order by min(category_ord)
-  erin_win_margins:
+      order by category_ord
+  score_margins:
     sql: |
-      select margin
+      select 'Erin' as player, margin
       from mart_game_trends
       where winner = 'erin'
-  jordan_win_margins:
-    sql: |
-      select margin
+      union all
+      select 'Jordan', margin
       from mart_game_trends
       where winner = 'jordan'
-  erin_recorded_totals:
+  score_totals:
     sql: |
-      select erin_recorded_total as recorded_total
+      select 'Erin' as player, erin_recorded_total as recorded_total
       from mart_game_trends
-  jordan_recorded_totals:
-    sql: |
-      select jordan_recorded_total as recorded_total
+      union all
+      select 'Jordan', jordan_recorded_total
       from mart_game_trends
-  # DAC 0.21.0 table cells are plain text (no markdown / <a>). Vega-Lite href
-  # marks are the in-dashboard click path; the sidecar HTML is the comparison UX.
   closest_scorecard_links:
     sql: |
       select
@@ -233,8 +426,6 @@ queries:
       from mart_game_trends
       order by margin desc, game_seq
       limit 8
-  # Strategy tab — player-blind exclusive-feature rates. Cohort comments
-  # live in assets/marts/strategy.md and the mart SQL headers.
   strategy_swing:
     sql: |
       select
@@ -243,10 +434,8 @@ queries:
         n,
         holder_wins,
         holder_win_rate,
-        case when is_low_n then 'low_n' else 'ok' end as tone,
-        label,
-        round(100.0 * holder_win_rate)::integer
-          || '% (' || holder_wins || '/' || n || ')' as kpi_label
+        case when n < 5 then 'low_n' else 'ok' end as tone,
+        label
       from mart_strategy_swing
       order by feature_ord
   strategy_rescue:
@@ -260,7 +449,7 @@ queries:
         focal_win_rate,
         case
           when n = 0 then 'empty'
-          when is_low_n then 'low_n'
+          when n < 5 then 'low_n'
           else 'ok'
         end as tone,
         label
@@ -288,366 +477,426 @@ queries:
         stack_key
       from mart_yz_matchup
       order by holder_ord, outcome_ord
-  yz_holder:
-    sql: |
-      select
-        sum(n) filter (where outcome = 'Holder won')::integer as holder_wins,
-        sum(n)::integer as n_bucket,
-        sum(n) filter (where outcome = 'Holder won')::double
-          / nullif(sum(n), 0) as holder_win_rate,
-        round(
-          100.0 * sum(n) filter (where outcome = 'Holder won') / nullif(sum(n), 0)
-        )::integer
-          || '% ('
-          || sum(n) filter (where outcome = 'Holder won')::integer
-          || '/'
-          || sum(n)::integer
-          || ')' as label
-      from mart_yz_matchup
-  ls_yz_rescue:
-    sql: |
-      select
-        sum(focal_wins)::integer as wins,
-        sum(n)::integer as n,
-        sum(focal_wins)::double / nullif(sum(n), 0) as rate,
-        round(100.0 * sum(focal_wins) / nullif(sum(n), 0))::integer
-          || '% (' || sum(focal_wins)::integer || '/' || sum(n)::integer || ')' as label
-      from mart_strategy_rescue
-      where miss = 'Large straight = 0'
-        and consolation in ('Has Yahtzee', 'Has both')
   location_win_rates:
     sql: |
-      select location, player, win_rate, games
+      select
+        location || ' (n=' || games || ')' as location_label,
+        games,
+        player,
+        win_rate
       from (
-        select location, 'Erin' as player,
-          erin_wins::double / games as win_rate, games
+        select location, games, 'Erin' as player,
+          erin_wins::double / games as win_rate
         from mart_location_stats
         union all
-        select location, 'Jordan',
-          jordan_wins::double / games, games
+        select location, games, 'Jordan',
+          jordan_wins::double / games
         from mart_location_stats
       ) rates
-      order by location = 'Unknown', location, player
+      order by games desc, location, player
 
 rows:
-  - tab: Overview
+  # No tab: DAC shows this row above the tab bar on every tab.
+  - height: "210"
     widgets:
-      - name: How to read this
+      - name: The story
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Wins, Yahtzees, and where they turn into wins.
+        query: headline_story
+        spec:
+          width: container
+          height: 128
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 2, left: 2, right: 2, bottom: 2 }
+          background: transparent
+          view: { stroke: null }
+          mark:
+            type: text
+            align: left
+            baseline: middle
+            fontWeight: 600
+            limit: 340
+            x: { expr: "2" }
+          encoding:
+            y:
+              field: ypos
+              type: quantitative
+              axis: null
+              scale: { domain: [0.4, 5.6], nice: false }
+            text: { field: line, type: nominal }
+            color:
+              condition:
+                test: "datum.ord === 1"
+                value: "#F3F6FA"
+              value: "#C5CEDA"
+            size:
+              condition:
+                test: "datum.ord === 1"
+                value: 16
+              value: 13
+
+  - tab: Top
+    height: "168"
+    widgets:
+      - name: Wins
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Games won, from the sum of the boxes.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_wins, type: quantitative, format: ",.0f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_wins, type: quantitative, format: ",.0f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "datum.erin_wins === datum.jordan_wins ? 'Level' : datum.jordan_wins > datum.erin_wins ? 'Jordan +' + format(datum.jordan_wins - datum.erin_wins, '.0f') : 'Erin +' + format(datum.erin_wins - datum.jordan_wins, '.0f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+      - name: Average
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Average total written on the card.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_avg_score, type: quantitative, format: ",.1f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_avg_score, type: quantitative, format: ",.1f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "abs(datum.erin_avg_score - datum.jordan_avg_score) < 0.05 ? 'Level' : datum.jordan_avg_score > datum.erin_avg_score ? 'Jordan +' + format(datum.jordan_avg_score - datum.erin_avg_score, '.1f') : 'Erin +' + format(datum.erin_avg_score - datum.jordan_avg_score, '.1f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+      - name: Median
+        type: chart
+        chart: vega-lite
+        col: 4
+        description: Median total written on the card.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_median_score, type: quantitative, format: ",.0f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_median_score, type: quantitative, format: ",.0f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "datum.erin_median_score === datum.jordan_median_score ? 'Level' : datum.jordan_median_score > datum.erin_median_score ? 'Jordan +' + format(datum.jordan_median_score - datum.erin_median_score, '.0f') : 'Erin +' + format(datum.erin_median_score - datum.jordan_median_score, '.0f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+  - tab: Top
+    height: "168"
+    widgets:
+      - name: High score
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Best total written on the card. Click a number to open that game.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *link_erin
+              encoding:
+                text: { field: erin_high_score, type: quantitative, format: ",.0f" }
+                href: { field: erin_high_score_url, type: nominal }
+                tooltip:
+                  - { field: erin_high_score_game_seq, type: quantitative, title: Game, format: d }
+            - mark: *link_jordan
+              encoding:
+                text: { field: jordan_high_score, type: quantitative, format: ",.0f" }
+                href: { field: jordan_high_score_url, type: nominal }
+                tooltip:
+                  - { field: jordan_high_score_game_seq, type: quantitative, title: Game, format: d }
+            - mark: *gap_mark
+              transform:
+                - calculate: "datum.erin_high_score === datum.jordan_high_score ? 'Level' : datum.jordan_high_score > datum.erin_high_score ? 'Jordan +' + format(datum.jordan_high_score - datum.erin_high_score, '.0f') : 'Erin +' + format(datum.erin_high_score - datum.jordan_high_score, '.0f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+      - name: Low score
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Lowest total written on the card. Click a number to open that game.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          usermeta:
+            embedOptions:
+              loader:
+                target: _blank
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *link_erin
+              encoding:
+                text: { field: erin_low_score, type: quantitative, format: ",.0f" }
+                href: { field: erin_low_score_url, type: nominal }
+                tooltip:
+                  - { field: erin_low_score_game_seq, type: quantitative, title: Game, format: d }
+            - mark: *link_jordan
+              encoding:
+                text: { field: jordan_low_score, type: quantitative, format: ",.0f" }
+                href: { field: jordan_low_score_url, type: nominal }
+                tooltip:
+                  - { field: jordan_low_score_game_seq, type: quantitative, title: Game, format: d }
+            - mark: *gap_mark
+              transform:
+                - calculate: "datum.erin_low_score === datum.jordan_low_score ? 'Level' : datum.jordan_low_score > datum.erin_low_score ? 'Jordan +' + format(datum.jordan_low_score - datum.erin_low_score, '.0f') : 'Erin +' + format(datum.erin_low_score - datum.jordan_low_score, '.0f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+  - tab: Top
+    height: "188"
+    widgets:
+      - name: Yahtzees
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Natural 50s plus each bonus Yahtzee.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_total_yahtzees, type: quantitative, format: ",.0f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_total_yahtzees, type: quantitative, format: ",.0f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "datum.erin_total_yahtzees === datum.jordan_total_yahtzees ? 'Level' : datum.erin_total_yahtzees > datum.jordan_total_yahtzees ? 'Erin +' + format(datum.erin_total_yahtzees - datum.jordan_total_yahtzees, '.0f') : 'Jordan +' + format(datum.jordan_total_yahtzees - datum.erin_total_yahtzees, '.0f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+      - name: Solo Yahtzee
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Win rate when only that player scored a Yahtzee. Small type is wins over games.
+        query: solo_yahtzee
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_rate, type: quantitative, format: ".0%" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_rate, type: quantitative, format: ".0%" }
+            - mark: *sub_erin
+              encoding:
+                text: { field: erin_record, type: nominal }
+            - mark: *sub_jordan
+              encoding:
+                text: { field: jordan_record, type: nominal }
+
+  - tab: Top
+    widgets:
+      - name: How scores work
         type: text
         col: 12
         content: |
-          **Erin** is electric pink (`#FF2D92`). **Jordan** is electric blue (`#2D9CFF`).
+          Wins compare the sum of the boxes. High scores, low scores, and
+          averages are the totals written on the card. Pink is Erin, blue is
+          Jordan. Grey is a coin-flip line or a sample of fewer than 5 games.
 
-          High scores, low scores, lifetime points, and averages use **`recorded_total`** — the grand
-          total written on the card. A high score is `max(recorded_total)` for that player; a low
-          score is `min(recorded_total)`, the same single-player grain. If several cards share
-          the extreme, the link uses the earliest `game_seq` (same secondary key as closest
-          games and blowouts). Wins and margins use `computed_total` from
-          `int_win_loss` (sum of the 15 boxes).
-
-          Click a high or low score to open that game's photo | seed scorecard in a new tab
-          (`/scorecards/viewer.html?game=N` on this site), same Vega-Lite `href` + `target: _blank` pattern
-          as the Deep cuts scorecard lists.
-
-          Yahtzees = `yahtzee = 50` plus `yahtzee_bonus / 100`. A multi-yahtzee
-          player-game is `total_yahtzees >= 2` (bonus ≥ 100). Overview also
-          shows **Erin / Jordan total yahtzees** from `mart_player_kpis`.
-
-          Game-level tables link to side-by-side scorecards (photo | seed card)
-          on the **Scorecards** tab — DAC 0.21.0 cannot make table cells clickable.
-
-  - tab: Overview
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Score
+    height: "160"
     widgets:
-      - name: Total games
+      - name: Streaks
         type: chart
         chart: vega-lite
-        col: 4
-        description: Distinct game_seq in int_win_loss
-        query: headline
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: total_games, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Erin wins
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Games Erin won on computed_total
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_wins, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan wins
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Games Jordan won on computed_total
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_wins, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Overview
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Erin high score
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: max(recorded_total) for Erin. Click opens that game's photo | seed card (earliest game_seq on a tie).
-        query: headline
-        spec:
-          usermeta:
-            embedOptions:
-              loader:
-                target: _blank
-          mark: *erin_link_mark
-          encoding:
-            text: { field: erin_high_score, type: quantitative, format: ",.0f" }
-            href: { field: erin_high_score_url, type: nominal }
-            tooltip:
-              - field: erin_high_score_game_seq
-                type: quantitative
-                title: Game
-                format: d
-          width: container
-          padding: 0
-
-      - name: Erin low score
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: min(recorded_total) for Erin. Click opens that game's photo | seed card (earliest game_seq on a tie).
-        query: headline
-        spec:
-          usermeta:
-            embedOptions:
-              loader:
-                target: _blank
-          mark: *erin_link_mark
-          encoding:
-            text: { field: erin_low_score, type: quantitative, format: ",.0f" }
-            href: { field: erin_low_score_url, type: nominal }
-            tooltip:
-              - field: erin_low_score_game_seq
-                type: quantitative
-                title: Game
-                format: d
-          width: container
-          padding: 0
-
-      - name: Jordan high score
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: max(recorded_total) for Jordan. Click opens that game's photo | seed card (earliest game_seq on a tie).
-        query: headline
-        spec:
-          usermeta:
-            embedOptions:
-              loader:
-                target: _blank
-          mark: *jordan_link_mark
-          encoding:
-            text: { field: jordan_high_score, type: quantitative, format: ",.0f" }
-            href: { field: jordan_high_score_url, type: nominal }
-            tooltip:
-              - field: jordan_high_score_game_seq
-                type: quantitative
-                title: Game
-                format: d
-          width: container
-          padding: 0
-
-      - name: Jordan low score
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: min(recorded_total) for Jordan. Click opens that game's photo | seed card (earliest game_seq on a tie).
-        query: headline
-        spec:
-          usermeta:
-            embedOptions:
-              loader:
-                target: _blank
-          mark: *jordan_link_mark
-          encoding:
-            text: { field: jordan_low_score, type: quantitative, format: ",.0f" }
-            href: { field: jordan_low_score_url, type: nominal }
-            tooltip:
-              - field: jordan_low_score_game_seq
-                type: quantitative
-                title: Game
-                format: d
-          width: container
-          padding: 0
-
-  - tab: Overview
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Total yahtzees
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Natural 50s plus yahtzee_bonus/100, both players
-        query: headline
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: total_yahtzees, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Erin total yahtzees
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Natural 50s plus yahtzee_bonus/100 for Erin
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_total_yahtzees, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan total yahtzees
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Natural 50s plus yahtzee_bonus/100 for Jordan
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_total_yahtzees, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Overview
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Erin upper bonuses
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Times Erin scored the 35 upper bonus
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_upper_bonuses, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan upper bonuses
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Times Jordan scored the 35 upper bonus
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_upper_bonuses, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Multi-yahtzee player-games
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Player-games with 2+ yahtzees (yahtzee + bonus ≥ 100)
-        query: headline
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: multi_yahtzee_player_games, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Overview
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Erin current streak
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_current_streak, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan current streak
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_current_streak, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Erin longest streak
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_longest_streak, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan longest streak
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_longest_streak, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Races
-    widgets:
-      - name: Race notes
-        type: text
         col: 12
-        content: |
-          The horizontal axis is the game number, not a calendar date. Lines are
-          cumulative so the race stays readable as more games are added. Native
-          DAC line tooltips cannot open a URL — look that game up on
-          **Scorecards** or
-          [viewer.html?game=N](/scorecards/viewer.html).
+        description: Current run of wins, and the longest run, beside the race below.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 12
+                fontWeight: 600
+                x: { expr: "width * 0.50" }
+                y: { expr: "height * 0.14" }
+                color: "#FF2D92"
+              encoding:
+                text: { value: Erin }
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 12
+                fontWeight: 600
+                x: { expr: "width * 0.78" }
+                y: { expr: "height * 0.14" }
+                color: "#2D9CFF"
+              encoding:
+                text: { value: Jordan }
+            - mark:
+                type: text
+                align: right
+                baseline: middle
+                fontSize: 12
+                fontWeight: 600
+                x: { expr: "width * 0.22" }
+                y: { expr: "height * 0.42" }
+                color: "#A8B3C5"
+              encoding:
+                text: { value: Now }
+            - mark:
+                type: text
+                align: right
+                baseline: middle
+                fontSize: 12
+                fontWeight: 600
+                x: { expr: "width * 0.22" }
+                y: { expr: "height * 0.74" }
+                color: "#A8B3C5"
+              encoding:
+                text: { value: Best }
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 22
+                fontWeight: 600
+                x: { expr: "width * 0.50" }
+                y: { expr: "height * 0.42" }
+                color: "#FF2D92"
+              encoding:
+                text: { field: erin_current_streak, type: quantitative, format: ",.0f" }
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 22
+                fontWeight: 600
+                x: { expr: "width * 0.78" }
+                y: { expr: "height * 0.42" }
+                color: "#2D9CFF"
+              encoding:
+                text: { field: jordan_current_streak, type: quantitative, format: ",.0f" }
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 22
+                fontWeight: 600
+                x: { expr: "width * 0.50" }
+                y: { expr: "height * 0.74" }
+                color: "#FF2D92"
+              encoding:
+                text: { field: erin_longest_streak, type: quantitative, format: ",.0f" }
+            - mark:
+                type: text
+                align: center
+                baseline: middle
+                fontSize: 22
+                fontWeight: 600
+                x: { expr: "width * 0.78" }
+                y: { expr: "height * 0.74" }
+                color: "#2D9CFF"
+              encoding:
+                text: { field: jordan_longest_streak, type: quantitative, format: ",.0f" }
 
-  - tab: Races
-    height: 360
+  - tab: Score
+    height: "340"
     widgets:
-      - name: Cumulative wins
+      - name: Wins race
         type: chart
         chart: line
         col: 12
-        description: Running win counts by game sequence
+        description: Running wins. The line on top at the latest game is ahead.
         query: races
         x: { field: game_seq, type: number, title: Game }
         y: { field: [Erin, Jordan], type: number, title: Wins, beginAtZero: true, curve: straight }
@@ -655,88 +904,77 @@ rows:
           Erin: { color: "#FF2D92" }
           Jordan: { color: "#2D9CFF" }
 
-  - tab: Races
-    height: 320
+  - tab: Score
+    height: "340"
     widgets:
-      - name: Cumulative yahtzees
+      - name: Win margins
         type: chart
-        chart: line
-        col: 12
-        description: Running yahtzee count (50-box + bonus/100)
-        query: cum_yahtzees
-        x: { field: game_seq, type: number, title: Game }
-        y: { field: [Erin, Jordan], type: number, title: Yahtzees, beginAtZero: true, curve: straight }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
-
-  - tab: Races
-    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Yahtzees per game
-        type: chart
-        chart: bar
+        chart: vega-lite
         col: 6
-        description: Yahtzees scored that game — 2+ is a multi-yahtzee card
-        query: yahtzees_per_game
-        x: { field: game_seq, type: number, title: Game }
-        y: { field: [Erin, Jordan], type: number, title: Yahtzees, beginAtZero: true }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
+        description: Points the winner was ahead, from the sum of the boxes.
+        query: score_margins
+        spec:
+          width: container
+          height: 210
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: margin
+              type: quantitative
+              bin: { maxbins: 8 }
+              title: Margin
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+            xOffset: { field: player }
+            color: *player_color
+          mark: { type: bar }
 
-      - name: Cumulative multi-yahtzee games
+      - name: Score distribution
         type: chart
-        chart: line
+        chart: vega-lite
         col: 6
-        description: Running count of player-games with 2+ yahtzees
-        query: multi_yahtzee_cum
-        x: { field: game_seq, type: number, title: Game }
-        y: { field: [Erin, Jordan], type: number, title: Games, beginAtZero: true, curve: straight }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
+        description: Total written on the card. Same bins for both players.
+        query: score_totals
+        spec:
+          width: container
+          height: 210
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
+          encoding:
+            x:
+              field: recorded_total
+              type: quantitative
+              bin: { extent: [100, 550], step: 50 }
+              title: Points
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+            xOffset: { field: player }
+            color: *player_color
+          mark: { type: bar }
 
-  - tab: Zeros
+  - tab: Score
+    height: "340"
     widgets:
-      - name: Zero rules
-        type: text
-        col: 12
-        content: |
-          A **zero** is a scratched scoring box. `upper_bonus` and `yahtzee_bonus`
-          are excluded (those are 0/35 and 0/100×n, not category scratches).
-
-          Conversion boxes are the fixed lower-section scores: full house (25),
-          small straight (30), large straight (40), yahtzee (50). Miss rate is
-          the share of games scored 0.
-
-  - tab: Zeros
-    height: 320
-    widgets:
-      - name: Zeros per game
-        type: chart
-        chart: line
-        col: 12
-        description: Count of 0-score categories that game (bonuses excluded)
-        query: zeros_per_game
-        x: { field: game_seq, type: number, title: Game }
-        y: { field: [Erin, Jordan], type: number, title: Zeros, beginAtZero: true, curve: straight }
-        series:
-          Erin: { color: "#FF2D92" }
-          Jordan: { color: "#2D9CFF" }
-
-  - tab: Zeros
-    height: 320
-    widgets:
-      - name: Lower-section miss rate
+      - name: Sum boxes
         type: chart
         chart: vega-lite
         col: 12
-        description: Share of games scored 0 on FH / SS / LS / Yahtzee
-        query: conversion_miss
+        description: Average points on the boxes that add the dice, not a fixed score.
+        query: lower_sum_avg
         spec:
+          width: container
           height: 220
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
           transform:
             - fold: ["Erin", "Jordan"]
@@ -745,397 +983,135 @@ rows:
             x:
               field: category
               type: nominal
-              title: Category
-              sort:
-                - full_house
-                - small_straight
-                - large_straight
-                - yahtzee
-              axis: { labelAngle: 0 }
+              title: null
+              sort: ["Three of a kind", "Four of a kind", Chance]
+              axis: { labelAngle: 0, labelLimit: 120, labelFontSize: 11 }
             xOffset: { field: player }
             y:
               field: value
               type: quantitative
-              title: Miss rate
-              axis: { format: ".0%" }
-              scale: { domainMin: 0 }
+              title: Average points
+              scale: { domain: [0, 30] }
             color: *player_color
           layer:
             - mark: { type: bar }
             - mark: *bar_label
               encoding:
-                text: { field: value, type: quantitative, format: ".0%" }
+                text: { field: value, type: quantitative, format: ".0f" }
 
-  - tab: Zeros
+  - tab: Roll
+    height: "168"
     widgets:
-      - name: Zeros by category
-        type: table
-        col: 12
-        sql: |
-          select
-            display_name as player,
-            category,
-            section,
-            games,
-            zero_count,
-            miss_rate,
-            avg_score
-          from mart_category_stats
-          order by category_ord, player_key
-        columns:
-          - name: player
-            label: Player
-          - name: category
-            label: Category
-          - name: section
-            label: Section
-          - name: games
-            label: Games
-            number: number
-            align: right
-          - name: zero_count
-            label: Zeros
-            number: number
-            align: right
-          - name: miss_rate
-            label: Miss rate
-            number: ".0%"
-            align: right
-          - name: avg_score
-            label: Avg
-            number: number
-            align: right
-
-  - tab: Strategy
-    widgets:
-      - name: How to read strategy
-        type: text
-        col: 12
-        content: |
-          **Player-blind** rates: when exactly one of Erin or Jordan has a
-          feature, how often does **that holder** win? Yahtzee and the upper
-          bonus dominate. Missing a large straight hurts hard. A Yahtzee only
-          partly rescues a missed large straight — the rate is the
-          **LS=0 + Yahtzee rescue** figure (games where exactly one player
-          both missed the large straight and scored a natural Yahtzee).
-
-          Oak and chance are weak signals here — they stay on Deep cuts, not
-          this tab. Cohort definitions:
-          [strategy notes](https://github.com/jgoodman55/yahtzee/blob/main/assets/marts/strategy.md).
-
-          Swing-chart ticks: **YZ bonus** = Yahtzee bonus > 0, **UB** = upper
-          bonus (35), **YZ=50** = Yahtzee, **LS=40 / LS=0** = large straight,
-          **FH=0** = full house, **SS=0** = small straight.
-
-  - tab: Strategy
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Exclusive Yahtzee holder
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Exactly one player scored Yahtzee = 50
-        query: yz_holder
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: label, type: nominal }
-          width: container
-          padding: 0
-
-      - name: Exclusive upper bonus holder
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Exactly one player scored the 35 upper bonus
-        query: strategy_swing
-        spec:
-          transform:
-            - filter: "datum.feature === 'Upper bonus (35)'"
-          mark: *neutral_mark
-          encoding:
-            text: { field: kpi_label, type: nominal }
-          width: container
-          padding: 0
-
-      - name: LS=0 + Yahtzee rescue
-        type: chart
-        chart: vega-lite
-        col: 4
-        description: Exclusive combo of missed LS and a natural Yahtzee
-        query: ls_yz_rescue
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: label, type: nominal }
-          width: container
-          padding: 0
-
-  - tab: Strategy
-    height: 360
-    widgets:
-      - name: Swing factors
+      - name: Per game
         type: chart
         chart: vega-lite
         col: 12
-        description: Holder win rate when exactly one player has the feature. Grey = n < 10. Hover a bar for the full name.
-        query: strategy_swing
+        description: Yahtzees per game, including bonus Yahtzees.
+        query: headline
         spec:
-          # DAC 0.21 injects width container when omitted; set it here so the
-          # bars track the card. Tick text is abbreviated in the spec, not
-          # mart_strategy_swing — those strings are cohort keys (the upper-bonus
-          # KPI filter still matches "Upper bonus (35)").
           width: container
-          # Row is 360px. On a phone the title + description sit above this
-          # view, so the SVG has to stay short enough that the x-axis remains
-          # inside the card.
-          height: 240
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_yahtzees_per_game, type: quantitative, format: ".2f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "abs(datum.erin_yahtzees_per_game - datum.jordan_yahtzees_per_game) < 0.005 ? 'Level' : datum.erin_yahtzees_per_game > datum.jordan_yahtzees_per_game ? 'Erin +' + format(datum.erin_yahtzees_per_game - datum.jordan_yahtzees_per_game, '.2f') : 'Jordan +' + format(datum.jordan_yahtzees_per_game - datum.erin_yahtzees_per_game, '.2f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+  - tab: Roll
+    height: "320"
+    widgets:
+      - name: Count per game
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: How many Yahtzees each player scored in a single game.
+        query: yahtzee_dist
+        spec:
+          width: container
+          height: 200
           autosize: { type: fit, contains: padding, resize: true }
-          padding: { top: 4, left: 2, right: 76, bottom: 2 }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
-          transform:
-            - calculate: "datum.feature === 'Yahtzee bonus > 0' ? 'YZ bonus' : datum.feature === 'Upper bonus (35)' ? 'UB' : datum.feature === 'Yahtzee = 50' ? 'YZ=50' : datum.feature === 'Large straight = 40' ? 'LS=40' : datum.feature === 'Large straight = 0' ? 'LS=0' : datum.feature === 'Full house = 0' ? 'FH=0' : datum.feature === 'Small straight = 0' ? 'SS=0' : datum.feature"
-              as: feature_short
           encoding:
-            y:
-              field: feature_short
-              type: nominal
-              # Explicit list, top → bottom (DAC/Vega-Lite puts
-              # sort[0] at the top of the y-axis).
-              sort:
-                - YZ bonus
-                - UB
-                - YZ=50
-                - LS=40
-                - LS=0
-                - FH=0
-                - SS=0
-              title: null
-              axis:
-                labelFontSize: 10
-                labelPadding: 2
-                labelLimit: 64
             x:
-              field: holder_win_rate
+              field: bucket
+              type: ordinal
+              title: Yahtzees in the game
+              sort: { field: bucket_ord }
+              axis: { labelAngle: 0 }
+            y:
+              field: games
               type: quantitative
-              title: Win rate
-              axis:
-                format: ".0%"
-                # 20-point ticks collide inside a ~390px card. Quarter steps fit;
-                # bar labels still show the exact rate.
-                values: [0, 0.25, 0.5, 0.75, 1]
-                labelFontSize: 10
-                titleFontSize: 11
-                titlePadding: 2
-              scale: { domain: [0, 1] }
+              title: Games
+              scale: { domainMin: 0 }
+            xOffset: { field: player }
+            color: *player_color
           layer:
-            - mark: { type: bar, cornerRadiusEnd: 2 }
+            - mark: { type: bar }
+            - mark: *bar_label
               encoding:
-                color:
-                  field: tone
-                  type: nominal
-                  scale:
-                    domain: [ok, low_n]
-                    range: ["#A78BFA", "#6D7889"]
-                  legend: null
-                tooltip:
-                  - { field: feature, type: nominal, title: Feature }
-                  - { field: label, type: nominal, title: Holder win rate }
-                  - { field: n, type: quantitative, title: Games }
-            - mark:
-                type: text
-                align: left
-                dx: 6
-                fontSize: 10
-                fontWeight: 600
-                color: "#F3F6FA"
-              encoding:
-                text: { field: label }
-                tooltip:
-                  - { field: feature, type: nominal, title: Feature }
-                  - { field: label, type: nominal, title: Holder win rate }
-                  - { field: n, type: quantitative, title: Games }
+                text: { field: games, type: quantitative, format: "d" }
 
-  - tab: Strategy
+  - tab: Roll
+    height: "320"
     widgets:
-      - name: Rescue matrix notes
-        type: text
-        col: 12
-        content: |
-          **Rescue cohort** — exclusive combo, not exclusive-miss-then-split.
-          A game is in a cell when exactly one player has **both** that miss
-          and that consolation. Consolations do not overlap (Yahtzee-only /
-          upper-bonus-only / both / neither). Empty cells are n = 0; n < 10
-          is noisy — trust the label.
+      - name: Yahtzee race
+        type: chart
+        chart: line
+        col: 6
+        description: Running Yahtzee count, including bonus Yahtzees.
+        query: cum_yahtzees
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Yahtzees, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
 
-          Combined **large straight missed + any Yahtzee** (Has Yahtzee + Has
-          both) is the **LS=0 + Yahtzee rescue** figure above. Do not quote a
-          different cut of the same question (for example, “exactly one player
-          missed the large straight, then split by whether they also had a
-          Yahtzee”).
+      - name: Multi Yahtzee
+        type: chart
+        chart: line
+        col: 6
+        description: Running count of games with two or more Yahtzees.
+        query: multi_yahtzee_cum
+        x: { field: game_seq, type: number, title: Game }
+        y: { field: [Erin, Jordan], type: number, title: Games, beginAtZero: true, curve: straight }
+        series:
+          Erin: { color: "#FF2D92" }
+          Jordan: { color: "#2D9CFF" }
 
-          Chart ticks are short so the heatmap fits a phone. **Missed:**
-          LS=0 large straight, SS=0 small straight, FH=0 full house, No YZ
-          = no Yahtzee. **Still scored:** YZ = Yahtzee only, UB = upper
-          bonus only, Both = Yahtzee and upper bonus, None = neither.
-          Hover a cell for those full names.
-
-  - tab: Strategy
-    height: 360
+  - tab: Roll
+    height: "400"
     widgets:
-      - name: Rescue matrix
+      - name: Yahtzee matchup
         type: chart
         chart: vega-lite
         col: 12
-        description: Focal-player win rate for an exclusive miss × consolation. Hover a cell for the full names.
-        query: strategy_rescue
-        spec:
-          # Abbreviations stay in the spec. mart_strategy_rescue strings are
-          # the cohort keys for the rates table, the LS+YZ KPI filter, and tests.
-          # Cells already print the rate, so there is no colour legend — a
-          # bottom legend was painting outside this 360px card onto Rescue rates.
-          # Height leaves room for the title and the one-line description.
-          width: container
-          height: 250
-          autosize: { type: fit, contains: padding, resize: true }
-          padding: { top: 4, left: 2, right: 4, bottom: 2 }
-          config: *vl_dark
-          transform:
-            - calculate: "datum.consolation === 'Has Yahtzee' ? 'YZ' : datum.consolation === 'Has upper bonus' ? 'UB' : datum.consolation === 'Has both' ? 'Both' : datum.consolation === 'Has neither' ? 'None' : datum.consolation"
-              as: cons_short
-            - calculate: "datum.miss === 'Large straight = 0' ? 'LS=0' : datum.miss === 'Small straight = 0' ? 'SS=0' : datum.miss === 'Full house = 0' ? 'FH=0' : datum.miss === 'No Yahtzee' ? 'No YZ' : datum.miss"
-              as: miss_short
-          encoding:
-            x:
-              field: cons_short
-              type: nominal
-              sort: { field: cons_ord }
-              title: Still scored
-              axis:
-                labelAngle: 0
-                labelFontSize: 10
-                titleFontSize: 11
-                labelPadding: 2
-                titlePadding: 2
-                labelLimit: 48
-            y:
-              field: miss_short
-              type: nominal
-              sort: { field: miss_ord }
-              title: Missed
-              axis:
-                labelFontSize: 10
-                titleFontSize: 11
-                labelPadding: 2
-                titlePadding: 4
-                labelLimit: 48
-          layer:
-            - mark: { type: rect, stroke: "#2A3344", strokeWidth: 1 }
-              encoding:
-                color:
-                  condition:
-                    - test: "datum.tone === 'empty'"
-                      value: "#12171F"
-                  field: focal_win_rate
-                  type: quantitative
-                  scale:
-                    domain: [0, 1]
-                    range: ["#1B2433", "#34D399"]
-                  legend: null
-                tooltip:
-                  - { field: miss, type: nominal, title: Missed }
-                  - { field: consolation, type: nominal, title: Still scored }
-                  - { field: label, type: nominal, title: Win rate }
-                  - { field: n, type: quantitative, title: Games }
-            - mark:
-                type: text
-                fontSize: 10
-                fontWeight: 600
-                color: "#F3F6FA"
-              encoding:
-                text: { field: label }
-                tooltip:
-                  - { field: miss, type: nominal, title: Missed }
-                  - { field: consolation, type: nominal, title: Still scored }
-                  - { field: label, type: nominal, title: Win rate }
-                  - { field: n, type: quantitative, title: Games }
-
-  - tab: Strategy
-    widgets:
-      - name: Rescue rates
-        type: table
-        col: 12
-        sql: |
-          select
-            miss,
-            consolation,
-            n,
-            focal_wins,
-            focal_win_rate,
-            label
-          from mart_strategy_rescue
-          order by miss_ord, cons_ord
-        columns:
-          - name: miss
-            label: Missed
-          - name: consolation
-            label: Still has
-          - name: n
-            label: n
-            number: number
-            align: right
-          - name: focal_wins
-            label: Wins
-            number: number
-            align: right
-          - name: focal_win_rate
-            label: Win %
-            number: ".0%"
-            align: right
-          - name: label
-            label: Rate
-
-  - tab: Strategy
-    widgets:
-      - name: Yahtzee matchup notes
-        type: text
-        col: 12
-        content: |
-          **Exactly one** player scored Yahtzee = 50. Bars are **who held
-          it** (Erin alone vs Jordan alone). Stack is **holder won** vs
-          **upset** (holder lost) — not winner-name stacks that ignore
-          who had the Yahtzee. The Y-axis is that holder's outcome
-          **share (0–100%)** so Erin-alone and Jordan-alone are
-          comparable; bar labels / tooltips keep absolute W/L. Axis ticks
-          read **Erin alone** and **Jordan alone** (Yahtzee abbreviated YZ
-          on the axis title). None / both games are off this chart.
-
-  - tab: Strategy
-    height: 360
-    widgets:
-      - name: Exclusive Yahtzee — holder won vs upset
-        type: chart
-        chart: vega-lite
-        col: 12
-        description: Exclusive Yahtzee = 50. Y-axis is outcome share (0–100%); labels keep W/L counts.
+        description: When only one player scored a Yahtzee, how often they won. The grey line is a coin flip.
         query: yz_matchup
         spec:
-          # Short ticks in the spec. mart_yz_matchup.holder_label stays the
-          # full "Erin alone has Yahtzee" string for tooltips and the table-free
-          # cohort; tests key off holder, not the tick text.
-          # Keep the Erin won / Jordan won / Upset legend, but stay inside the
-          # 360px card (at 390px a 280px view pushed that legend onto the next row).
           width: container
-          height: 240
+          height: 250
           autosize: { type: fit, contains: padding, resize: true }
           padding: { top: 22, left: 2, right: 4, bottom: 2 }
           config: *vl_dark
           transform:
             - calculate: "datum.holder === 'Erin' ? 'Erin alone' : 'Jordan alone'"
               as: holder_short
-            # Stack in the same order the bars use (upset at the baseline,
-            # holder-won on top) so the W/L text sits in the middle of its
-            # own segment instead of on the percentage label.
             - stack: share
               groupby: [holder_short]
               sort:
@@ -1144,26 +1120,25 @@ rows:
               as: [share_start, share_end]
             - calculate: "(datum.share_start + datum.share_end) / 2"
               as: share_mid
-          encoding:
-            x:
-              field: holder_short
-              type: nominal
-              sort: { field: holder_ord }
-              title: Who has YZ
-              axis:
-                labelAngle: 0
-                labelFontSize: 10
-                titleFontSize: 11
-                labelPadding: 2
-                titlePadding: 2
-                labelLimit: 72
           layer:
             - mark: { type: bar }
               encoding:
+                x:
+                  field: holder_short
+                  type: nominal
+                  sort: { field: holder_ord }
+                  title: Who scored it
+                  axis:
+                    labelAngle: 0
+                    labelFontSize: 11
+                    titleFontSize: 11
+                    labelPadding: 2
+                    titlePadding: 2
+                    labelLimit: 90
                 y:
                   field: share_end
                   type: quantitative
-                  title: Percent
+                  title: Share
                   axis: { format: ".0%" }
                   scale: { domain: [0, 1] }
                 y2: { field: share_start }
@@ -1182,19 +1157,28 @@ rows:
                   - { field: share, type: quantitative, title: Share, format: ".0%" }
                   - { field: label, type: nominal, title: Rate }
             - mark:
+                type: rule
+                color: "#6D7889"
+                strokeDash: [4, 3]
+                strokeWidth: 1.5
+              encoding:
+                y: { datum: 0.5 }
+            - mark:
                 type: text
                 fontSize: 11
                 fontWeight: 600
                 baseline: middle
               encoding:
+                x:
+                  field: holder_short
+                  type: nominal
+                  sort: { field: holder_ord }
                 y:
                   field: share_mid
                   type: quantitative
                   axis: null
                   scale: { domain: [0, 1] }
                 text: { field: wl_label, type: nominal }
-                # Fixed ink. A mark-level color loses to the stacked bar's
-                # color encoding, which painted these labels pink-on-pink.
                 color: { value: "#F3F6FA" }
             - mark:
                 type: text
@@ -1211,6 +1195,10 @@ rows:
                       as: total
                   groupby: [holder_label, holder_short, holder_ord]
               encoding:
+                x:
+                  field: holder_short
+                  type: nominal
+                  sort: { field: holder_ord }
                 y:
                   field: total
                   type: quantitative
@@ -1219,442 +1207,494 @@ rows:
                 text: { field: holder_label_pct, type: nominal }
                 color: { value: "#F3F6FA" }
 
-  - tab: Deep cuts
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Roll
+    height: "360"
     widgets:
-      - name: Erin Lifetime Points
+      - name: Scratched boxes
         type: chart
         chart: vega-lite
-        col: 6
-        description: Sum of recorded_total
-        query: headline
+        col: 12
+        description: Share of games that box was left at zero.
+        query: conversion_miss
         spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_lifetime_points, type: quantitative, format: ",.0f" }
           width: container
-          padding: 0
-
-      - name: Jordan Lifetime Points
-        type: chart
-        chart: vega-lite
-        col: 6
-        description: Sum of recorded_total
-        query: headline
-        spec:
-          mark: *jordan_mark
+          height: 230
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 28 }
+          config: *vl_dark
+          transform:
+            - fold: ["Erin", "Jordan"]
+              as: ["player", "value"]
           encoding:
-            text: { field: jordan_lifetime_points, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
+            x:
+              field: category
+              type: nominal
+              title: null
+              sort: ["Four of a kind", "Full house", "Small straight", "Large straight", Yahtzee]
+              axis:
+                labelAngle: -30
+                labelAlign: right
+                labelFontSize: 10
+                labelLimit: 100
+            xOffset: { field: player }
+            y:
+              field: value
+              type: quantitative
+              title: Scratch rate
+              axis: { format: ".0%" }
+              scale: { domainMin: 0 }
+            color: *player_color
+          layer:
+            - mark: { type: bar }
+            - mark: *bar_label
+              encoding:
+                text: { field: value, type: quantitative, format: ".0%" }
 
-  - tab: Deep cuts
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Roll
+    height: "320"
     widgets:
-      - name: Erin Avg
+      - name: Scratches
         type: chart
         chart: vega-lite
-        col: 3
-        description: Average recorded_total
-        query: headline
+        col: 12
+        description: How many boxes were scored zero in that game. Bonuses are not counted.
+        query: scratch_dist
         spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_avg_score, type: quantitative, format: ",.1f" }
           width: container
-          padding: 0
-
-      - name: Jordan Avg
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: Average recorded_total
-        query: headline
-        spec:
-          mark: *jordan_mark
+          height: 200
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
+          config: *vl_dark
           encoding:
-            text: { field: jordan_avg_score, type: quantitative, format: ",.1f" }
-          width: container
-          padding: 0
+            x:
+              field: scratches
+              type: ordinal
+              title: Boxes scratched
+              sort: [0, 1, 2, 3, 4, 5]
+              axis: { labelAngle: 0 }
+            y:
+              aggregate: count
+              type: quantitative
+              title: Games
+              scale: { domainMin: 0 }
+            xOffset: { field: player }
+            color: *player_color
+          mark: { type: bar }
 
-      - name: Erin Median
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: Median recorded_total
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_median_score, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-      - name: Jordan Median
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: Median recorded_total
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_median_score, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Deep cuts
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Roll
     widgets:
-      - name: Erin bonus rate
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_bonus_rate, type: quantitative, format: ".0%" }
-          width: container
-          padding: 0
+      - name: Every box
+        type: table
+        col: 12
+        sql: |
+          select
+            display_name as player,
+            case category
+              when 'ones' then 'Ones'
+              when 'twos' then 'Twos'
+              when 'threes' then 'Threes'
+              when 'fours' then 'Fours'
+              when 'fives' then 'Fives'
+              when 'sixes' then 'Sixes'
+              when 'three_of_a_kind' then 'Three of a kind'
+              when 'four_of_a_kind' then 'Four of a kind'
+              when 'full_house' then 'Full house'
+              when 'small_straight' then 'Small straight'
+              when 'large_straight' then 'Large straight'
+              when 'chance' then 'Chance'
+              when 'yahtzee' then 'Yahtzee'
+              else category
+            end as category,
+            case section when 'upper' then 'Upper' else 'Lower' end as section,
+            games,
+            zero_count,
+            miss_rate,
+            avg_score
+          from mart_category_stats
+          order by category_ord, player_key
+        columns:
+          - name: player
+            label: Player
+          - name: category
+            label: Box
+          - name: section
+            label: Section
+          - name: games
+            label: Games
+            number: number
+            align: right
+          - name: zero_count
+            label: Zeros
+            number: number
+            align: right
+          - name: miss_rate
+            label: Scratch rate
+            number: ".0%"
+            align: right
+          - name: avg_score
+            label: Average
+            number: number
+            align: right
 
-      - name: Jordan bonus rate
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_bonus_rate, type: quantitative, format: ".0%" }
-          width: container
-          padding: 0
-
-      - name: Erin yahtzees / game
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_yahtzees_per_game, type: quantitative, format: ".2f" }
-          width: container
-          padding: 0
-
-      - name: Jordan yahtzees / game
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f" }
-          width: container
-          padding: 0
-
-  - tab: Deep cuts
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Odds
     widgets:
-      - name: Erin upper avg (pre-bonus)
-        type: chart
-        chart: vega-lite
-        col: 3
-        description: Average of ones–sixes only
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
-          width: container
-          padding: 0
-
-      - name: Jordan upper avg (pre-bonus)
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
-          width: container
-          padding: 0
-
-      - name: Erin chance avg
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *erin_mark
-          encoding:
-            text: { field: erin_avg_chance, type: quantitative, format: ",.1f" }
-          width: container
-          padding: 0
-
-      - name: Jordan chance avg
-        type: chart
-        chart: vega-lite
-        col: 3
-        query: headline
-        spec:
-          mark: *jordan_mark
-          encoding:
-            text: { field: jordan_avg_chance, type: quantitative, format: ",.1f" }
-          width: container
-          padding: 0
-
-  - tab: Deep cuts
-    height: "120"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Ties
-        type: chart
-        chart: vega-lite
-        col: 4
-        query: headline
-        spec:
-          mark: *neutral_mark
-          encoding:
-            text: { field: ties, type: quantitative, format: ",.0f" }
-          width: container
-          padding: 0
-
-  - tab: Deep cuts
-    widgets:
-      - name: Category average notes
+      - name: Reading the rates
         type: text
         col: 12
         content: |
-          **Upper** charts average **dice count** (`score / face`), so ones–sixes
-          share a 0–5 scale (18 on sixes = 3 dice). **Lower** charts average
-          **points** on the three sum boxes only (3oak / 4oak / chance). Fixed
-          conversion boxes (FH / SS / LS / Yahtzee) stay on the Zeros miss-rate
-          chart, not here.
+          When exactly one player has a box, how often does that player win?
+          These rates are associated with winning. They do not show that the
+          box caused the win.
 
-          **Win margin** is `abs(computed_total difference)` from the winner's
-          perspective. Ties are excluded. Erin and Jordan each get their own
-          histogram.
+          How often a box is scratched is on the Roll tab. A Yahtzee only
+          partly rescues a missed large straight: that rate is the large-straight
+          row of the rescue chart, in the Yahtzee and Both columns.
 
-          **Total points** histograms use `recorded_total` per player-game
-          (same as lifetime / avg / median). Shared 50-point bins so the two
-          distributions line up.
+          A dash is no such games, including pairs that cannot happen together
+          (no Yahtzee, and also a Yahtzee). Faded cells and grey bars are fewer
+          than 5 games. The grey line is a coin flip.
 
-  - tab: Deep cuts
-    height: "320"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+          How the groups are defined:
+          [strategy notes](https://github.com/jgoodman55/yahtzee/blob/main/assets/marts/strategy.md).
+
+  - tab: Odds
+    height: "188"
     widgets:
-      - name: Upper section — avg dice count
+      - name: Upper bonus
         type: chart
         chart: vega-lite
         col: 6
-        description: Average dice per face (score / 1..6). Same 0–5 scale for ones–sixes.
+        description: Times the upper section reached 63. The small line is the share of games.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_upper_bonuses, type: quantitative, format: ",.0f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_upper_bonuses, type: quantitative, format: ",.0f" }
+            - mark: *sub_erin
+              encoding:
+                text: { field: erin_bonus_rate, type: quantitative, format: ".0%" }
+            - mark: *sub_jordan
+              encoding:
+                text: { field: jordan_bonus_rate, type: quantitative, format: ".0%" }
+
+      - name: Upper average
+        type: chart
+        chart: vega-lite
+        col: 6
+        description: Average of ones through sixes, before the 35 point bonus.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f" }
+            - mark: *gap_mark
+              transform:
+                - calculate: "abs(datum.erin_avg_upper_pre_bonus - datum.jordan_avg_upper_pre_bonus) < 0.05 ? 'Level' : datum.jordan_avg_upper_pre_bonus > datum.erin_avg_upper_pre_bonus ? 'Jordan +' + format(datum.jordan_avg_upper_pre_bonus - datum.erin_avg_upper_pre_bonus, '.1f') : 'Erin +' + format(datum.erin_avg_upper_pre_bonus - datum.jordan_avg_upper_pre_bonus, '.1f')"
+                  as: gap_label
+              encoding:
+                text: { field: gap_label, type: nominal }
+
+  - tab: Odds
+    height: "360"
+    widgets:
+      - name: Upper dice
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Average dice on each face. The grey line is par. 3 of every face is 63, which earns the upper bonus.
         query: upper_avg_dice
         spec:
-          height: 240
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          width: container
+          height: 230
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 4, bottom: 4 }
           config: *vl_dark
           transform:
             - fold: ["Erin", "Jordan"]
               as: ["player", "value"]
-          encoding:
-            x:
-              field: category
-              type: nominal
-              title: Face
-              sort: [ones, twos, threes, fours, fives, sixes]
-              axis: { labelAngle: 0 }
-            xOffset: { field: player }
-            y:
-              field: value
-              type: quantitative
-              title: Avg dice
-              scale: { domain: [0, 5] }
-            color: *player_color
           layer:
             - mark: { type: bar }
-            - mark: *bar_label
               encoding:
-                text: { field: value, type: quantitative, format: ".1f" }
+                x:
+                  field: face
+                  type: nominal
+                  title: null
+                  sort: [Ones, Twos, Threes, Fours, Fives, Sixes]
+                  axis: { labelAngle: 0, labelFontSize: 11, labelLimit: 70 }
+                xOffset: { field: player }
+                y:
+                  field: value
+                  type: quantitative
+                  title: Average dice
+                  scale: { domain: [0, 5] }
+                color: *player_color
+            - mark:
+                type: rule
+                color: "#6D7889"
+                strokeDash: [4, 3]
+                strokeWidth: 1.5
+              encoding:
+                y: { datum: 3 }
 
-      - name: Lower sum boxes — avg points
+  - tab: Odds
+    height: "420"
+    widgets:
+      - name: Swing factors
         type: chart
         chart: vega-lite
-        col: 6
-        description: Average points on 3oak / 4oak / chance only (typical 0–30).
-        query: lower_sum_avg
+        col: 12
+        description: When only one player had this, how often they won. Past the grey line beats a coin flip. Grey bars are under 5 games.
+        query: strategy_swing
         spec:
-          height: 240
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
+          width: container
+          height: 280
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 2, right: 8, bottom: 4 }
           config: *vl_dark
           transform:
-            - fold: ["Erin", "Jordan"]
-              as: ["player", "value"]
+            - calculate: "datum.feature === 'Yahtzee bonus > 0' ? 'Yahtzee bonus' : datum.feature === 'Upper bonus (35)' ? 'Upper bonus' : datum.feature === 'Yahtzee = 50' ? 'Yahtzee' : datum.feature === 'Large straight = 40' ? 'Large straight' : datum.feature === 'Large straight = 0' ? 'No large straight' : datum.feature === 'Full house = 0' ? 'No full house' : datum.feature === 'Small straight = 0' ? 'No small straight' : datum.feature"
+              as: feature_label
+          layer:
+            - mark: { type: bar, cornerRadiusEnd: 2 }
+              encoding:
+                y:
+                  field: feature_label
+                  type: nominal
+                  sort:
+                    - Yahtzee bonus
+                    - Upper bonus
+                    - Yahtzee
+                    - Large straight
+                    - No large straight
+                    - No full house
+                    - No small straight
+                  title: null
+                  axis:
+                    labelFontSize: 11
+                    labelPadding: 2
+                    labelLimit: 140
+                x:
+                  field: holder_win_rate
+                  type: quantitative
+                  title: Win rate
+                  axis:
+                    format: ".0%"
+                    values: [0, 0.25, 0.5, 0.75, 1]
+                    labelFontSize: 10
+                    titleFontSize: 11
+                    titlePadding: 2
+                  scale: { domain: [0, 1] }
+                color:
+                  field: tone
+                  type: nominal
+                  scale:
+                    domain: [ok, low_n]
+                    range: ["#A78BFA", "#6D7889"]
+                  legend: null
+                tooltip:
+                  - { field: feature, type: nominal, title: Feature }
+                  - { field: label, type: nominal, title: Win rate }
+                  - { field: n, type: quantitative, title: Games }
+            - mark:
+                type: rule
+                color: "#6D7889"
+                strokeDash: [4, 3]
+                strokeWidth: 1.5
+              encoding:
+                x: { datum: 0.5 }
+            - mark:
+                type: text
+                align: left
+                dx: 4
+                fontSize: 10
+                fontWeight: 600
+                color: "#F3F6FA"
+              encoding:
+                y:
+                  field: feature_label
+                  type: nominal
+                  sort:
+                    - Yahtzee bonus
+                    - Upper bonus
+                    - Yahtzee
+                    - Large straight
+                    - No large straight
+                    - No full house
+                    - No small straight
+                x:
+                  field: holder_win_rate
+                  type: quantitative
+                  scale: { domain: [0, 1] }
+                text: { field: label }
+                color: { value: "#F3F6FA" }
+
+  - tab: Odds
+    height: "420"
+    widgets:
+      - name: Rescue matrix
+        type: chart
+        chart: vega-lite
+        col: 12
+        description: Win rate when only one player both missed that box and still scored the other. Faded cells are under 5 games.
+        query: strategy_rescue
+        spec:
+          width: container
+          height: 280
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 4, left: 2, right: 4, bottom: 2 }
+          config: *vl_dark
+          transform:
+            - calculate: "datum.consolation === 'Has Yahtzee' ? 'Yahtzee' : datum.consolation === 'Has upper bonus' ? 'Upper bonus' : datum.consolation === 'Has both' ? 'Both' : datum.consolation === 'Has neither' ? 'Neither' : datum.consolation"
+              as: cons_label
+            - calculate: "datum.miss === 'Large straight = 0' ? 'Large straight' : datum.miss === 'Small straight = 0' ? 'Small straight' : datum.miss === 'Full house = 0' ? 'Full house' : datum.miss === 'No Yahtzee' ? 'No Yahtzee' : datum.miss"
+              as: miss_label
           encoding:
             x:
-              field: category
+              field: cons_label
               type: nominal
-              title: Category
-              sort: ["3 of a kind", "4 of a kind", chance]
-              axis: { labelAngle: 0 }
-            xOffset: { field: player }
+              sort: { field: cons_ord }
+              title: Still scored
+              axis:
+                labelAngle: 0
+                labelFontSize: 10
+                titleFontSize: 11
+                labelPadding: 2
+                titlePadding: 2
+                labelLimit: 72
             y:
-              field: value
-              type: quantitative
-              title: Avg points
-              scale: { domain: [0, 30] }
-            color: *player_color
+              field: miss_label
+              type: nominal
+              sort: { field: miss_ord }
+              title: Missed
+              axis:
+                labelFontSize: 11
+                titleFontSize: 11
+                labelPadding: 2
+                titlePadding: 4
+                labelLimit: 110
           layer:
-            - mark: { type: bar }
-            - mark: *bar_label
+            - mark: { type: rect, stroke: "#2A3344", strokeWidth: 1 }
               encoding:
-                text: { field: value, type: quantitative, format: ".1f" }
+                color:
+                  condition:
+                    - test: "datum.tone === 'empty'"
+                      value: "#12171F"
+                    - test: "datum.tone === 'low_n'"
+                      value: "#3A4454"
+                  field: focal_win_rate
+                  type: quantitative
+                  scale:
+                    domain: [0, 1]
+                    range: ["#1B2433", "#34D399"]
+                  legend: null
+                opacity:
+                  condition:
+                    test: "datum.tone === 'low_n'"
+                    value: 0.55
+                  value: 1
+                tooltip:
+                  - { field: miss, type: nominal, title: Missed }
+                  - { field: consolation, type: nominal, title: Still scored }
+                  - { field: label, type: nominal, title: Win rate }
+                  - { field: n, type: quantitative, title: Games }
+            - mark:
+                type: text
+                fontSize: 10
+                fontWeight: 600
+              encoding:
+                text: { field: label }
+                color:
+                  condition:
+                    test: "datum.tone === 'empty' || datum.tone === 'low_n'"
+                    value: "#8B95A8"
+                  value: "#F3F6FA"
 
-  - tab: Deep cuts
-    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Game
     widgets:
-      - name: Erin win margins
-        type: chart
-        chart: vega-lite
-        col: 6
-        description: Margin on games Erin won (computed_total). Ties excluded.
-        query: erin_win_margins
-        spec:
-          height: 220
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
-          config: *vl_dark
-          encoding:
-            x:
-              field: margin
-              type: quantitative
-              bin: { maxbins: 8 }
-              title: Margin
-            y:
-              aggregate: count
-              type: quantitative
-              title: Games
-              scale: { domainMin: 0 }
-          layer:
-            - mark: { type: bar, color: "#FF2D92" }
-            - mark: *bar_label
-              encoding:
-                text: { aggregate: count, format: "d" }
-
-      - name: Jordan win margins
-        type: chart
-        chart: vega-lite
-        col: 6
-        description: Margin on games Jordan won (computed_total). Ties excluded.
-        query: jordan_win_margins
-        spec:
-          height: 220
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
-          config: *vl_dark
-          encoding:
-            x:
-              field: margin
-              type: quantitative
-              bin: { maxbins: 8 }
-              title: Margin
-            y:
-              aggregate: count
-              type: quantitative
-              title: Games
-              scale: { domainMin: 0 }
-          layer:
-            - mark: { type: bar, color: "#2D9CFF" }
-            - mark: *bar_label
-              encoding:
-                text: { aggregate: count, format: "d" }
-
-  - tab: Deep cuts
-    height: "300"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
-    widgets:
-      - name: Erin total points
-        type: chart
-        chart: vega-lite
-        col: 6
-        description: recorded_total per Erin player-game (same grain as lifetime / avg)
-        query: erin_recorded_totals
-        spec:
-          height: 220
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
-          config: *vl_dark
-          encoding:
-            x:
-              field: recorded_total
-              type: quantitative
-              bin: { extent: [100, 550], step: 50 }
-              title: Points
-            y:
-              aggregate: count
-              type: quantitative
-              title: Games
-              scale: { domainMin: 0 }
-          layer:
-            - mark: { type: bar, color: "#FF2D92" }
-            - mark: *bar_label
-              encoding:
-                text: { aggregate: count, format: "d" }
-
-      - name: Jordan total points
-        type: chart
-        chart: vega-lite
-        col: 6
-        description: recorded_total per Jordan player-game (same grain as lifetime / avg)
-        query: jordan_recorded_totals
-        spec:
-          height: 220
-          padding: { top: 18, left: 8, right: 8, bottom: 8 }
-          config: *vl_dark
-          encoding:
-            x:
-              field: recorded_total
-              type: quantitative
-              bin: { extent: [100, 550], step: 50 }
-              title: Points
-            y:
-              aggregate: count
-              type: quantitative
-              title: Games
-              scale: { domainMin: 0 }
-          layer:
-            - mark: { type: bar, color: "#2D9CFF" }
-            - mark: *bar_label
-              encoding:
-                text: { aggregate: count, format: "d" }
-
-  - tab: Deep cuts
-    widgets:
-      - name: Open a game scorecard
+      - name: Opening a game
         type: text
         col: 12
         content: |
-          DAC 0.21.0 **tables do not render markdown or `<a>` cells**, so the
-          tables list the game number. The lists below are the clickable path.
+          Newest games first. The comment is the first column after the game number.
 
-          **Click a game** in the lists below (Vega-Lite `href`) or
-          **[browse every scorecard](/scorecards/index.html)**. Each page is
-          original photo | seed-rendered card (Chance before Yahtzee).
+          Tables show the game number. Click a game in the lists to open the
+          photo beside the digitized card, or
+          [browse every scorecard](/scorecards/index.html).
 
-          Image widgets are display-only (`src` / `alt` — no click URL). The
-          lists use Vega-Lite `href` plus `usermeta.embedOptions.loader.target:
-          _blank` so the viewer opens in a **new tab** when the DAC
-          viewer honors it. If a click stays in-tab,
-          Shift/ctrl-click or the Scorecards tab still works.
-
-  - tab: Deep cuts
-    height: "240"  # Quoted on purpose for DAC 0.21 (pinned): DAC sizes the chart from this number; a unitless CSS height is ignored, so stacked cards below 640px size to content.
+  - tab: Game
     widgets:
-      - name: Open closest games
+      - name: Commentary
+        type: table
+        col: 12
+        sql: |
+          select
+            h.game_seq,
+            concat_ws(
+              ' · ',
+              replace(replace(h.margin_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
+              replace(replace(h.yahtzee_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
+              replace(replace(h.bonus_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
+              replace(replace(h.streak_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:')
+            ) as comment,
+            upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
+            t.erin_recorded_total as erin_score,
+            t.jordan_recorded_total as jordan_score
+          from mart_head_to_head h
+          inner join mart_game_trends t using (game_seq)
+          order by h.game_seq desc
+        columns:
+          - name: game_seq
+            label: Game
+            frozen: true
+          - name: comment
+            label: Comment
+          - name: winner
+            label: Winner
+          - name: erin_score
+            label: Erin
+            number: number
+            align: right
+          - name: jordan_score
+            label: Jordan
+            number: number
+            align: right
+
+  - tab: Game
+    height: "240"
+    widgets:
+      - name: Closest games
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
+        description: Click a game to open the scorecard in a new tab.
         query: closest_scorecard_links
         spec:
-          # One label only: the colored text. A y-axis label repeated it in
-          # grey and pushed this text past the right edge of a 390px card.
           width: container
           height: 200
           autosize: { type: fit, contains: padding, resize: true }
@@ -1689,11 +1729,11 @@ rows:
               legend: null
             href: { field: url, type: nominal }
 
-      - name: Open biggest blowouts
+      - name: Biggest blowouts
         type: chart
         chart: vega-lite
         col: 6
-        description: Colored by winner. Click opens the scorecard viewer in a new tab when DAC honors embed target=_blank.
+        description: Click a game to open the scorecard in a new tab.
         query: blowout_scorecard_links
         spec:
           width: container
@@ -1730,254 +1770,23 @@ rows:
               legend: null
             href: { field: url, type: nominal }
 
-  - tab: Deep cuts
+  - tab: Game
     widgets:
-      - name: Closest games
-        type: table
-        col: 6
-        sql: |
-          select
-            game_seq,
-            upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
-            margin,
-            erin_computed_total as erin,
-            jordan_computed_total as jordan
-          from mart_game_trends
-          order by margin asc, game_seq
-          limit 8
-        columns:
-          - name: game_seq
-            label: Game
-          - name: winner
-            label: Winner
-          - name: margin
-            label: Margin
-            number: number
-            align: right
-          - name: erin
-            label: Erin
-            number: number
-            align: right
-          - name: jordan
-            label: Jordan
-            number: number
-            align: right
-
-      - name: Biggest blowouts
-        type: table
-        col: 6
-        sql: |
-          select
-            game_seq,
-            upper(substr(winner, 1, 1)) || substr(winner, 2) as winner,
-            margin,
-            erin_computed_total as erin,
-            jordan_computed_total as jordan
-          from mart_game_trends
-          order by margin desc, game_seq
-          limit 8
-        columns:
-          - name: game_seq
-            label: Game
-          - name: winner
-            label: Winner
-          - name: margin
-            label: Margin
-            number: number
-            align: right
-          - name: erin
-            label: Erin
-            number: number
-            align: right
-          - name: jordan
-            label: Jordan
-            number: number
-            align: right
-
-  - tab: Deep cuts
-    widgets:
-      - name: Player lifetime
-        type: table
-        col: 12
-        sql: |
-          select
-            display_name as player,
-            games_played,
-            wins,
-            high_score,
-            low_score,
-            lifetime_points,
-            avg_score,
-            median_score,
-            total_yahtzees,
-            multi_yahtzee_games,
-            upper_bonus_hits,
-            upper_bonus_rate,
-            yahtzees_per_game,
-            avg_upper_pre_bonus,
-            avg_chance,
-            current_win_streak,
-            longest_win_streak
-          from mart_player_kpis
-          order by player_key
-        columns:
-          - name: player
-            label: Player
-          - name: games_played
-            label: Games
-            number: number
-            align: right
-          - name: wins
-            label: Wins
-            number: number
-            align: right
-          - name: high_score
-            label: High
-            number: number
-            align: right
-          - name: low_score
-            label: Low
-            number: number
-            align: right
-          - name: lifetime_points
-            label: Points
-            number: number
-            align: right
-          - name: avg_score
-            label: Avg
-            number: number
-            align: right
-          - name: median_score
-            label: Median
-            number: number
-            align: right
-          - name: total_yahtzees
-            label: Yahtzees
-            number: number
-            align: right
-          - name: multi_yahtzee_games
-            label: Multi-Y
-            number: number
-            align: right
-          - name: upper_bonus_hits
-            label: Bonuses
-            number: number
-            align: right
-          - name: upper_bonus_rate
-            label: Bonus %
-            number: ".0%"
-            align: right
-          - name: yahtzees_per_game
-            label: Y / game
-            number: number
-            align: right
-          - name: avg_upper_pre_bonus
-            label: Upper
-            number: number
-            align: right
-          - name: avg_chance
-            label: Chance
-            number: number
-            align: right
-          - name: current_win_streak
-            label: Streak
-            number: number
-            align: right
-          - name: longest_win_streak
-            label: Longest
-            number: number
-            align: right
-
-  - tab: Deep cuts
-    widgets:
-      - name: Commentary
-        type: table
-        col: 12
-        sql: |
-          select
-            h.game_seq,
-            upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
-            t.erin_recorded_total as erin_score,
-            t.jordan_recorded_total as jordan_score,
-            replace(replace(h.margin_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as margin_comment,
-            replace(replace(h.yahtzee_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as yahtzee_comment,
-            replace(replace(h.bonus_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as bonus_comment,
-            replace(replace(h.streak_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as streak_comment
-          from mart_head_to_head h
-          inner join mart_game_trends t using (game_seq)
-          order by h.game_seq desc
-        columns:
-          - name: game_seq
-            label: Game
-          - name: winner
-            label: Winner
-          - name: erin_score
-            label: Erin score
-            number: number
-            align: right
-          - name: jordan_score
-            label: Jordan score
-            number: number
-            align: right
-          - name: margin_comment
-            label: Margin
-          - name: yahtzee_comment
-            label: Yahtzee
-          - name: bonus_comment
-            label: Bonus
-          - name: streak_comment
-            label: Streak
-
-  - tab: Scorecards
-    widgets:
-      - name: Photo vs seed
-        type: text
-        col: 12
-        content: |
-          Side-by-side comparison Jordan used to validate the seed: **original
-          sheet photo** | **digitized card** from `raw_games` (Chance before
-          Yahtzee; Erin `#FF2D92` / Jordan `#2D9CFF`).
-
-          DAC 0.21.0 can do Markdown links in **text** widgets, data-driven
-          `image` widgets, and Vega-Lite `href`. It cannot embed arbitrary
-          HTML, and table cells are not clickable. On
-          [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves
-          `/scorecards` and `/pub_map.html` straight from `dashboard/` on disk.
-          Everything else is reverse-proxied to `dac serve` on 127.0.0.1:8321.
-          Ports 8321 and 8765 are not public, and there is no `http.server` sidecar.
-
-          1. After `bruin run`: `python3 dashboard/scripts/export_scorecards.py`
-          2. **[Open the scorecard index](/scorecards/index.html)**
-             or a game, e.g. [Game 1](/scorecards/viewer.html?game=1),
-             [Game 47](/scorecards/viewer.html?game=47) (1-pt),
-             [Game 100](/scorecards/viewer.html?game=100) (blowout).
-
-          Locally, `dac serve` does not publish those files. Serve `dashboard/`
-          in front of it (the local Caddyfile in `docs/hosting-vps.md`) so these
-          root-relative links resolve.
-
-          Full Drive HEICs stay out of git. Copy `IMG_####.jpg` / `.HEIC` into
-          `dashboard/scorecards/photos/` (see `docs/scorecard_ingest.md`) and
-          re-run the export. This repo ships a few sample photos + PNG composites.
-
-  - tab: Scorecards
-    widgets:
-      - name: Sample — Game 1 (IMG_2885)
+      - name: Sample card
         type: image
         col: 12
         fit: contain
-        # 0.21 image widgets are data-driven: src/alt/title name columns.
         data:
           columns: [photo_url, alt_text, heading]
           rows:
             - - /scorecards/samples/game_1.png
               - Game 1 original photo beside the seed-rendered scorecard
-              - Game 1 (IMG_2885)
+              - Game 1
         src: photo_url
         alt: alt_text
         title: heading
 
-  - tab: Scorecards
+  - tab: Game
     widgets:
       - name: All games
         type: table
@@ -1994,10 +1803,11 @@ rows:
           from mart_game_trends t
           left join sheet_game_crosswalk c
             on c.game_seq = t.game_seq
-          order by t.game_seq
+          order by t.game_seq desc
         columns:
           - name: game_seq
             label: Game
+            frozen: true
           - name: sheet
             label: Sheet
           - name: game_on_sheet
@@ -2017,59 +1827,73 @@ rows:
             number: number
             align: right
 
-  - tab: Pubs
+  - tab: Pub
     widgets:
-      - name: Pub map
+      - name: Map
         type: text
         col: 12
         content: |
-          Chase visits stay a separate log. From new sheets onward, the header
-          `<pub> - <games>` is stored in `seed_game_locations` and joined to
-          `seed_pubs` on the canonical pub name. Older games are **Unknown**.
+          Games with no pub written on the sheet are Unknown.
 
-          **[Open the interactive Leaflet map](/pub_map.html)**
-          (Boroughs / Pubs layers, same-size pint pins coloured by unique-day
-          visits, light-gray canvas tiles). Pins for logged games with no
-          statement visits still appear. Click a borough to zoom to its pubs.
+          [Open the map](/pub_map.html).
 
-          DAC cannot embed Leaflet or MapKit. Caddy serves `/pub_map.html` from
-          `dashboard/` on disk (same origin as this dashboard). After `bruin run`,
-          refresh pins with `python3 dashboard/scripts/export_pub_map.py`.
-          `file://` still works for the HTML on its own.
-
-  - tab: Pubs
-    height: 280
+  - tab: Pub
+    height: "360"
     widgets:
-      - name: Win rate by location
+      - name: Win rate
         type: chart
         chart: vega-lite
         col: 12
-        description: Share of games each player won where a scorecard named the pub. Unknown has no written location.
+        description: Share of games won at that pub. The grey line is an even split. Faded bars are under 5 games.
         query: location_win_rates
         spec:
-          height: 200
-          padding: { top: 8, left: 8, right: 16, bottom: 8 }
+          width: container
+          height: 230
+          autosize: { type: fit, contains: padding, resize: true }
+          padding: { top: 8, left: 4, right: 8, bottom: 8 }
           config: *vl_dark
-          encoding:
-            x:
-              field: location
-              type: nominal
-              title: null
-              sort: ["The Butcher's Hook", "The Queen's Arms", "Unknown"]
-              axis: { labelAngle: 0 }
-            y:
-              field: win_rate
-              type: quantitative
-              title: Win rate
-              axis: { format: ".0%" }
-              scale: { domain: [0, 1] }
-            xOffset: { field: player, type: nominal }
-            color: *player_color
-          mark: { type: bar, cornerRadiusEnd: 2 }
+          layer:
+            - mark: { type: bar, cornerRadiusEnd: 2 }
+              encoding:
+                x:
+                  field: location_label
+                  type: nominal
+                  title: null
+                  sort: { field: games, order: descending }
+                  axis:
+                    labelAngle: -20
+                    labelAlign: right
+                    labelFontSize: 10
+                    labelLimit: 140
+                y:
+                  field: win_rate
+                  type: quantitative
+                  title: Win rate
+                  axis: { format: ".0%" }
+                  scale: { domain: [0, 1] }
+                xOffset: { field: player, type: nominal }
+                color: *player_color
+                opacity:
+                  condition:
+                    test: "datum.games < 5"
+                    value: 0.35
+                  value: 1
+                tooltip:
+                  - { field: location_label, type: nominal, title: Pub }
+                  - { field: player, type: nominal, title: Player }
+                  - { field: win_rate, type: quantitative, title: Win rate, format: ".0%" }
+                  - { field: games, type: quantitative, title: Games }
+            - mark:
+                type: rule
+                color: "#6D7889"
+                strokeDash: [4, 3]
+                strokeWidth: 1.5
+              encoding:
+                y: { datum: 0.5 }
 
-  - tab: Pubs
+  - tab: Pub
     widgets:
-      - name: Games by location
+      - name: By location
         type: table
         col: 12
         sql: |
@@ -2078,11 +1902,10 @@ rows:
             games,
             erin_wins,
             jordan_wins,
-            ties,
             round(100.0 * erin_wins / games, 1) as erin_win_pct,
             round(100.0 * jordan_wins / games, 1) as jordan_win_pct
           from mart_location_stats
-          order by location = 'Unknown', games desc, location
+          order by games desc, location
         columns:
           - name: location
             label: Location
@@ -2098,46 +1921,30 @@ rows:
             label: Jordan wins
             number: number
             align: right
-          - name: ties
-            label: Ties
-            number: number
-            align: right
           - name: erin_win_pct
-            label: Erin win %
+            label: Erin %
             number: number
             align: right
           - name: jordan_win_pct
-            label: Jordan win %
+            label: Jordan %
             number: number
             align: right
 
-  - tab: Pubs
+  - tab: Pub
     widgets:
       - name: Venues
         type: table
         col: 12
         sql: |
           select
-            merchant_name_raw,
-            pub_name,
-            lat,
-            lng,
-            source,
+            coalesce(pub_name, merchant_name_raw) as place,
             coalesce(visit_count, 1)::integer as visit_count,
             is_confirmed_pub
           from mart_pub_locations
-          order by is_confirmed_pub desc, visit_count desc, coalesce(pub_name, merchant_name_raw)
+          order by is_confirmed_pub desc, visit_count desc, place
         columns:
-          - name: merchant_name_raw
-            label: Merchant
-          - name: pub_name
-            label: Pub
-          - name: lat
-            label: Lat
-          - name: lng
-            label: Lng
-          - name: source
-            label: Source
+          - name: place
+            label: Place
           - name: visit_count
             label: Visits
             number: number

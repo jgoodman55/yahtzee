@@ -425,12 +425,48 @@ queries:
 
 rows:
   - tab: Top
-    height: "168"
+    height: "188"
     widgets:
+      - name: Streak
+        type: chart
+        chart: vega-lite
+        col: 3
+        description: Wins in a row right now. Small type is the longest run.
+        query: headline
+        spec:
+          width: container
+          padding: 0
+          config: *pair_view
+          layer:
+            - mark: *name_erin
+              encoding:
+                text: { value: Erin }
+            - mark: *name_jordan
+              encoding:
+                text: { value: Jordan }
+            - mark: *num_erin
+              encoding:
+                text: { field: erin_current_streak, type: quantitative, format: ",.0f" }
+            - mark: *num_jordan
+              encoding:
+                text: { field: jordan_current_streak, type: quantitative, format: ",.0f" }
+            - mark: *sub_erin
+              transform:
+                - calculate: "'best ' + format(datum.erin_longest_streak, '.0f')"
+                  as: erin_best
+              encoding:
+                text: { field: erin_best, type: nominal }
+            - mark: *sub_jordan
+              transform:
+                - calculate: "'best ' + format(datum.jordan_longest_streak, '.0f')"
+                  as: jordan_best
+              encoding:
+                text: { field: jordan_best, type: nominal }
+
       - name: Wins
         type: chart
         chart: vega-lite
-        col: 4
+        col: 3
         description: Games won, from the sum of the boxes.
         query: headline
         spec:
@@ -460,7 +496,7 @@ rows:
       - name: Average
         type: chart
         chart: vega-lite
-        col: 4
+        col: 3
         description: Average total written on the card.
         query: headline
         spec:
@@ -490,7 +526,7 @@ rows:
       - name: Median
         type: chart
         chart: vega-lite
-        col: 4
+        col: 3
         description: Median total written on the card.
         query: headline
         spec:

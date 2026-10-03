@@ -121,9 +121,38 @@ def test_overview_places_low_score_beside_high_score():
     assert "target: _blank" in dashboard
 
 
+def test_top_tab_shows_streak_from_headline():
+    """Current run and longest run sit on Top. Score keeps its race companion.
+
+    Numbers come from mart_headline_kpis (already on the headline query).
+    No extra mart. The row height stays a quoted string so phone cards
+    do not collapse.
+    """
+    dashboard = DASHBOARD.read_text()
+    top, rest = dashboard.split("  - tab: Score\n", 1)
+    assert "name: Streak\n" in top
+    assert top.index("name: Streak") < top.index("name: Wins")
+    streak = top[top.index("name: Streak"): top.index("name: Wins")]
+    assert "col: 3" in streak
+    assert "query: headline" in streak
+    for field in (
+        "erin_current_streak",
+        "jordan_current_streak",
+        "erin_longest_streak",
+        "jordan_longest_streak",
+    ):
+        assert f"field: {field}" in streak or f"datum.{field}" in streak
+    row = top[top.rindex("  - tab: Top\n", 0, top.index("name: Streak")): top.index("name: Streak")]
+    assert 'height: "188"' in row
+    assert "height: 188\n" not in row
+    score = rest.split("  - tab: Roll\n", 1)[0]
+    assert "name: Streaks" in score
+
+
 if __name__ == "__main__":
     test_tie_break_picks_earliest_game_seq()
     test_seed_extremes_match_recorded_total()
     test_mart_ranks_high_and_low_the_same_way()
     test_overview_places_low_score_beside_high_score()
+    test_top_tab_shows_streak_from_headline()
     print("test_score_extremes: ok")

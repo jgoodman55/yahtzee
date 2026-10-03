@@ -149,10 +149,33 @@ def test_top_tab_shows_streak_from_headline():
     assert "name: Streaks" in score
 
 
+def test_top_tab_links_map_and_scorecards():
+    """Family landing buttons sit above the streak row. Pub keeps its link.
+
+    DAC 0.21 cannot iframe the map. The buttons are Vega href marks on a
+    quoted-height row so the tap target survives a phone stack.
+    """
+    dashboard = DASHBOARD.read_text()
+    assert dashboard.startswith("schema:") or "name: Yahtzee Head-to-Head\n" in dashboard[:200]
+    top, rest = dashboard.split("  - tab: Score\n", 1)
+    links = top[: top.index("name: Streak")]
+    assert "See where we've played →" in links
+    assert "Open the scorecards →" in links
+    assert '"/pub_map.html"' in links
+    assert '"/scorecards/index.html"' in links
+    assert "preview.jpg" not in dashboard
+    row = links[links.rindex("  - tab: Top\n", 0, links.index("name: Pub map")): links.index("name: Pub map")]
+    assert 'height: "148"' in row
+    assert "height: 148\n" not in row
+    pub = rest.split("  - tab: Pub\n", 1)[1]
+    assert "[Open the map](/pub_map.html)" in pub
+
+
 if __name__ == "__main__":
     test_tie_break_picks_earliest_game_seq()
     test_seed_extremes_match_recorded_total()
     test_mart_ranks_high_and_low_the_same_way()
     test_overview_places_low_score_beside_high_score()
     test_top_tab_shows_streak_from_headline()
+    test_top_tab_links_map_and_scorecards()
     print("test_score_extremes: ok")

@@ -112,9 +112,9 @@ Dark-mode DAC app (`dashboard/yahtzee.yml`, theme `yahtzee-dark`): Erin is
 5 games. The name stays `Yahtzee Head-to-Head`. Six tabs, short enough to
 fit a 390px screen (DAC pads each tab by 16px a side):
 
-1. **Top** — paired comparisons, starting with the current win streak
-   (longest run in small type), then wins, average, median, high, low,
-   Yahtzees, and the solo-Yahtzee win rate.
+1. **Top** — two links first (pub map, scorecard photos), then paired
+   comparisons: current win streak (longest run in small type), wins,
+   average, median, high, low, Yahtzees, and the solo-Yahtzee win rate.
 2. **Score** — streaks, cumulative wins, margin and total distributions,
    sum-box averages.
 3. **Roll** — distribution, cumulative races, solo-Yahtzee matchup,

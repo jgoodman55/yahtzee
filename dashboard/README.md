@@ -9,7 +9,7 @@ does not move.
 
 | Tab | What’s on it |
 |---|---|
-| **Top** | Erin-vs-Jordan comparisons: current win streak (longest run in small type), wins, average, median, high and low score (click opens that game), Yahtzees, and the solo-Yahtzee win rate. |
+| **Top** | Two buttons first: the pub map and the scorecard photos. Then Erin-vs-Jordan comparisons: current win streak (longest run in small type), wins, average, median, high and low score (click opens that game), Yahtzees, and the solo-Yahtzee win rate. |
 | **Score** | Streaks next to the wins race, separate Erin and Jordan histograms for margins and totals, sum-box averages. |
 | **Roll** | Per-game rate, Yahtzee count distribution, cumulative races, the solo-Yahtzee matchup, scratch rates (including four of a kind), scratches as a percent of games. |
 | **Odds** | Upper bonus as a percent with the count, upper average, dice-per-face with value labels, swing bars ordered by win rate, rescue matrix. Plain labels. |

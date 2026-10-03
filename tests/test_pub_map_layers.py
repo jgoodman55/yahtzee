@@ -143,6 +143,18 @@ def test_vendored_london_boroughs():
     assert "OGL" in js or "ONS" in js
 
 
+def test_boroughs_open_by_default_and_hashes_still_work():
+    """First load is the London borough choropleth. Deep links stay put."""
+    html = MAP_HTML.read_text(encoding="utf-8")
+    assert 'id="btn-boroughs" aria-pressed="true"' in html
+    assert 'id="btn-pubs" aria-pressed="false"' in html
+    assert 'if (!raw || raw === "boroughs") return { mode: "boroughs", filter: null };' in html
+    assert 'if (raw === "pubs") return { mode: "pubs", filter: null };' in html
+    assert 'if (match) return { mode: "pubs", filter: decodeURIComponent(match[1]) };' in html
+    assert 'setView("pubs", null)' in html
+    assert "fitBounds(londonBounds" in html
+
+
 def test_html_layers_and_pint_svg():
     html = MAP_HTML.read_text(encoding="utf-8")
     assert "circleMarker" not in html
@@ -239,6 +251,7 @@ def test_borough_visit_totals_sum_unique_days():
 if __name__ == "__main__":
     for fn in (
         test_vendored_london_boroughs,
+        test_boroughs_open_by_default_and_hashes_still_work,
         test_html_layers_and_pint_svg,
         test_export_script_joins_notes_not_borough,
         test_pubs_export_includes_notes,

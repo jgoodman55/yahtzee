@@ -34,12 +34,12 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 
 | Layer | Default | What you see |
 |---|---|---|
-| **Pubs** (Layer B) | Yes (`#pubs`) | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
-| **Boroughs** (Layer A) | `#boroughs` | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+| **Boroughs** (Layer A) | Yes (no hash, or `#boroughs`) | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+| **Pubs** (Layer B) | `#pubs` | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
 
 Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Click or hover a pint pin for a Google-Maps-ish card: photo (when we have one), name, unique-day visits, and the seed address/note. Pins without a photo still open the card with a **No photo yet** strip and a Google Maps search link — the map never depends on photos loading.
 
-Default overview fits **Greater London** so the pint field stays readable. Oxford pubs and Munkbron in Stockholm are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out). The Outside London drill-down frames both clusters; pick a venue to zoom in.
+The map opens on **Boroughs**, framed on **Greater London**. `#pubs` still shows the pint pins on that same London frame. `#borough=Southwark` (and any other borough name) still opens that borough’s pins. Oxford pubs and Munkbron in Stockholm are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out). The Outside London drill-down frames both clusters; pick a venue to zoom in.
 
 Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png).
 
@@ -155,9 +155,8 @@ visit log without invented coordinates.
 open dashboard/pub_map.html   # macOS; or just open the file
 
 # 2) Hosted site — Caddy serves /pub_map.html from dashboard/
-# https://yahtzee.jginfo.xyz/pub_map.html
-# Layers: https://yahtzee.jginfo.xyz/pub_map.html#pubs
-#         https://yahtzee.jginfo.xyz/pub_map.html#boroughs
+# https://yahtzee.jginfo.xyz/pub_map.html          (Boroughs, Greater London)
+# Pins:   https://yahtzee.jginfo.xyz/pub_map.html#pubs
 # Drill:  https://yahtzee.jginfo.xyz/pub_map.html#borough=Southwark
 
 # 3) Locally, dac serve does not publish pub_map.html. Use the Caddyfile

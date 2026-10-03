@@ -342,20 +342,20 @@
   <div class="chrome">
     <header class="card">
       <h1>Yahtzee pub map</h1>
-      <p id="tagline">Same-size pint pins, coloured by unique-day visits. Statement venues from <code>mart_pub_locations</code>, plus pubs with a logged scorecard location.</p>
+      <p id="tagline">Borough visit totals (same pale-lager → stout ramp as the pints). Labels show name + visits; crowded ones hide until you zoom in. Click a borough for its pins.</p>
       <div class="seg" role="group" aria-label="Map layer">
-        <button type="button" id="btn-boroughs" aria-pressed="false">Boroughs</button>
-        <button type="button" id="btn-pubs" aria-pressed="true">Pubs</button>
+        <button type="button" id="btn-boroughs" aria-pressed="true">Boroughs</button>
+        <button type="button" id="btn-pubs" aria-pressed="false">Pubs</button>
       </div>
       <div class="crumb" id="crumb">
         <button type="button" id="btn-back">← Boroughs</button>
         <span id="crumb-label"></span>
       </div>
       <p class="basemap-note">Esri World Light Gray · ONS boroughs (OGL v3.0). Optional MapTiler: <code>?maptiler=KEY</code>.</p>
-      <button type="button" class="list-toggle" id="list-toggle" aria-expanded="false" aria-controls="side-list">Show venues</button>
+      <button type="button" class="list-toggle" id="list-toggle" aria-expanded="false" aria-controls="side-list">Show boroughs</button>
     </header>
     <section class="card list" id="side-list" hidden>
-      <h2 id="list-heading">Venues</h2>
+      <h2 id="list-heading">Boroughs</h2>
       <div id="list-items"></div>
     </section>
   </div>
@@ -725,11 +725,11 @@
 
       function parseHash() {
         var raw = (window.location.hash || "").replace(/^#/, "");
-        if (!raw || raw === "pubs") return { mode: "pubs", filter: null };
-        if (raw === "boroughs") return { mode: "boroughs", filter: null };
+        if (!raw || raw === "boroughs") return { mode: "boroughs", filter: null };
+        if (raw === "pubs") return { mode: "pubs", filter: null };
         var match = raw.match(/^borough=(.+)$/);
         if (match) return { mode: "pubs", filter: decodeURIComponent(match[1]) };
-        return { mode: "pubs", filter: null };
+        return { mode: "boroughs", filter: null };
       }
 
       function writeHash(mode, filter) {

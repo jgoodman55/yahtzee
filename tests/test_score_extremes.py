@@ -149,24 +149,27 @@ def test_top_tab_shows_streak_from_headline():
     assert "name: Streaks" in score
 
 
-def test_top_tab_links_map_and_scorecards():
-    """Family landing buttons sit above the streak row. Pub keeps its link.
+def test_top_tab_links_the_pub_map():
+    """The pub map button sits above the streak row, full width.
 
-    DAC 0.21 cannot iframe the map. The buttons are Vega href marks on a
-    quoted-height row so the tap target survives a phone stack.
+    Scorecard links stay on the Game tab. The Pub tab keeps its own map
+    link. DAC 0.21 cannot iframe the map. The row height is a quoted
+    string so the phone card does not collapse.
     """
     dashboard = DASHBOARD.read_text()
-    assert dashboard.startswith("schema:") or "name: Yahtzee Head-to-Head\n" in dashboard[:200]
+    assert "name: Yahtzee Head-to-Head\n" in dashboard[:200]
     top, rest = dashboard.split("  - tab: Score\n", 1)
-    links = top[: top.index("name: Streak")]
-    assert "See where we've played →" in links
-    assert "Open the scorecards →" in links
-    assert '"/pub_map.html"' in links
-    assert '"/scorecards/index.html"' in links
-    assert "preview.jpg" not in dashboard
-    row = links[links.rindex("  - tab: Top\n", 0, links.index("name: Pub map")): links.index("name: Pub map")]
+    landing = top[top.index("name: Pub map"): top.index("name: Streak")]
+    assert "See where we've played →" in landing
+    assert "Open the scorecards" not in landing
+    assert '"/pub_map.html"' in landing
+    assert "scorecards" not in landing.lower()
+    assert "col: 12" in landing[:250]
+    row = top[top.rindex("  - tab: Top\n", 0, top.index("name: Pub map")): top.index("name: Pub map")]
     assert 'height: "148"' in row
     assert "height: 148\n" not in row
+    game = rest.split("  - tab: Game\n", 1)[1].split("  - tab: Pub\n", 1)[0]
+    assert "[browse every scorecard](/scorecards/index.html)" in game
     pub = rest.split("  - tab: Pub\n", 1)[1]
     assert "[Open the map](/pub_map.html)" in pub
 
@@ -177,5 +180,5 @@ if __name__ == "__main__":
     test_mart_ranks_high_and_low_the_same_way()
     test_overview_places_low_score_beside_high_score()
     test_top_tab_shows_streak_from_headline()
-    test_top_tab_links_map_and_scorecards()
+    test_top_tab_links_the_pub_map()
     print("test_score_extremes: ok")

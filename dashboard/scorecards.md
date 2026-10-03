@@ -48,7 +48,7 @@ HTML directly (`file://` works — `games.js` is inlined like `pub_map/pubs.js`)
 ## Photos
 
 Full-resolution HEIC sheets stay out of git (`dashboard/scorecards/photos/`).
-Every sheet the crosswalk names (`IMG_2885`–`IMG_2922`) is committed as a
+Every sheet the crosswalk names (`IMG_2885`–`IMG_2923`) is committed as a
 web JPEG under `dashboard/scorecards/samples/photos/` (about 1200×1600,
 EXIF/GPS stripped). `resolve_photo` in `export_scorecards.py` checks that
 directory before `photos/`, so `games.js` points at the committed files and

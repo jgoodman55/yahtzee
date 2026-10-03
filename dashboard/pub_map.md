@@ -39,7 +39,7 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 
 Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Click or hover a pint pin for a Google-Maps-ish card: photo (when we have one), name, unique-day visits, and the seed address/note. Pins without a photo still open the card with a **No photo yet** strip and a Google Maps search link — the map never depends on photos loading.
 
-Default overview fits **Greater London** so the pint field stays readable. Oxford pubs are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out).
+Default overview fits **Greater London** so the pint field stays readable. Oxford pubs and Munkbron in Stockholm are listed as **Outside London** on the borough view (and as ordinary pins if you zoom/pan out). The Outside London drill-down frames both clusters; pick a venue to zoom in.
 
 Captures from the local static server: [boroughs](docs/screenshots/pub_map_layer_a_boroughs.png), [pint pins](docs/screenshots/pub_map_layer_b_pint_pins.png), [Southwark drill-down](docs/screenshots/pub_map_southwark_drilldown.png), [popup with photo](docs/screenshots/pub_map_popup_with_photo.png), [popup without photo](docs/screenshots/pub_map_popup_without_photo.png), [Gordon's after backfill](docs/screenshots/pub_map_popup_gordons_photo.png), [Spaniards Inn after backfill](docs/screenshots/pub_map_popup_spaniards_photo.png).
 
@@ -63,7 +63,7 @@ for `file://`).
 The map does **not** add a `borough` column to `mart_pub_locations`. Assignment is
 client-side: ray-casting point-in-polygon, then (only for points inside the
 Greater London bbox that miss a polygon — e.g. Tamesis Dock on the Thames)
-snap to the nearest borough within ~1 km. Oxford stays **Outside London**.
+snap to the nearest borough within ~1 km. Oxford and Stockholm stay **Outside London**.
 
 ### Optional nicer tiles (not required)
 

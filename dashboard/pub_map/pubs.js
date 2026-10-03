@@ -953,6 +953,28 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
+          18.0674809,
+          59.3244808
+        ]
+      },
+      "properties": {
+        "name": "Munkbron",
+        "merchant_name_raw": "MUNKBRON STOCKHOLM",
+        "source": "game_location",
+        "visit_count": 0,
+        "note": "Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
+        "games_played": 1,
+        "erin_wins": 1,
+        "jordan_wins": 0,
+        "ties": 0,
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1890569,
           51.4801902
         ]
@@ -985,9 +1007,9 @@ window.PUB_MAP_DATA = {
         "source": "game_location",
         "visit_count": 0,
         "note": "11 Warwick Way, Pimlico, London SW1V 1QT — OSM amenity=pub The Queen's Arms (Brunning & Price). Logged from a scorecard header, not a Chase visit.",
-        "games_played": 2,
+        "games_played": 4,
         "erin_wins": 0,
-        "jordan_wins": 2,
+        "jordan_wins": 4,
         "ties": 0,
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Queen%27s+Arms+51.4925913%2C-0.1391752"
       }
@@ -999,7 +1021,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 45,
+    "confirmed_pub_count": 46,
     "photo_count": 43
   }
 };

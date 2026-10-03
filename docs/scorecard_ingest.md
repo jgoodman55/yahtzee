@@ -36,14 +36,14 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 - Google Drive folder: https://drive.google.com/drive/folders/1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo
 - Folder id: `1nSooXGB5YhYIaP43eBJdxjCR3NHSZxEo`
-- 38 sheets: `IMG_2885` through `IMG_2922`. Web JPEGs for all of them are in `dashboard/scorecards/samples/photos/`. Drive still has the 2885–2918 originals; 2919–2922 were later sheets already vendored the same way.
+- 39 sheets: `IMG_2885` through `IMG_2923`. Web JPEGs for all of them are in `dashboard/scorecards/samples/photos/`. Drive still has the 2885–2918 originals; 2919–2923 were later sheets already vendored the same way.
 - Filename ascending = game order
 - Each sheet is a standard Hasbro card: up to 3 Erin/Jordan games (`E J` column pairs, left to right)
 - Location, when written, is at the **top of the sheet** as `<pub> - <number of games>`, in column order. Example: `Butcher's Hook - 1` then `Queen's Arms - 2` means game 1 of that sheet is at Butcher's Hook and the next two games are at Queen's Arms. Store the canonical `seed_pubs.pub_name` in `seed_game_locations.csv` (`game_seq`, `pub_name`, `sheet_label`). Games with no header stay out of that file and show up as **Unknown**. Do not infer a pub from Chase transactions.
 
 ## Numbering
 
-- `game_seq` is continuous **1–114**
+- `game_seq` is continuous **1–117**
 - Mapping of sequence → photo → column group is in `assets/seeds/sheet_game_crosswalk.csv`
 - `IMG_2890` game 3 is included as `game_seq` **18** (Erin recorded_total **173**, Jordan **224**). Later sheets continue at 19.
 
@@ -51,7 +51,7 @@ is a leftover Anthropic helper and is not part of `bruin run`.
 
 | File | Role |
 |---|---|
-| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 114 games = 3420 data rows). Players are `jordan` / `erin`. |
+| `assets/seeds/raw_games.csv` | Category scores: `game_seq,player,category,score,recorded_total` (15 categories × 2 players × 117 games = 3510 data rows). Players are `jordan` / `erin`. |
 | `assets/seeds/sheet_game_crosswalk.csv` | Photo provenance for each `game_seq` |
 | `assets/seeds/seed_game_locations.csv` | Optional pub per `game_seq` (`pub_name` matches `seed_pubs`). Missing rows are Unknown. |
 | `assets/seeds/extraction_flags.md` | Cells / games that needed a human call during extraction |
@@ -95,7 +95,7 @@ python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 
 Drop Drive originals into `dashboard/scorecards/photos/` as `IMG_2885.HEIC`
 (or `.jpg`). Those files are gitignored. Web-sized JPEGs for every sheet
-(`IMG_2885`–`IMG_2922`) ship under `dashboard/scorecards/samples/photos/`,
+(`IMG_2885`–`IMG_2923`) ship under `dashboard/scorecards/samples/photos/`,
 and `games.js` prefers those. Details: `dashboard/scorecards.md`.
 
 ## Pipeline

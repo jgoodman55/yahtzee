@@ -13,8 +13,8 @@ depends:
 -- Rate: that holder's win rate (winner from int_win_loss / computed_total).
 -- Ties count in n and do not count as a holder win (seed has 0 ties).
 --
--- Seed grounding (n=114, 0 ties) — verify after rebuild:
---   exclusive Yahtzee = 50      = 85%  (51/60)
+-- Seed grounding (n=117, 0 ties) — verify after rebuild:
+--   exclusive Yahtzee = 50      ≈ 85%  (52/61)
 --   exclusive upper bonus (35)  ≈ 84%  (48/57)
 --   exclusive large straight 40 ≈ 74%  (28/38)
 --   exclusive large straight 0  ≈ 26%  (10/38)

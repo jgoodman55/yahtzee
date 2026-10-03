@@ -206,7 +206,7 @@ def test_map_uses_pint_pins_and_esri_basemap():
 def test_confirmed_pin_count():
     features = load_features()
     names = [f["properties"]["name"] for f in features]
-    assert len(features) == 45
+    assert len(features) == 46
     assert "The Butcher's Hook" in names
     assert "The Queen's Arms" in names
     hook = next(f for f in features if f["properties"]["name"] == "The Butcher's Hook")
@@ -216,9 +216,19 @@ def test_confirmed_pin_count():
     assert hook["properties"]["erin_wins"] == 1
     assert "Fulham Road" in hook["properties"]["note"]
     assert queens["properties"]["visit_count"] == 0
-    assert queens["properties"]["games_played"] == 2
-    assert queens["properties"]["jordan_wins"] == 2
+    assert queens["properties"]["games_played"] == 4
+    assert queens["properties"]["jordan_wins"] == 4
+    assert queens["properties"]["erin_wins"] == 0
     assert "Warwick Way" in queens["properties"]["note"]
+    munkbron = next(f for f in features if f["properties"]["name"] == "Munkbron")
+    assert munkbron["properties"]["visit_count"] == 0
+    assert munkbron["properties"]["games_played"] == 1
+    assert munkbron["properties"]["erin_wins"] == 1
+    assert munkbron["properties"]["jordan_wins"] == 0
+    assert "photo_url" not in munkbron["properties"]
+    assert "Munkbron Bryggeri & Ölhall" in munkbron["properties"]["note"]
+    assert "Lilla Nygatan" in munkbron["properties"]["note"]
+    assert munkbron["geometry"]["coordinates"] == [18.0674809, 59.3244808]
     assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
     assert "German Kraft" not in names

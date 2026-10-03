@@ -943,6 +943,22 @@
         });
       }
 
+      function pointsFarApart(pts) {
+        if (!pts || pts.length < 2) return false;
+        var minLat = pts[0].lat;
+        var maxLat = pts[0].lat;
+        var minLng = pts[0].lng;
+        var maxLng = pts[0].lng;
+        for (var i = 1; i < pts.length; i++) {
+          if (pts[i].lat < minLat) minLat = pts[i].lat;
+          if (pts[i].lat > maxLat) maxLat = pts[i].lat;
+          if (pts[i].lng < minLng) minLng = pts[i].lng;
+          if (pts[i].lng > maxLng) maxLng = pts[i].lng;
+        }
+        // A London borough is well under 1°. Oxford vs Stockholm is about 8° / 19°.
+        return (maxLat - minLat) > 2 || (maxLng - minLng) > 2;
+      }
+
       function fitTo(items, fallbackLondon) {
         var pts = [];
         items.forEach(function (item) {
@@ -953,7 +969,17 @@
           return;
         }
         if (pts.length > 1) {
-          map.fitBounds(pts, { padding: [48, 48], maxZoom: 15, animate: true });
+          var far = pointsFarApart(pts);
+          var narrow = window.innerWidth < 640;
+          // Far clusters (Oxford + Stockholm): frame both, and keep the
+          // western pin clear of the header card. Default Pubs/Boroughs
+          // views still fit Greater London via londonBounds, not these pins.
+          map.fitBounds(pts, {
+            paddingTopLeft: far ? (narrow ? [16, 96] : [360, 120]) : [48, 48],
+            paddingBottomRight: far ? (narrow ? [20, 48] : [64, 64]) : [48, 48],
+            maxZoom: 15,
+            animate: true
+          });
           return;
         }
         if (fallbackLondon && londonBounds.isValid()) {
@@ -1003,8 +1029,12 @@
               (stats.pubs === 1 ? " pub" : " pubs") +
               " · " +
               (stats.visits === 1 ? "1 visit" : stats.visits + " visits");
-            tagline.textContent =
-              "Pint pins in " + filter + " — same size, colour by unique-day visits.";
+            var fittedPts = visiblePubItems(filter).map(function (item) {
+              return item.marker.getLatLng();
+            });
+            tagline.textContent = pointsFarApart(fittedPts)
+              ? "Outside London covers more than one city. Both clusters stay in view — pick a venue to zoom in."
+              : "Pint pins in " + filter + " — same size, colour by unique-day visits.";
             heading.textContent = "Venues";
             if (!skipFit) fitTo(visiblePubItems(filter), true);
           } else {

@@ -154,6 +154,8 @@ def test_html_layers_and_pint_svg():
     assert 'id="btn-pubs"' in html
     assert "BEER_STOPS" in html
     assert "assignBorough" in html
+    assert "fitBounds(londonBounds" in html
+    assert "pointsFarApart" in html
     assert "pub_map/london_boroughs.js" in html
     assert "is-count" not in html
     assert "NAME_ZOOM" not in html
@@ -203,6 +205,7 @@ def test_point_in_polygon_assignments():
         "The Derby": "Lambeth",
         "The Bear Inn": OUTSIDE,
         "The Crown": OUTSIDE,
+        "Munkbron Bryggeri & Ölhall": OUTSIDE,
         "Tamesis Dock": "Lambeth",
     }
     got = {}

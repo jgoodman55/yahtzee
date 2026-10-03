@@ -36,6 +36,24 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 114
+    assert max(game_seqs) == 117
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
+
+
+def test_img_2923_queens_arms_and_munkbron():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    assert by_seq[115]["pub_name"] == "The Queen's Arms"
+    assert by_seq[115]["sheet_label"] == "Queen's Arms - 2"
+    assert by_seq[116]["pub_name"] == "The Queen's Arms"
+    assert by_seq[116]["sheet_label"] == "Queen's Arms - 2"
+    assert by_seq[117]["pub_name"] == "Munkbron Bryggeri & Ölhall"
+    assert by_seq[117]["sheet_label"] == "Sweden - Munkbron - 1"
+    pubs = {row["pub_name"]: row for row in _rows(PUBS)}
+    munkbron = pubs["Munkbron Bryggeri & Ölhall"]
+    assert munkbron["merchant_name_raw"] == "MUNKBRON STOCKHOLM"
+    assert munkbron["lat"] == "59.3244808"
+    assert munkbron["lng"] == "18.0674809"
+    assert "Lilla Nygatan" in munkbron["note"]
+    assert "Stockholm" in munkbron["note"]
+    assert not (munkbron.get("photo_url") or "").strip()

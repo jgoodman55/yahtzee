@@ -166,7 +166,7 @@ the Pubs tab links out to this page. Default tiles are Esri World Light Gray
 6. Animation script
 7. Wire everything into `pipeline.yml`, validate, run
 
-See `/assets` for the Bruin pipeline (114 photographed games in
+See `/assets` for the Bruin pipeline (117 photographed games in
 `raw_games.csv`; `recorded_total` was recomputed from category sums after
 Jordan's review, and `fact_games.totals_match` remains the spot-check),
 `/docs/scorecard_ingest.md` for the Grok + score-rule loop, and
@@ -234,8 +234,8 @@ directly:
 duckdb yahtzee.duckdb "select * from mart_head_to_head"
 ```
 
-`assets/seeds/raw_games.csv` already holds the 114 games from sheets
-`IMG_2885`–`IMG_2922`. Re-run after appending more sheets (Grok extract,
+`assets/seeds/raw_games.csv` already holds the 117 games from sheets
+`IMG_2885`–`IMG_2923`. Re-run after appending more sheets (Grok extract,
 then score-rule tests). See `docs/scorecard_ingest.md`.
 
 **Migrating an older two-file seed:** if you still have a separate

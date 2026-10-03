@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2922 (114 games from 38 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2923 (117 games from 39 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -330,4 +330,28 @@ with **Pimlico** under Queen's Arms.
 - game 2 (`113`) and game 3 (`114`): The Queen's Arms, Pimlico. Grands **E 192 / J 198** and **E 153 / J 215**.
 - game 3 (`114`), erin, upper_bonus: written like **65**. Upper faces 3+8+6+12+20+18 = 67, and the written upper total is **102**, so the bonus is **35** (67+35). Stored 35, not 65.
 - Locations: `seed_game_locations` pub names are **The Butcher's Hook** and **The Queen's Arms** (the `seed_pubs` rows). Games 1–111 have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part8_flags.md
+
+# part8 extraction flags — IMG_2923 (games 115–117)
+
+One sheet after IMG_2922. Conceptual name `IMG_2923`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **115, 116, 117**.
+`recorded_total` equals `sum(score)` on every player-game.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2923.jpg`.
+
+Header, in column order: **Queen's Arms - 2** then **Sweden - Munkbron - 1**.
+
+- game 1 (`115`) and game 2 (`116`): The Queen's Arms. Grands **E 220 / J 230** and **E 183 / J 199**.
+- game 3 (`117`): Munkbron Bryggeri & Ölhall, Stockholm. Grands **E 407 / J 264**.
+- game 1 (`115`), erin, twos: the cell is overwritten **2→8**. Stored **8**. Upper faces 1+8+9+12+25+18 = 73, plus bonus 35, match the written upper total **108**.
+- game 2 (`116`), jordan: written lower **138** and grand **199**. Confirmed by Jordan. Upper faces 3+2+6+12+20+18 = 61 (bonus 0); 61+138 = 199.
+- game 3 (`117`), jordan, three_of_a_kind: **16**. chance: **29**. Those reads match the written lower **162** and grand **264** (upper faces 67 + bonus 35 = 102; 102+162 = 264).
+- game 3 (`117`), erin, yahtzee_bonus: one coloured box → **100**.
+- Locations: games 115–116 reuse **The Queen's Arms**. Game 117 is **Munkbron Bryggeri & Ölhall** (`MUNKBRON STOCKHOLM` in `seed_pubs`). Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

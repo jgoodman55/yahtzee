@@ -220,12 +220,13 @@ def test_confirmed_pin_count():
     assert queens["properties"]["jordan_wins"] == 4
     assert queens["properties"]["erin_wins"] == 0
     assert "Warwick Way" in queens["properties"]["note"]
-    munkbron = next(f for f in features if f["properties"]["name"] == "Munkbron Bryggeri & Ölhall")
+    munkbron = next(f for f in features if f["properties"]["name"] == "Munkbron")
     assert munkbron["properties"]["visit_count"] == 0
     assert munkbron["properties"]["games_played"] == 1
     assert munkbron["properties"]["erin_wins"] == 1
     assert munkbron["properties"]["jordan_wins"] == 0
     assert "photo_url" not in munkbron["properties"]
+    assert "Munkbron Bryggeri & Ölhall" in munkbron["properties"]["note"]
     assert "Lilla Nygatan" in munkbron["properties"]["note"]
     assert munkbron["geometry"]["coordinates"] == [18.0674809, 59.3244808]
     assert "The Walrus & Carpenter" not in names

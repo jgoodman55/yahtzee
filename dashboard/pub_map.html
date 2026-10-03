@@ -133,12 +133,34 @@
     .pub-btn:hover, .pub-btn:focus-visible,
     .borough-btn:hover, .borough-btn:focus-visible { background: #f3ebe0; outline: none; }
     .pub-btn .name, .borough-btn .name { font-weight: 600; }
-    .pub-btn .meta, .borough-btn .meta { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+    .pub-btn .meta, .borough-btn .meta { color: var(--muted); font-size: 0.78rem; }
+    .borough-btn .meta { white-space: nowrap; }
     .pub-btn .row, .borough-btn .row {
       display: flex;
       align-items: center;
       gap: 8px;
       min-width: 0;
+    }
+    /* Long venue names wrap; the stats line sits under the name. */
+    .pub-btn {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+    }
+    .pub-btn .row { align-items: flex-start; }
+    .pub-btn .pint-pin { flex: 0 0 auto; margin-top: 1px; }
+    .pub-btn .name {
+      min-width: 0;
+      flex: 1;
+      white-space: normal;
+      overflow-wrap: break-word;
+      line-height: 1.25;
+    }
+    .pub-btn .meta {
+      white-space: normal;
+      overflow-wrap: break-word;
+      line-height: 1.35;
+      margin-left: 22px;
     }
     .legend {
       position: absolute;
@@ -393,8 +415,17 @@
       }
 
       function visitLabel(n) {
-        if (n === 0) return "No statement visits";
+        if (!n) return "";
         return n === 1 ? "1 visit" : n + " visits";
+      }
+
+      function publicAddress(note) {
+        if (!note) return "";
+        var text = String(note);
+        text = text.replace(/\s*[—–-]\s*OSM amenity=[^.]*\./gi, "");
+        text = text.replace(/\s*[—–-]?\s*Logged from a scorecard header, not a Chase visit\.?/gi, "");
+        text = text.replace(/\s*[—–-]\s*$/, "");
+        return text.trim();
       }
 
       function gamesBlurb(props) {
@@ -631,9 +662,13 @@
 
       function pubPopupHtml(props) {
         var visits = visitsOf({ properties: props });
-        var meta = visitLabel(visits);
+        var metaLines = [];
+        var visitText = visitLabel(visits);
         var games = gamesBlurb(props);
-        if (games) meta += "<br>" + games;
+        if (visitText) metaLines.push(visitText);
+        if (games) metaLines.push(games);
+        var meta = metaLines.join("<br>");
+        var address = publicAddress(props.note);
         var photo = "";
         if (isSafePhotoUrl(props.photo_url)) {
           photo =
@@ -651,11 +686,12 @@
           '<div class="venue-card-body">' +
           '<p class="popup-title">' +
           escapeHtml(props.name || "Pub") +
-          "</p><p class=\"popup-meta\">" +
-          meta +
           "</p>";
-        if (props.note) {
-          html += '<p class="popup-note">' + escapeHtml(props.note) + "</p>";
+        if (meta) {
+          html += '<p class="popup-meta">' + meta + "</p>";
+        }
+        if (address) {
+          html += '<p class="popup-note">' + escapeHtml(address) + "</p>";
         }
         if (props.photo_url && props.photo_attribution) {
           html += '<p class="popup-credit">' + escapeHtml(props.photo_attribution) + "</p>";
@@ -1113,9 +1149,14 @@
             '<span class="row"><span class="pint-pin"></span><span class="name"></span></span><span class="meta"></span>';
           btn.querySelector(".pint-pin").innerHTML = pintSvg(beerColor(visits), 14, 18);
           btn.querySelector(".name").textContent = props.name || "Pub";
-          var meta = visitLabel(visits);
+          var metaParts = [];
+          var visitText = visitLabel(visits);
           var games = gamesBlurb(props);
-          btn.querySelector(".meta").textContent = games ? meta + " · " + games : meta;
+          if (visitText) metaParts.push(visitText);
+          if (games) metaParts.push(games);
+          var metaEl = btn.querySelector(".meta");
+          if (metaParts.length) metaEl.textContent = metaParts.join(" · ");
+          else metaEl.remove();
           btn.addEventListener("click", function () {
             var latlng = item.marker.getLatLng();
             var targetZoom = Math.max(map.getZoom(), 14);

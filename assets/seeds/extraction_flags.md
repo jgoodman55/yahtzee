@@ -353,5 +353,5 @@ Header, in column order: **Queen's Arms - 2** then **Sweden - Munkbron - 1**.
 - game 2 (`116`), jordan: written lower **138** and grand **199**. Confirmed by Jordan. Upper faces 3+2+6+12+20+18 = 61 (bonus 0); 61+138 = 199.
 - game 3 (`117`), jordan, three_of_a_kind: **16**. chance: **29**. Those reads match the written lower **162** and grand **264** (upper faces 67 + bonus 35 = 102; 102+162 = 264).
 - game 3 (`117`), erin, yahtzee_bonus: one coloured box → **100**.
-- Locations: games 115–116 reuse **The Queen's Arms**. Game 117 is **Munkbron Bryggeri & Ölhall** (`MUNKBRON STOCKHOLM` in `seed_pubs`). Games 1–111 still have no row and read as Unknown.
+- Locations: games 115–116 reuse **The Queen's Arms**. Game 117 is stored as **Munkbron** (`MUNKBRON STOCKHOLM` in `seed_pubs`). The full name stays in the address note: Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, Stockholm. The map, popup, and location charts render **Munkbron**. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

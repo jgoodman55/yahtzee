@@ -958,16 +958,16 @@ window.PUB_MAP_DATA = {
         ]
       },
       "properties": {
-        "name": "Munkbron Bryggeri & Ölhall",
+        "name": "Munkbron",
         "merchant_name_raw": "MUNKBRON STOCKHOLM",
         "source": "game_location",
         "visit_count": 0,
-        "note": "Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
+        "note": "Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
         "games_played": 1,
         "erin_wins": 1,
         "jordan_wins": 0,
         "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+Bryggeri+%26+%C3%96lhall+59.3244808%2C18.0674809"
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
       }
     },
     {

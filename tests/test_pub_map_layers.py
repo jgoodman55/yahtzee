@@ -165,6 +165,10 @@ def test_html_layers_and_pint_svg():
     assert "resolveBoroughLabelCollisions" in html
     assert "venue-card" in html
     assert "No photo yet" in html
+    assert "No statement visits" not in html
+    assert "publicAddress" in html
+    assert "Logged from a scorecard header, not a Chase visit" in html
+    assert ".pub-btn {\n      flex-direction: column;" in html
     assert "bindVenuePopup" in html
     assert "keepInView: false" in html
     assert "keepInView: true" not in html
@@ -205,7 +209,7 @@ def test_point_in_polygon_assignments():
         "The Derby": "Lambeth",
         "The Bear Inn": OUTSIDE,
         "The Crown": OUTSIDE,
-        "Munkbron Bryggeri & Ölhall": OUTSIDE,
+        "Munkbron": OUTSIDE,
         "Tamesis Dock": "Lambeth",
     }
     got = {}

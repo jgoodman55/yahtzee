@@ -47,13 +47,14 @@ def test_img_2923_queens_arms_and_munkbron():
     assert by_seq[115]["sheet_label"] == "Queen's Arms - 2"
     assert by_seq[116]["pub_name"] == "The Queen's Arms"
     assert by_seq[116]["sheet_label"] == "Queen's Arms - 2"
-    assert by_seq[117]["pub_name"] == "Munkbron Bryggeri & Ölhall"
+    assert by_seq[117]["pub_name"] == "Munkbron"
     assert by_seq[117]["sheet_label"] == "Sweden - Munkbron - 1"
     pubs = {row["pub_name"]: row for row in _rows(PUBS)}
-    munkbron = pubs["Munkbron Bryggeri & Ölhall"]
+    munkbron = pubs["Munkbron"]
     assert munkbron["merchant_name_raw"] == "MUNKBRON STOCKHOLM"
     assert munkbron["lat"] == "59.3244808"
     assert munkbron["lng"] == "18.0674809"
+    assert "Munkbron Bryggeri & Ölhall" in munkbron["note"]
     assert "Lilla Nygatan" in munkbron["note"]
     assert "Stockholm" in munkbron["note"]
     assert not (munkbron.get("photo_url") or "").strip()

@@ -149,10 +149,36 @@ def test_top_tab_shows_streak_from_headline():
     assert "name: Streaks" in score
 
 
+def test_top_tab_links_the_pub_map():
+    """The pub map button sits above the streak row, full width.
+
+    Scorecard links stay on the Game tab. The Pub tab keeps its own map
+    link. DAC 0.21 cannot iframe the map. The row height is a quoted
+    string so the phone card does not collapse.
+    """
+    dashboard = DASHBOARD.read_text()
+    assert "name: Yahtzee Head-to-Head\n" in dashboard[:200]
+    top, rest = dashboard.split("  - tab: Score\n", 1)
+    landing = top[top.index("name: Pub map"): top.index("name: Streak")]
+    assert "See where we've played →" in landing
+    assert "Open the scorecards" not in landing
+    assert '"/pub_map.html"' in landing
+    assert "scorecards" not in landing.lower()
+    assert "col: 12" in landing[:250]
+    row = top[top.rindex("  - tab: Top\n", 0, top.index("name: Pub map")): top.index("name: Pub map")]
+    assert 'height: "148"' in row
+    assert "height: 148\n" not in row
+    game = rest.split("  - tab: Game\n", 1)[1].split("  - tab: Pub\n", 1)[0]
+    assert "[browse every scorecard](/scorecards/index.html)" in game
+    pub = rest.split("  - tab: Pub\n", 1)[1]
+    assert "[Open the map](/pub_map.html)" in pub
+
+
 if __name__ == "__main__":
     test_tie_break_picks_earliest_game_seq()
     test_seed_extremes_match_recorded_total()
     test_mart_ranks_high_and_low_the_same_way()
     test_overview_places_low_score_beside_high_score()
     test_top_tab_shows_streak_from_headline()
+    test_top_tab_links_the_pub_map()
     print("test_score_extremes: ok")

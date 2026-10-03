@@ -80,9 +80,9 @@ Queries hit DuckDB marts (`mart_headline_kpis`, `mart_player_kpis`,
 `mart_pub_locations`).
 
 DAC 0.21.0 cannot embed Leaflet/MapKit. The real map is `pub_map.html` (Esri
-World Light Gray tiles, no API key): Boroughs / Pubs layers, pint pins
-coloured by unique-day visits. See `pub_map.md` for regenerate / serve /
-`dac build`.
+World Light Gray tiles, no API key). It opens on the Boroughs layer, framed
+on Greater London; Pubs is the other toggle. See `pub_map.md` for regenerate /
+serve / `dac build`.
 
 Queries run against the pipeline DuckDB file (`yahtzee.duckdb` at the repo root)
 via the read-only `local_duckdb` connection in `.bruin.yml`. The pipeline writes

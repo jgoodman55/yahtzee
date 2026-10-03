@@ -315,8 +315,10 @@
     .list-toggle:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
     /* Phone: the header, 42vh venue list, and legend otherwise cover most of the map. */
     @media (max-width: 640px) {
-      .chrome { max-width: calc(100vw - 24px); }
+      /* Leave the top-right clear for the +/- zoom control. */
+      .chrome { max-width: calc(100vw - 64px); }
       header.card { padding: 10px 12px 10px; }
+      header p { overflow-wrap: anywhere; }
       header h1 { font-size: 1.02rem; }
       header p { font-size: 0.75rem; }
       .basemap-note { display: none; }
@@ -342,20 +344,20 @@
   <div class="chrome">
     <header class="card">
       <h1>Yahtzee pub map</h1>
-      <p id="tagline">Same-size pint pins, coloured by unique-day visits. Statement venues from <code>mart_pub_locations</code>, plus pubs with a logged scorecard location.</p>
+      <p id="tagline">Darker = more visits. Tap a borough to see its pubs.</p>
       <div class="seg" role="group" aria-label="Map layer">
-        <button type="button" id="btn-boroughs" aria-pressed="false">Boroughs</button>
-        <button type="button" id="btn-pubs" aria-pressed="true">Pubs</button>
+        <button type="button" id="btn-boroughs" aria-pressed="true">Boroughs</button>
+        <button type="button" id="btn-pubs" aria-pressed="false">Pubs</button>
       </div>
       <div class="crumb" id="crumb">
         <button type="button" id="btn-back">← Boroughs</button>
         <span id="crumb-label"></span>
       </div>
       <p class="basemap-note">Esri World Light Gray · ONS boroughs (OGL v3.0). Optional MapTiler: <code>?maptiler=KEY</code>.</p>
-      <button type="button" class="list-toggle" id="list-toggle" aria-expanded="false" aria-controls="side-list">Show venues</button>
+      <button type="button" class="list-toggle" id="list-toggle" aria-expanded="false" aria-controls="side-list">Show boroughs</button>
     </header>
     <section class="card list" id="side-list" hidden>
-      <h2 id="list-heading">Venues</h2>
+      <h2 id="list-heading">Boroughs</h2>
       <div id="list-items"></div>
     </section>
   </div>
@@ -725,11 +727,11 @@
 
       function parseHash() {
         var raw = (window.location.hash || "").replace(/^#/, "");
-        if (!raw || raw === "pubs") return { mode: "pubs", filter: null };
-        if (raw === "boroughs") return { mode: "boroughs", filter: null };
+        if (!raw || raw === "boroughs") return { mode: "boroughs", filter: null };
+        if (raw === "pubs") return { mode: "pubs", filter: null };
         var match = raw.match(/^borough=(.+)$/);
         if (match) return { mode: "pubs", filter: decodeURIComponent(match[1]) };
-        return { mode: "pubs", filter: null };
+        return { mode: "boroughs", filter: null };
       }
 
       function writeHash(mode, filter) {
@@ -1008,8 +1010,8 @@
           var far = pointsFarApart(pts);
           var narrow = window.innerWidth < 640;
           // Far clusters (Oxford + Stockholm): frame both, and keep the
-          // western pin clear of the header card. Default Pubs/Boroughs
-          // views still fit Greater London via londonBounds, not these pins.
+          // western pin clear of the header card. Desktop overview still
+          // fits Greater London. Phone overview fits the played boroughs.
           map.fitBounds(pts, {
             paddingTopLeft: far ? (narrow ? [16, 96] : [360, 120]) : [48, 48],
             paddingBottomRight: far ? (narrow ? [20, 48] : [64, 64]) : [48, 48],
@@ -1018,9 +1020,49 @@
           });
           return;
         }
-        if (fallbackLondon && londonBounds.isValid()) {
-          map.fitBounds(londonBounds, { padding: [24, 24], maxZoom: 12, animate: true });
+        if (fallbackLondon && londonBounds.isValid()) fitOverview();
+      }
+
+      // Phone is tall, so the full Greater London box shows Luton to Brighton.
+      // Fit the boroughs we have actually played. Desktop stays on Greater London.
+      function playedBoroughBounds() {
+        var features = [];
+        Object.keys(boroughStats).forEach(function (key) {
+          var row = boroughStats[key];
+          if (!row || key === OUTSIDE || !row.visits || !row.feature) return;
+          features.push(row.feature);
+        });
+        if (!features.length) return londonBounds;
+        return L.geoJSON({ type: "FeatureCollection", features: features }).getBounds();
+      }
+
+      function fitOverview() {
+        var narrow = window.innerWidth < 640;
+        if (!narrow) {
+          if (londonBounds.isValid()) {
+            map.fitBounds(londonBounds, { padding: [28, 28], maxZoom: 12, animate: false });
+          }
+          return;
         }
+        var bounds = playedBoroughBounds();
+        if (!bounds || !bounds.isValid()) return;
+        // A tall phone would letterbox a wide London box and show Luton and
+        // Brighton. Zoom so the played boroughs fill the screen height.
+        var north = bounds.getNorth();
+        var south = bounds.getSouth();
+        function mercY(lat) {
+          var r = lat * Math.PI / 180;
+          return Math.log(Math.tan(Math.PI / 4 + r / 2));
+        }
+        var header = 0;
+        var card = document.querySelector("header.card");
+        if (card) header = card.getBoundingClientRect().height;
+        var usableH = Math.max(280, window.innerHeight - header - 36);
+        var mercSpan = Math.abs(mercY(north) - mercY(south));
+        var zoom = Math.log(usableH * 2 * Math.PI / (256 * mercSpan)) / Math.LN2;
+        zoom = Math.max(10, Math.min(13, zoom));
+        map.setView(bounds.getCenter(), zoom, { animate: false });
+        if (header) map.panBy([0, header / 2], { animate: false });
       }
 
       function setView(mode, filter, opts) {
@@ -1042,12 +1084,9 @@
           boroughLabelLayer.addTo(map);
           outsideLayer.addTo(map);
           crumb.classList.remove("is-on");
-          tagline.textContent =
-            "Borough visit totals (same pale-lager → stout ramp as the pints). Labels show name + visits; crowded ones hide until you zoom in. Click a borough for its pins.";
+          tagline.textContent = "Darker = more visits. Tap a borough to see its pubs.";
           heading.textContent = "Boroughs";
-          if (!skipFit && londonBounds.isValid()) {
-            map.fitBounds(londonBounds, { padding: [28, 28], maxZoom: 12, animate: true });
-          }
+          if (!skipFit) fitOverview();
           resolveBoroughLabelCollisions();
         } else {
           map.removeLayer(boroughLayer);
@@ -1069,22 +1108,15 @@
               return item.marker.getLatLng();
             });
             tagline.textContent = pointsFarApart(fittedPts)
-              ? "Outside London covers more than one city. Both clusters stay in view — pick a venue to zoom in."
-              : "Pint pins in " + filter + " — same size, colour by unique-day visits.";
+              ? "These pubs are outside London. Tap one to zoom in."
+              : "Darker = more visits. Tap a pub to see it.";
             heading.textContent = "Venues";
             if (!skipFit) fitTo(visiblePubItems(filter), true);
           } else {
             crumb.classList.remove("is-on");
-            tagline.textContent =
-              "Same-size pint pins, coloured by unique-day visits. Statement venues, plus pubs with a logged scorecard location.";
+            tagline.textContent = "Darker = more visits. Tap a pub to see it.";
             heading.textContent = "Venues";
-            if (!skipFit) {
-              if (londonBounds.isValid()) {
-                map.fitBounds(londonBounds, { padding: [28, 28], maxZoom: 12, animate: true });
-              } else {
-                fitTo(pubMarkers, true);
-              }
-            }
+            if (!skipFit) fitOverview();
           }
         }
         renderList(mode, filter);
@@ -1197,7 +1229,7 @@
             row.appendChild(document.createTextNode(n === 1 ? "1" : String(n)));
             root.appendChild(row);
           });
-          hint.textContent = "Same pale-lager → stout ramp as the pint pins. Name labels hide on collision; zoom in to see more. Click a borough for its pins.";
+          hint.textContent = "Darker = more visits. Tap a borough to see its pubs.";
         } else {
           title.textContent = "Visits (unique days)";
           var beerSamples = [1, 3, 5, Math.max(8, maxPubVisits)];
@@ -1214,7 +1246,7 @@
             row.appendChild(document.createTextNode(n === 1 ? "1" : String(n)));
             root.appendChild(row);
           });
-          hint.textContent = "Same-size lager pint · pale → stout by unique-day visits. Click or hover a pin for photo + address.";
+          hint.textContent = "Darker = more visits. Tap a pub to see it.";
         }
         box.hidden = false;
       }

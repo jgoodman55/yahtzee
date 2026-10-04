@@ -428,7 +428,9 @@ rows:
   # of the borough view that links to the map page. Prose images already
   # get rounded corners, and a link fades slightly on hover. The Pub tab
   # keeps its own map link. Scorecards stay on the Game tab.
-  # Refresh the picture with dashboard/scripts/export_map_preview.py
+  # The SVG holds the map plus a corner chip that stays one size. Raw HTML
+  # (a <picture> or a DOM chip) is escaped, so it cannot live in this widget.
+  # Refresh with dashboard/scripts/export_map_preview.py
   # (not part of the droplet rebuild).
   - tab: Top
     widgets:
@@ -436,7 +438,7 @@ rows:
         type: text
         col: 12
         content: |
-          [![Pub map](/pub_map/preview.jpg)](/pub_map.html)
+          [![Pub map](/pub_map/preview.svg)](/pub_map.html)
 
   - tab: Top
     height: "188"

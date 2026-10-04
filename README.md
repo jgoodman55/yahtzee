@@ -213,7 +213,7 @@ dac serve --dir dashboard --template yahtzee-dark --open
 python3 dashboard/scripts/export_pub_map.py
 python3 dashboard/scripts/export_scorecards.py
 # Optional, when the Top-tab map picture should change. Needs Chrome.
-# Not part of the droplet rebuild.
+# Writes preview.jpg and preview.svg. Not part of the droplet rebuild.
 # python3 dashboard/scripts/export_map_preview.py
 
 # Locally, serve dashboard/ in front of dac serve so root-relative links

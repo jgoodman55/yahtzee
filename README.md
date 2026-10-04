@@ -132,8 +132,8 @@ Marts behind the widgets: `mart_headline_kpis`, `mart_player_kpis`,
 Standalone Leaflet map (`dashboard/pub_map.html`) — opens on the London
 borough choropleth, with same-size pint pins one toggle away, from
 `mart_pub_locations`. DAC 0.21.0 cannot embed Leaflet/MapKit; the Top tab
-and the Pub tab link out to this page. Default tiles are Esri World Light
-Gray (no API key). See `dashboard/pub_map.md`.
+shows a preview image that opens this page, and the Pub tab links out too.
+Default tiles are Esri World Light Gray (no API key). See `dashboard/pub_map.md`.
 
 ## 5. Animation
 
@@ -212,6 +212,9 @@ dac serve --dir dashboard --template yahtzee-dark --open
 # dashboard/ at /pub_map.html and /scorecards; dac serve does not publish them.
 python3 dashboard/scripts/export_pub_map.py
 python3 dashboard/scripts/export_scorecards.py
+# Optional, when the Top-tab map picture should change. Needs Chrome.
+# Not part of the droplet rebuild.
+# python3 dashboard/scripts/export_map_preview.py
 
 # Locally, serve dashboard/ in front of dac serve so root-relative links
 # resolve. The short Caddyfile in docs/hosting-vps.md listens on :8080:

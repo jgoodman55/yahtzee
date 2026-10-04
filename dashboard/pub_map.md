@@ -86,6 +86,18 @@ page (no CORS fetch). Seed `note` (address / Jordan pin comment) and optional
 `photo_url` are joined in the exporter from `assets/seeds/seed_pubs.csv` —
 not mart columns.
 
+### Top-tab preview image
+
+The Top tab shows `dashboard/pub_map/preview.jpg` (served as
+`/pub_map/preview.jpg`) and the whole picture links to `/pub_map.html`.
+Refresh it when new pubs or boroughs should show up in that banner. It
+needs Chrome and Playwright, so it is **not** part of `scripts/yahtzee-rebuild.sh`
+or the droplet deploy.
+
+```bash
+python3 dashboard/scripts/export_map_preview.py
+```
+
 ### Venue photos
 
 Popup photos are **optional** and **seed-only**. There is no live Google

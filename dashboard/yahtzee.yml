@@ -424,61 +424,19 @@ queries:
       order by games desc, location, player
 
 rows:
-  # Family landing row. DAC 0.21 cannot iframe the map, so this is a
-  # full-card link. The Pub tab keeps its own map link. Scorecards stay
-  # on the Game tab.
+  # Family landing. DAC 0.21 cannot iframe the map, so this is a picture
+  # of the borough view that links to the map page. Prose images already
+  # get rounded corners, and a link fades slightly on hover. The Pub tab
+  # keeps its own map link. Scorecards stay on the Game tab.
+  # Refresh the picture with dashboard/scripts/export_map_preview.py
+  # (not part of the droplet rebuild).
   - tab: Top
-    height: "148"
     widgets:
       - name: Pub map
-        type: chart
-        chart: vega-lite
+        type: text
         col: 12
-        description: Opens the map of pubs.
-        data:
-          columns: [url, title, sub]
-          rows:
-            - ["/pub_map.html", "See where we've played →", "Pub map"]
-        spec:
-          width: container
-          padding: 0
-          data: { name: dac }
-          config: *pair_view
-          layer:
-            - mark:
-                type: rect
-                cursor: pointer
-                color: "#1A2130"
-                x: { expr: "0" }
-                y: { expr: "0" }
-                x2: { expr: "width" }
-                y2: { expr: "height" }
-              encoding:
-                href: { field: url, type: nominal }
-            - mark:
-                type: text
-                align: center
-                baseline: middle
-                fontSize: 20
-                fontWeight: 600
-                color: "#F3F6FA"
-                cursor: pointer
-                y: { expr: "height * 0.42" }
-              encoding:
-                text: { field: title, type: nominal }
-                href: { field: url, type: nominal }
-            - mark:
-                type: text
-                align: center
-                baseline: middle
-                fontSize: 13
-                fontWeight: 600
-                color: "#A8B3C5"
-                cursor: pointer
-                y: { expr: "height * 0.72" }
-              encoding:
-                text: { field: sub, type: nominal }
-                href: { field: url, type: nominal }
+        content: |
+          [![Pub map](/pub_map/preview.jpg)](/pub_map.html)
 
   - tab: Top
     height: "188"

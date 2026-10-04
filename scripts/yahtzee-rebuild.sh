@@ -42,3 +42,6 @@ bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"
 
 "$PYTHON" dashboard/scripts/export_scorecards.py
 "$PYTHON" dashboard/scripts/export_pub_map.py
+# preview.jpg on the Top tab is a checked-in screenshot. Refresh it with
+# dashboard/scripts/export_map_preview.py on a machine that has Chrome.
+# This rebuild does not launch a browser.

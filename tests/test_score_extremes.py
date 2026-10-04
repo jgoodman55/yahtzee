@@ -149,25 +149,54 @@ def test_top_tab_shows_streak_from_headline():
     assert "name: Streaks" in score
 
 
-def test_top_tab_links_the_pub_map():
-    """The pub map button sits above the streak row, full width.
+def _jpeg_size(path: Path) -> tuple[int, int]:
+    data = path.read_bytes()
+    i = 2
+    while i < len(data) - 9:
+        if data[i] != 0xFF:
+            break
+        marker = data[i + 1]
+        if marker in (0xC0, 0xC1, 0xC2):
+            height = int.from_bytes(data[i + 5 : i + 7], "big")
+            width = int.from_bytes(data[i + 7 : i + 9], "big")
+            return width, height
+        if marker == 0xD8 or marker == 0x01 or 0xD0 <= marker <= 0xD9:
+            i += 2
+            continue
+        length = int.from_bytes(data[i + 2 : i + 4], "big")
+        i += 2 + length
+    raise AssertionError(f"no JPEG size in {path}")
 
-    Scorecard links stay on the Game tab. The Pub tab keeps its own map
-    link. DAC 0.21 cannot iframe the map. The row height is a quoted
-    string so the phone card does not collapse.
+
+def test_top_tab_links_the_pub_map():
+    """A preview of the borough map sits above the streak row.
+
+    The picture links to the map page. Scorecard links stay on the Game
+    tab. The Pub tab keeps its own map link. No fixed row height, so the
+    banner is not clipped and a numeric height cannot crush the card.
     """
     dashboard = DASHBOARD.read_text()
     assert "name: Yahtzee Head-to-Head\n" in dashboard[:200]
     top, rest = dashboard.split("  - tab: Score\n", 1)
     landing = top[top.index("name: Pub map"): top.index("name: Streak")]
-    assert "See where we've played →" in landing
+    assert "See where we've played" not in landing
     assert "Open the scorecards" not in landing
-    assert '"/pub_map.html"' in landing
+    assert "[![Pub map](/pub_map/preview.svg)](/pub_map.html)" in landing
     assert "scorecards" not in landing.lower()
     assert "col: 12" in landing[:250]
     row = top[top.rindex("  - tab: Top\n", 0, top.index("name: Pub map")): top.index("name: Pub map")]
-    assert 'height: "148"' in row
-    assert "height: 148\n" not in row
+    assert "height:" not in row
+    pub_map = Path(__file__).resolve().parents[1] / "dashboard" / "pub_map"
+    preview = pub_map / "preview.jpg"
+    assert preview.is_file()
+    assert preview.stat().st_size < 200_000
+    width, height = _jpeg_size(preview)
+    aspect = width / height
+    assert 2.3 <= aspect <= 3.0, aspect
+    svg = (pub_map / "preview.svg").read_text()
+    assert "Pub map" in svg
+    assert "chip-phone" in svg
+    assert svg.count("data:image/jpeg;base64,") == 1
     game = rest.split("  - tab: Game\n", 1)[1].split("  - tab: Pub\n", 1)[0]
     assert "[browse every scorecard](/scorecards/index.html)" in game
     pub = rest.split("  - tab: Pub\n", 1)[1]

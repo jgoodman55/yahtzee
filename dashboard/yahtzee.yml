@@ -430,6 +430,9 @@ rows:
   # keeps its own map link. Scorecards stay on the Game tab.
   # The SVG holds the map plus a corner chip that stays one size. Raw HTML
   # (a <picture> or a DOM chip) is escaped, so it cannot live in this widget.
+  # DAC also strips target= on this markdown link. The new-tab proxy injects
+  # dashboard/pub_map/newtab.js, which sets target=_blank rel=noopener on
+  # this preview image only. The Pub tab's text link stays in the same tab.
   # Refresh with dashboard/scripts/export_map_preview.py
   # (not part of the droplet rebuild).
   - tab: Top

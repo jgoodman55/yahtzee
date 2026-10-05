@@ -180,6 +180,11 @@ def player_box(scores: dict[str, int]) -> dict:
     }
 
 
+def display_winner(winner: str) -> str:
+    """Visitor-facing name. Stored keys stay lowercase for joins and filters."""
+    return {"erin": "Erin", "jordan": "Jordan"}.get(winner, winner)
+
+
 def build_games(db_path: Path) -> list[dict]:
     crosswalk = load_crosswalk()
     scores = load_scores()
@@ -323,7 +328,7 @@ def render_composite_png(game: dict, sheet_games: list[dict], dest: Path) -> Non
     draw.text((pad, 14), title, fill="#F3F6FA", font=title_f)
     draw.text(
         (pad, 40),
-        f"winner {game['winner']}   margin {game['margin']}   "
+        f"winner {display_winner(game['winner'])}   margin {game['margin']}   "
         f"Erin {game['erin']['recorded_total']} / Jordan {game['jordan']['recorded_total']}",
         fill="#A8B3C5",
         font=small_f,

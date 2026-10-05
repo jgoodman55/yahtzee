@@ -17,19 +17,25 @@ that is already running.
 Ubuntu 24.04 droplet, SSH user `ubuntu`. The app checkout is
 `/home/ubuntu/yahtzee`.
 
-**ufw** allows only 22, 80, and 443. `dac serve` listens on
-`127.0.0.1:8321`. Nothing listens on 8765. Neither port is open to the
-internet, and there is no `python -m http.server` sidecar.
+**ufw** allows only 22, 80, and 443. The new-tab proxy listens on
+`127.0.0.1:8321` and forwards to `dac serve` on `127.0.0.1:8322`. Nothing
+listens on 8765. Neither port is open to the internet, and there is no
+`python -m http.server` sidecar.
 
 **Caddy** (official apt repo) terminates HTTPS for `yahtzee.jginfo.xyz` and
 also answers plain HTTP on the droplet IP (`46.101.81.198`). It serves
 `/pub_map.html`, `/pub_map/*`, `/scorecards`, and `/scorecards/*` from
 `/home/ubuntu/yahtzee/dashboard` on disk. Every other path is reverse-proxied
-to DAC. `/yahtzee.yml`, `/.bruin.yml`, and `/data/*` are 404s.
+to `127.0.0.1:8321`. `/yahtzee.yml`, `/.bruin.yml`, and `/data/*` are 404s.
 
 **DAC 0.21.0** is a systemd **user** unit (`yahtzee-dac.service`) with linger,
-so it stays up after logout. It is bound to `--host 127.0.0.1 --port 8321`
-and `--config` points at the absolute `.bruin.yml`.
+so it stays up after logout. It is bound to `--host 127.0.0.1 --port 8322`
+and `--config` points at the absolute `.bruin.yml`. DAC 0.21 escapes HTML in
+text widgets, so the Top-tab pub map link cannot set `target=_blank` itself.
+`yahtzee-newtab-proxy.service` listens on `127.0.0.1:8321` (the address Caddy
+already proxies to), forwards to DAC, and injects `dashboard/pub_map/newtab.js`
+into HTML. That script sets `target=_blank` and `rel=noopener` only on the
+preview image.
 
 A **2 GB swapfile** is on so `bruin run` has headroom on a small droplet.
 
@@ -146,7 +152,7 @@ Environment=HOME=/home/ubuntu
 Environment=PATH=/home/ubuntu/.local/bin:/usr/bin
 # --config must point at .bruin.yml (Jordan's laptop lesson). Same file as bruin --config-file.
 # Bound to loopback. Caddy is the only public listener.
-ExecStart=/home/ubuntu/.local/bin/dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321 --config /home/ubuntu/yahtzee/.bruin.yml
+ExecStart=/home/ubuntu/.local/bin/dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8322 --config /home/ubuntu/yahtzee/.bruin.yml
 Restart=on-failure
 
 [Install]
@@ -158,9 +164,36 @@ systemctl --user daemon-reload
 systemctl --user enable --now yahtzee-dac.service
 ```
 
+`~/.config/systemd/user/yahtzee-newtab-proxy.service` (Caddy keeps using 8321):
+
+```ini
+[Unit]
+Description=Yahtzee pub-map new-tab proxy
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/yahtzee
+ExecStart=/home/ubuntu/.venvs/yahtzee/bin/python /home/ubuntu/yahtzee/dashboard/scripts/newtab_proxy.py --listen 127.0.0.1:8321 --upstream 127.0.0.1:8322
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+```
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now yahtzee-newtab-proxy.service
+```
+
+The next deploy rewrites that proxy unit and, if the DAC unit still says
+`--port 8321`, changes it to `8322`. Caddy's `reverse_proxy` line stays
+`127.0.0.1:8321`.
+
 Stop `dac serve` before a manual `bruin run` (DuckDB cannot mix a writer with
 open readers). The deploy workflow and `~/bin/yahtzee-rebuild` do this, and
-restart DAC on the way out even when `bruin run` or an export fails.
+restart DAC and the proxy on the way out even when `bruin run` or an export
+fails. If the proxy fails to bind, the trap puts DAC back on 8321.
 
 ## 5. Caddy
 
@@ -219,6 +252,7 @@ sudo chmod o+x /home/ubuntu
 	}
 
 	handle {
+		# The new-tab proxy. It forwards to DAC on 127.0.0.1:8322.
 		reverse_proxy 127.0.0.1:8321
 	}
 }
@@ -302,8 +336,9 @@ the secret is stored, or lock them down.
 4. [`.github/workflows/deploy-vps.yml`](../.github/workflows/deploy-vps.yml)
    SSHs in, `git fetch` + `reset --hard origin/main`, stops DAC, runs
    `bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"`, exports
-   scorecards + pub map with the venv Python, and starts DAC again from an
-   `EXIT` trap so a failed `bruin run` or export does not leave the site down.
+   scorecards + pub map with the venv Python, and starts DAC and the new-tab
+   proxy again from an `EXIT` trap so a failed `bruin run` or export does not
+   leave the site down.
 
 The workflow's `concurrency` group is `deploy-vps` (`cancel-in-progress: false`),
 so two Actions deploys never overlap. See also the lock in the next section.
@@ -328,7 +363,7 @@ ln -sfn "$HOME/yahtzee/scripts/yahtzee-rebuild.sh" "$HOME/bin/yahtzee-rebuild"
 
 The script `git fetch`es, `git reset --hard origin/main`, stops DAC, runs
 `bruin run --workers 1 --config-file`, runs both `dashboard/scripts/export_*.py`,
-and restarts DAC from `trap 'systemctl --user start yahtzee-dac.service || true' EXIT`.
+and restarts DAC and the new-tab proxy from an `EXIT` trap.
 
 Do not run `~/bin/yahtzee-rebuild` while the deploy workflow is in progress,
 and do not start a second manual rebuild over the first. Both take
@@ -343,7 +378,7 @@ On a laptop that failed when the working tree layout or cwd did not match
 
 ```bash
 dac check --dir dashboard --config /home/ubuntu/yahtzee/.bruin.yml
-dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321 --config /home/ubuntu/yahtzee/.bruin.yml
+dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8322 --config /home/ubuntu/yahtzee/.bruin.yml
 ```
 
 Bruin's equivalent flag is `--config-file` (or `BRUIN_CONFIG_FILE`). The
@@ -355,10 +390,13 @@ systemd unit and the deploy workflow both pass the absolute path.
 links in the dashboard only resolve when something in front of DAC serves
 those paths from `dashboard/`, the way Caddy does on the droplet.
 
-From the repo root, with DAC on loopback:
+From the repo root, with DAC on loopback. Point DAC at 8322 and put the
+new-tab proxy on 8321 so Caddy's upstream matches production. Without the
+proxy the preview still opens, in the same tab.
 
 ```bash
-dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8321
+dac serve --dir dashboard --template yahtzee-dark --host 127.0.0.1 --port 8322
+python3 dashboard/scripts/newtab_proxy.py --listen 127.0.0.1:8321 --upstream 127.0.0.1:8322
 caddy run --config scripts/Caddyfile.local
 # http://127.0.0.1:8080/
 # http://127.0.0.1:8080/scorecards/viewer.html?game=1

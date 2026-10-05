@@ -105,11 +105,49 @@ jobs:
 
             # DuckDB is single-writer: stop DAC before bruin run.
             # The host binary is pinned to DAC 0.21.0 (docs/hosting-vps.md). This job does not install it.
+            # Caddy stays on 127.0.0.1:8321. DAC moves to 8322 and the new-tab proxy
+            # listens on 8321. If the proxy cannot start, DAC goes back to 8321.
+            DAC_UNIT="${HOME}/.config/systemd/user/yahtzee-dac.service"
+            PROXY_UNIT="${HOME}/.config/systemd/user/yahtzee-newtab-proxy.service"
+
+            install_newtab_proxy() {
+              if [ ! -f "$DAC_UNIT" ]; then
+                return 0
+              fi
+              if grep -q -- '--port 8321' "$DAC_UNIT"; then
+                sed -i 's/--port 8321/--port 8322/' "$DAC_UNIT"
+              fi
+              PROXY_UNIT="$PROXY_UNIT" PYTHON="$PYTHON" DEPLOY_PATH="$DEPLOY_PATH" python3 -c 'from pathlib import Path; import os; Path(os.environ["PROXY_UNIT"]).write_text("[Unit]\nDescription=Yahtzee pub-map new-tab proxy\nAfter=network.target\n\n[Service]\nType=simple\nWorkingDirectory=%s\nExecStart=%s %s/dashboard/scripts/newtab_proxy.py --listen 127.0.0.1:8321 --upstream 127.0.0.1:8322\nRestart=on-failure\n\n[Install]\nWantedBy=default.target\n" % (os.environ["DEPLOY_PATH"], os.environ["PYTHON"], os.environ["DEPLOY_PATH"]))'
+              systemctl --user daemon-reload
+              systemctl --user enable yahtzee-newtab-proxy.service >/dev/null
+            }
+
+            start_site() {
+              systemctl --user start yahtzee-dac.service || true
+              if [ ! -f "$PROXY_UNIT" ]; then
+                return 0
+              fi
+              if systemctl --user start yahtzee-newtab-proxy.service; then
+                return 0
+              fi
+              echo "yahtzee-newtab-proxy failed to start; putting DAC back on 8321" >&2
+              if [ -f "$DAC_UNIT" ] && grep -q -- '--port 8322' "$DAC_UNIT"; then
+                systemctl --user stop yahtzee-dac.service || true
+                sed -i 's/--port 8322/--port 8321/' "$DAC_UNIT"
+                systemctl --user daemon-reload || true
+                systemctl --user start yahtzee-dac.service || true
+              fi
+            }
+
             if systemctl --user is-enabled yahtzee-dac.service >/dev/null 2>&1; then
               systemctl --user stop yahtzee-dac.service
             fi
+            if systemctl --user is-enabled yahtzee-newtab-proxy.service >/dev/null 2>&1; then
+              systemctl --user stop yahtzee-newtab-proxy.service
+            fi
+            install_newtab_proxy
             # A failed bruin run or export must still bring the site back.
-            trap 'systemctl --user start yahtzee-dac.service || true' EXIT
+            trap start_site EXIT
 
             # --config-file: path to .bruin.yml (DuckDB connections). --workers 1 avoids file locks.
             bruin run --workers 1 --config-file "$BRUIN_CONFIG_FILE"

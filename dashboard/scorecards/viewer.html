@@ -195,7 +195,12 @@
 
       document.title = `Game ${game.game_seq} · ${game.sheet}`;
       document.getElementById("title").textContent = `Game ${game.game_seq}`;
-      const w = game.winner === "tie" ? "tie" : game.winner;
+      function displayName(key) {
+        if (key === "erin") return "Erin";
+        if (key === "jordan") return "Jordan";
+        return key;
+      }
+      const w = displayName(game.winner);
       document.getElementById("subtitle").textContent =
         `${game.sheet} · game ${game.game_on_sheet} of ${sheetGames.length} on this sheet · winner ${w} · margin ${game.margin} · Erin ${game.erin.recorded_total} / Jordan ${game.jordan.recorded_total}`;
 

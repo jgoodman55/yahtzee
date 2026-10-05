@@ -44,6 +44,12 @@
     const body = document.getElementById("rows");
     const games = (window.SCORECARD_DATA && window.SCORECARD_DATA.games) || [];
 
+    function displayName(key) {
+      if (key === "erin") return "Erin";
+      if (key === "jordan") return "Jordan";
+      return key;
+    }
+
     function render(filter) {
       const q = (filter || "").trim().toLowerCase();
       body.innerHTML = "";
@@ -55,7 +61,7 @@
           <td><a class="game" href="viewer.html?game=${g.game_seq}">Game ${g.game_seq}</a></td>
           <td>${g.sheet}</td>
           <td>${g.game_on_sheet}</td>
-          <td>${g.winner}</td>
+          <td>${displayName(g.winner)}</td>
           <td>${g.margin}</td>
           <td>${g.erin.recorded_total}</td>
           <td>${g.jordan.recorded_total}</td>

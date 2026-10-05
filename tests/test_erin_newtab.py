@@ -30,6 +30,32 @@ def _load_export():
     return module
 
 
+def test_number_cards_title_player_fields():
+    """Vega uses the field name as the accessible name on the big numbers.
+
+    A missing title is what the live Top tab announced as erin_wins.
+    Game-number tooltips stay titled Game. Scorecard links stay Scorecard.
+    """
+    import re
+
+    dashboard = (REPO / "dashboard" / "yahtzee.yml").read_text()
+    pattern = re.compile(r"\{[^{}\n]*field:\s*((?:erin|jordan)_[A-Za-z0-9_]+)[^{}\n]*\}")
+    found = list(pattern.finditer(dashboard))
+    assert found, "expected player field encodings"
+    for match in found:
+        field = match.group(1)
+        blob = match.group(0)
+        if field.endswith("_game_seq"):
+            assert "title: Game" in blob, blob
+            continue
+        if field.endswith("_url"):
+            assert "title: Scorecard" in blob, blob
+            assert "title: Erin" not in blob and "title: Jordan" not in blob
+            continue
+        who = "Erin" if field.startswith("erin_") else "Jordan"
+        assert f"title: {who}" in blob, blob
+
+
 def test_scorecard_pages_capitalize_winner_names():
     index = (REPO / "dashboard" / "scorecards" / "index.html").read_text()
     viewer = (REPO / "dashboard" / "scorecards" / "viewer.html").read_text()

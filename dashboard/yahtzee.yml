@@ -39,8 +39,8 @@ x-bar-label: &bar_label
   fontWeight: 600
   color: "#F3F6FA"
 
-# Vega speaks a text field's name. Title player fields Erin or Jordan so the
-# big numbers are not announced as erin_wins or erin_current_streak.
+# Vega speaks a text field's name, and uses it as the hover tooltip key.
+# Title player fields Erin or Jordan, and repeat that title on the tooltip.
 x-name-erin: &name_erin
   type: text
   fontSize: 12
@@ -468,22 +468,29 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_current_streak, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_current_streak, type: quantitative, format: ",.0f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_current_streak, type: quantitative, format: ",.0f", title: Jordan }
+                tooltip:
+                  - { field: jordan_current_streak, type: quantitative, format: ",.0f", title: Jordan }
             - mark: *sub_erin
               transform:
                 - calculate: "'best ' + format(datum.erin_longest_streak, '.0f')"
                   as: erin_best
               encoding:
                 text: { field: erin_best, type: nominal, title: Erin }
+                tooltip:
+                  - { field: erin_best, type: nominal, title: Erin }
             - mark: *sub_jordan
               transform:
                 - calculate: "'best ' + format(datum.jordan_longest_streak, '.0f')"
                   as: jordan_best
               encoding:
                 text: { field: jordan_best, type: nominal, title: Jordan }
-
+                tooltip:
+                  - { field: jordan_best, type: nominal, title: Jordan }
       - name: Wins
         type: chart
         chart: vega-lite
@@ -504,9 +511,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_wins, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_wins, type: quantitative, format: ",.0f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_wins, type: quantitative, format: ",.0f", title: Jordan }
+                tooltip:
+                  - { field: jordan_wins, type: quantitative, format: ",.0f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "datum.erin_wins === datum.jordan_wins ? 'Level' : datum.jordan_wins > datum.erin_wins ? 'Jordan +' + format(datum.jordan_wins - datum.erin_wins, '.0f') : 'Erin +' + format(datum.erin_wins - datum.jordan_wins, '.0f')"
@@ -534,9 +545,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_avg_score, type: quantitative, format: ",.1f", title: Erin }
+                tooltip:
+                  - { field: erin_avg_score, type: quantitative, format: ",.1f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_avg_score, type: quantitative, format: ",.1f", title: Jordan }
+                tooltip:
+                  - { field: jordan_avg_score, type: quantitative, format: ",.1f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "abs(datum.erin_avg_score - datum.jordan_avg_score) < 0.05 ? 'Level' : datum.jordan_avg_score > datum.erin_avg_score ? 'Jordan +' + format(datum.jordan_avg_score - datum.erin_avg_score, '.1f') : 'Erin +' + format(datum.erin_avg_score - datum.jordan_avg_score, '.1f')"
@@ -564,9 +579,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_median_score, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_median_score, type: quantitative, format: ",.0f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_median_score, type: quantitative, format: ",.0f", title: Jordan }
+                tooltip:
+                  - { field: jordan_median_score, type: quantitative, format: ",.0f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "datum.erin_median_score === datum.jordan_median_score ? 'Level' : datum.jordan_median_score > datum.erin_median_score ? 'Jordan +' + format(datum.jordan_median_score - datum.erin_median_score, '.0f') : 'Erin +' + format(datum.erin_median_score - datum.jordan_median_score, '.0f')"
@@ -603,12 +622,14 @@ rows:
                 text: { field: erin_high_score, type: quantitative, format: ",.0f", title: Erin }
                 href: { field: erin_high_score_url, type: nominal, title: Scorecard }
                 tooltip:
+                  - { field: erin_high_score, type: quantitative, format: ",.0f", title: Erin }
                   - { field: erin_high_score_game_seq, type: quantitative, title: Game, format: d }
             - mark: *link_jordan
               encoding:
                 text: { field: jordan_high_score, type: quantitative, format: ",.0f", title: Jordan }
                 href: { field: jordan_high_score_url, type: nominal, title: Scorecard }
                 tooltip:
+                  - { field: jordan_high_score, type: quantitative, format: ",.0f", title: Jordan }
                   - { field: jordan_high_score_game_seq, type: quantitative, title: Game, format: d }
             - mark: *gap_mark
               transform:
@@ -643,12 +664,14 @@ rows:
                 text: { field: erin_low_score, type: quantitative, format: ",.0f", title: Erin }
                 href: { field: erin_low_score_url, type: nominal, title: Scorecard }
                 tooltip:
+                  - { field: erin_low_score, type: quantitative, format: ",.0f", title: Erin }
                   - { field: erin_low_score_game_seq, type: quantitative, title: Game, format: d }
             - mark: *link_jordan
               encoding:
                 text: { field: jordan_low_score, type: quantitative, format: ",.0f", title: Jordan }
                 href: { field: jordan_low_score_url, type: nominal, title: Scorecard }
                 tooltip:
+                  - { field: jordan_low_score, type: quantitative, format: ",.0f", title: Jordan }
                   - { field: jordan_low_score_game_seq, type: quantitative, title: Game, format: d }
             - mark: *gap_mark
               transform:
@@ -680,9 +703,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_total_yahtzees, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_total_yahtzees, type: quantitative, format: ",.0f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_total_yahtzees, type: quantitative, format: ",.0f", title: Jordan }
+                tooltip:
+                  - { field: jordan_total_yahtzees, type: quantitative, format: ",.0f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "datum.erin_total_yahtzees === datum.jordan_total_yahtzees ? 'Level' : datum.erin_total_yahtzees > datum.jordan_total_yahtzees ? 'Erin +' + format(datum.erin_total_yahtzees - datum.jordan_total_yahtzees, '.0f') : 'Jordan +' + format(datum.jordan_total_yahtzees - datum.erin_total_yahtzees, '.0f')"
@@ -710,16 +737,23 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_rate, type: quantitative, format: ".0%", title: Erin }
+                tooltip:
+                  - { field: erin_rate, type: quantitative, format: ".0%", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_rate, type: quantitative, format: ".0%", title: Jordan }
+                tooltip:
+                  - { field: jordan_rate, type: quantitative, format: ".0%", title: Jordan }
             - mark: *sub_erin
               encoding:
                 text: { field: erin_record, type: nominal, title: Erin }
+                tooltip:
+                  - { field: erin_record, type: nominal, title: Erin }
             - mark: *sub_jordan
               encoding:
                 text: { field: jordan_record, type: nominal, title: Jordan }
-
+                tooltip:
+                  - { field: jordan_record, type: nominal, title: Jordan }
   - tab: Top
     widgets:
       - name: How scores work
@@ -799,6 +833,8 @@ rows:
                 color: "#FF2D92"
               encoding:
                 text: { field: erin_current_streak, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_current_streak, type: quantitative, format: ",.0f", title: Erin }
             - mark:
                 type: text
                 align: center
@@ -810,6 +846,8 @@ rows:
                 color: "#2D9CFF"
               encoding:
                 text: { field: jordan_current_streak, type: quantitative, format: ",.0f", title: Jordan }
+                tooltip:
+                  - { field: jordan_current_streak, type: quantitative, format: ",.0f", title: Jordan }
             - mark:
                 type: text
                 align: center
@@ -821,6 +859,8 @@ rows:
                 color: "#FF2D92"
               encoding:
                 text: { field: erin_longest_streak, type: quantitative, format: ",.0f", title: Erin }
+                tooltip:
+                  - { field: erin_longest_streak, type: quantitative, format: ",.0f", title: Erin }
             - mark:
                 type: text
                 align: center
@@ -832,7 +872,8 @@ rows:
                 color: "#2D9CFF"
               encoding:
                 text: { field: jordan_longest_streak, type: quantitative, format: ",.0f", title: Jordan }
-
+                tooltip:
+                  - { field: jordan_longest_streak, type: quantitative, format: ",.0f", title: Jordan }
   - tab: Score
     height: "340"
     widgets:
@@ -1027,9 +1068,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_yahtzees_per_game, type: quantitative, format: ".2f", title: Erin }
+                tooltip:
+                  - { field: erin_yahtzees_per_game, type: quantitative, format: ".2f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f", title: Jordan }
+                tooltip:
+                  - { field: jordan_yahtzees_per_game, type: quantitative, format: ".2f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "abs(datum.erin_yahtzees_per_game - datum.jordan_yahtzees_per_game) < 0.005 ? 'Level' : datum.erin_yahtzees_per_game > datum.jordan_yahtzees_per_game ? 'Erin +' + format(datum.erin_yahtzees_per_game - datum.jordan_yahtzees_per_game, '.2f') : 'Jordan +' + format(datum.jordan_yahtzees_per_game - datum.erin_yahtzees_per_game, '.2f')"
@@ -1459,6 +1504,8 @@ rows:
                   as: erin_bonus_label
               encoding:
                 text: { field: erin_bonus_label, type: nominal, title: Erin }
+                tooltip:
+                  - { field: erin_bonus_label, type: nominal, title: Erin }
             - mark:
                 type: text
                 fontSize: 16
@@ -1474,7 +1521,8 @@ rows:
                   as: jordan_bonus_label
               encoding:
                 text: { field: jordan_bonus_label, type: nominal, title: Jordan }
-
+                tooltip:
+                  - { field: jordan_bonus_label, type: nominal, title: Jordan }
       - name: Upper average
         type: chart
         chart: vega-lite
@@ -1495,9 +1543,13 @@ rows:
             - mark: *num_erin
               encoding:
                 text: { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f", title: Erin }
+                tooltip:
+                  - { field: erin_avg_upper_pre_bonus, type: quantitative, format: ",.1f", title: Erin }
             - mark: *num_jordan
               encoding:
                 text: { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f", title: Jordan }
+                tooltip:
+                  - { field: jordan_avg_upper_pre_bonus, type: quantitative, format: ",.1f", title: Jordan }
             - mark: *gap_mark
               transform:
                 - calculate: "abs(datum.erin_avg_upper_pre_bonus - datum.jordan_avg_upper_pre_bonus) < 0.05 ? 'Level' : datum.jordan_avg_upper_pre_bonus > datum.erin_avg_upper_pre_bonus ? 'Jordan +' + format(datum.jordan_avg_upper_pre_bonus - datum.erin_avg_upper_pre_bonus, '.1f') : 'Erin +' + format(datum.erin_avg_upper_pre_bonus - datum.jordan_avg_upper_pre_bonus, '.1f')"

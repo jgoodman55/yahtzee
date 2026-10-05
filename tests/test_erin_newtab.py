@@ -54,6 +54,7 @@ def test_number_cards_title_player_fields():
             continue
         who = "Erin" if field.startswith("erin_") else "Jordan"
         assert f"title: {who}" in blob, blob
+    assert '- { field: erin_wins, type: quantitative, format: ",.0f", title: Erin }' in dashboard
 
 
 def test_scorecard_pages_capitalize_winner_names():

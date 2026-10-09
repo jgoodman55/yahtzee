@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2924 (120 games from 40 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2925 (123 games from 41 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -377,4 +377,31 @@ Header, in column order: **Munkbron - 2** then **Atlas - 1**.
 - game 1 (`118`), jordan, yahtzee_bonus: one coloured box → **100**. Yahtzee box is **50**.
 - game 2 (`119`), jordan, yahtzee: a stray mark in the box. Jordan and Erin read it as **0**.
 - Locations: games 118–119 reuse **Munkbron**. Game 120 is stored as **The Atlas** (`THE ATLAS FULHAM` in `seed_pubs`). The sheet writes **Atlas - 1**. Games 1–111 still have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part10_flags.md
+
+# part10 extraction flags — IMG_2925 (games 121–123)
+
+One sheet after IMG_2924. Conceptual name `IMG_2925`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **121, 122, 123**.
+Jordan reviewed these readings and corrected one total. `recorded_total`
+equals `sum(score)` on every player-game.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2925.jpg`.
+
+Header: **Atlas - 3** across all three games. All three are **The Atlas**,
+16 Seagrave Road, Fulham. The pin already exists (`THE ATLAS FULHAM`); this
+sheet does not add another.
+
+- game 1 (`121`): grands **E 266 / J 243**. Erin wins.
+- game 2 (`122`): grands **E 248 / J 252**. Jordan wins.
+- game 3 (`123`): grands **E 246 / J 259**. Jordan wins.
+- game 3 (`123`), jordan, lower section: the sheet writes **153** and a grand of **261**. The boxes sum to **151** (3K **7**, 4K **28**, FH 25, SS 30, LS 40, chance 21, Yahtzee 0, bonus 0). Jordan confirmed the addition error. Stored lower **151** and `recorded_total` **259** (upper faces 73 + bonus 35 = 108; 108+151 = 259).
+- game 3 (`123`), jordan, four_of_a_kind: **28** next to a three_of_a_kind of **7**. Unusual, kept as written.
+- Yahtzee bonus is **0** in all six columns.
+- Locations: games 121–123 reuse **The Atlas**. The sheet writes **Atlas - 3**. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

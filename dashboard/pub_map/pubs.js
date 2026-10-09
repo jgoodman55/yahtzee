@@ -985,9 +985,9 @@ window.PUB_MAP_DATA = {
         "source": "game_location",
         "visit_count": 0,
         "note": "16 Seagrave Road, Fulham, London SW6 1RX. Logged from a scorecard header, not a Chase visit.",
-        "games_played": 1,
-        "erin_wins": 1,
-        "jordan_wins": 0,
+        "games_played": 4,
+        "erin_wins": 2,
+        "jordan_wins": 2,
         "ties": 0,
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Atlas+51.4862159%2C-0.196156"
       }

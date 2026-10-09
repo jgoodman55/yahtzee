@@ -214,7 +214,7 @@ def test_every_game_has_one_deterministic_comment():
     mod = _load_build_commentary()
     phrases = load_phrases()
     situations = _seed_games()
-    assert len(situations) == 120
+    assert len(situations) == 123
     for seq, win_loss, jordan, erin in situations:
         facts = _facts(seq, jordan, erin)
         first = mod.build_row(seq, win_loss, facts, phrases)

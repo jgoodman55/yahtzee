@@ -36,7 +36,7 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 120
+    assert max(game_seqs) == 123
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
 
@@ -77,3 +77,13 @@ def test_img_2924_munkbron_and_atlas():
     assert "SW6 1RX" in atlas["note"]
     assert "Logged from a scorecard header, not a Chase visit" in atlas["note"]
     assert not (atlas.get("photo_url") or "").strip()
+
+
+def test_img_2925_atlas_three_games():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    for seq in (121, 122, 123):
+        assert by_seq[seq]["pub_name"] == "The Atlas"
+        assert by_seq[seq]["sheet_label"] == "Atlas - 3"
+    pubs = {row["pub_name"] for row in _rows(PUBS)}
+    assert sum(1 for row in _rows(PUBS) if row["pub_name"] == "The Atlas") == 1
+    assert "The Atlas" in pubs

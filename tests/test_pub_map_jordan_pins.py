@@ -231,9 +231,9 @@ def test_confirmed_pin_count():
     assert munkbron["geometry"]["coordinates"] == [18.0674809, 59.3244808]
     atlas = next(f for f in features if f["properties"]["name"] == "The Atlas")
     assert atlas["properties"]["visit_count"] == 0
-    assert atlas["properties"]["games_played"] == 1
-    assert atlas["properties"]["erin_wins"] == 1
-    assert atlas["properties"]["jordan_wins"] == 0
+    assert atlas["properties"]["games_played"] == 4
+    assert atlas["properties"]["erin_wins"] == 2
+    assert atlas["properties"]["jordan_wins"] == 2
     assert "photo_url" not in atlas["properties"]
     assert "16 Seagrave Road" in atlas["properties"]["note"]
     assert "Fulham" in atlas["properties"]["note"]

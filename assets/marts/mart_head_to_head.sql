@@ -16,10 +16,7 @@ select
     w.margin,
     w.jordan_cum_wins,
     w.erin_cum_wins,
-    c.margin_comment,
-    c.yahtzee_comment,
-    c.bonus_comment,
-    c.streak_comment
+    c.comment
 from int_win_loss w
 left join int_commentary c using (game_seq)
 order by w.game_seq

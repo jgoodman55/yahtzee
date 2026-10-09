@@ -30,8 +30,8 @@ def load_data():
 
 
 def build_caption(row) -> str:
-    parts = [c for c in (row.get("streak_comment"), row.get("margin_comment")) if c]
-    return "  •  ".join(parts) if parts else f"Game {int(row['game_seq'])}"
+    comment = row.get("comment")
+    return comment if comment else f"Game {int(row['game_seq'])}"
 
 
 def animate(df):

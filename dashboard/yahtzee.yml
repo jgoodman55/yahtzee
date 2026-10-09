@@ -1782,13 +1782,7 @@ rows:
         sql: |
           select
             h.game_seq,
-            concat_ws(
-              ' · ',
-              replace(replace(h.margin_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
-              replace(replace(h.yahtzee_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
-              replace(replace(h.bonus_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:'),
-              replace(replace(h.streak_comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:')
-            ) as comment,
+            replace(replace(h.comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as comment,
             upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
             t.erin_recorded_total as erin_score,
             t.jordan_recorded_total as jordan_score

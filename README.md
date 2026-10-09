@@ -19,7 +19,8 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 - `raw_players.csv` — player dimension source (`player_key`, `display_name`).
 - `seed_commentary.csv` — catchphrase bank, categorized (`big_margin`,
   `narrow_margin`, `tie`, `streak`, `no_bonus_either`, `bonus_split`,
-  `multi_yahtzee`, `zero_yahtzee`, `totals_mismatch`).
+  `multi_yahtzee`, `zero_yahtzee`, `ordinary`, `totals_mismatch`). The Game
+  tab keeps one line per game: the sharpest type that fits.
 - `raw_pub_visits.csv` / `seed_pubs.csv` — pub geocoding inputs. One visit-log
   row per unique calendar day at a venue (`visit_count` on `mart_pub_locations`
   is that unique-day count per merchant, summed on proximity-dedup). Chase
@@ -46,9 +47,9 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
 - `int_win_loss` — pivots `fact_games` to game grain: winner, margin,
   cumulative wins, streaks.
 - `int_commentary` — **Python** asset: deterministically (seeded by
-  `game_seq`) samples from `seed_commentary` based on the game's situation.
-  Seeded, not truly random, so re-running the pipeline doesn't change the
-  jokes each time.
+  `game_seq`) samples from `seed_commentary` based on the game's situation,
+  then keeps the single sharpest line. Seeded, not truly random, so
+  re-running the pipeline doesn't change the joke.
 - `mart_head_to_head` — `int_win_loss` joined with `int_commentary` — feeds
   the dashboard commentary table and the animation.
 - `mart_player_kpis` / `mart_headline_kpis` / `mart_game_trends` /

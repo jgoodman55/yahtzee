@@ -963,11 +963,33 @@ window.PUB_MAP_DATA = {
         "source": "game_location",
         "visit_count": 0,
         "note": "Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
+        "games_played": 3,
+        "erin_wins": 2,
+        "jordan_wins": 1,
+        "ties": 0,
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.196156,
+          51.4862159
+        ]
+      },
+      "properties": {
+        "name": "The Atlas",
+        "merchant_name_raw": "THE ATLAS FULHAM",
+        "source": "game_location",
+        "visit_count": 0,
+        "note": "16 Seagrave Road, Fulham, London SW6 1RX. Logged from a scorecard header, not a Chase visit.",
         "games_played": 1,
         "erin_wins": 1,
         "jordan_wins": 0,
         "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Atlas+51.4862159%2C-0.196156"
       }
     },
     {
@@ -1021,7 +1043,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 46,
+    "confirmed_pub_count": 47,
     "photo_count": 43
   }
 };

@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2923 (117 games from 39 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2924 (120 games from 40 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -354,4 +354,27 @@ Header, in column order: **Queen's Arms - 2** then **Sweden - Munkbron - 1**.
 - game 3 (`117`), jordan, three_of_a_kind: **16**. chance: **29**. Those reads match the written lower **162** and grand **264** (upper faces 67 + bonus 35 = 102; 102+162 = 264).
 - game 3 (`117`), erin, yahtzee_bonus: one coloured box → **100**.
 - Locations: games 115–116 reuse **The Queen's Arms**. Game 117 is stored as **Munkbron** (`MUNKBRON STOCKHOLM` in `seed_pubs`). The full name stays in the address note: Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, Stockholm. The map, popup, and location charts render **Munkbron**. Games 1–111 still have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part9_flags.md
+
+# part9 extraction flags — IMG_2924 (games 118–120)
+
+One sheet after IMG_2923. Conceptual name `IMG_2924`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **118, 119, 120**.
+`recorded_total` equals `sum(score)` on every player-game. Jordan confirmed
+these readings.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2924.jpg`.
+
+Header, in column order: **Munkbron - 2** then **Atlas - 1**.
+
+- game 1 (`118`) and game 2 (`119`): Munkbron. Grands **E 205 / J 403** and **E 312 / J 248**.
+- game 3 (`120`): The Atlas, 16 Seagrave Road, Fulham. Grands **E 192 / J 181**.
+- game 1 (`118`), jordan, yahtzee_bonus: one coloured box → **100**. Yahtzee box is **50**.
+- game 2 (`119`), jordan, yahtzee: a stray mark in the box. Jordan and Erin read it as **0**.
+- Locations: games 118–119 reuse **Munkbron**. Game 120 is stored as **The Atlas** (`THE ATLAS FULHAM` in `seed_pubs`). The sheet writes **Atlas - 1**. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

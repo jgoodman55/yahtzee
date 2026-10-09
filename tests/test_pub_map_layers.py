@@ -227,6 +227,7 @@ def test_point_in_polygon_assignments():
         "The Bear Inn": OUTSIDE,
         "The Crown": OUTSIDE,
         "Munkbron": OUTSIDE,
+        "The Atlas": "Hammersmith and Fulham",
         "Tamesis Dock": "Lambeth",
     }
     got = {}

@@ -6,7 +6,7 @@ conversion-box flags + `int_win_loss.winner`).
 
 That intermediate is the layer: swing, rescue, and Yahtzee matchup share
 the same exclusive-feature logic. Putting the pivot only in DAC YAML would
-duplicate cohort definitions and make the 13/23-style checks harder to
+duplicate cohort definitions and make the 13/24-style checks harder to
 re-run. The dashboard queries are thin `select`s from these marts.
 
 Oak / chance are intentionally absent — weak signals, not strategy.
@@ -16,14 +16,14 @@ Oak / chance are intentionally absent — weak signals, not strategy.
 Games where **exactly one** player has the binary feature. Rate = that
 holder's win rate.
 
-| Feature | Seed (n=117, 0 ties) |
+| Feature | Seed (n=120, 0 ties) |
 |---|---|
-| Yahtzee bonus > 0 | 14/14 = 100% (small n) |
-| Upper bonus (35) | 48/57 ≈ 84% |
-| Yahtzee = 50 | 52/61 ≈ 85% |
-| Large straight = 40 | 28/38 ≈ 74% |
-| Large straight = 0 | 10/38 ≈ 26% |
-| Full house = 0 | 9/23 ≈ 39% |
+| Yahtzee bonus > 0 | 15/15 = 100% |
+| Upper bonus (35) | 49/58 ≈ 84% |
+| Yahtzee = 50 | 54/64 ≈ 84% |
+| Large straight = 40 | 29/39 ≈ 74% |
+| Large straight = 0 | 10/39 ≈ 26% |
+| Full house = 0 | 9/24 ≈ 38% |
 | Small straight = 0 | 1/4 = 25% — **n < 10, grey on the chart** |
 
 ## `mart_strategy_rescue`
@@ -39,8 +39,8 @@ bonus (35, no YZ) / Has both / Has neither.
 Rows: LS=0, SS=0, FH=0, No Yahtzee.
 
 Grounding: exclusive **LS=0 + any Yahtzee** (Has Yahtzee + Has both) =
-**13/23 ≈ 57%**. That includes games where both missed LS but only one
-also had Yahtzee. The exclusive-miss cut of the same question is 9/19 —
+**13/24 ≈ 54%**. That includes games where both missed LS but only one
+also had Yahtzee. The exclusive-miss cut of the same question is 9/20 —
 do not quote that as the rescue rate.
 
 ## `mart_yz_matchup`
@@ -52,10 +52,10 @@ Grain: holder × outcome. Two bars (Erin alone / Jordan alone), each
 stacked **Holder won** vs **Upset** (holder lost). The Strategy chart
 Y-axis is that holder's outcome **share (0–100%)**; labels keep raw W/L.
 Combined exclusive holder rate is the swing-factor Yahtzee = 50 row
-(52/61 ≈ 85%) — not a separate dashboard visual.
+(54/64 ≈ 84%) — not a separate dashboard visual.
 
-| Holder | Seed (n=117, 0 ties) |
+| Holder | Seed (n=120, 0 ties) |
 |---|---|
-| Erin alone | 28W / 8L of 36 ≈ 78% |
-| Jordan alone | 24W / 1L of 25 ≈ 96% |
-| Combined | 52 / 61 ≈ 85% |
+| Erin alone | 29W / 8L of 37 ≈ 78% |
+| Jordan alone | 25W / 2L of 27 ≈ 93% |
+| Combined | 54 / 64 ≈ 84% |

@@ -36,7 +36,7 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 117
+    assert max(game_seqs) == 120
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
 
@@ -58,3 +58,22 @@ def test_img_2923_queens_arms_and_munkbron():
     assert "Lilla Nygatan" in munkbron["note"]
     assert "Stockholm" in munkbron["note"]
     assert not (munkbron.get("photo_url") or "").strip()
+
+
+def test_img_2924_munkbron_and_atlas():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    assert by_seq[118]["pub_name"] == "Munkbron"
+    assert by_seq[118]["sheet_label"] == "Munkbron - 2"
+    assert by_seq[119]["pub_name"] == "Munkbron"
+    assert by_seq[119]["sheet_label"] == "Munkbron - 2"
+    assert by_seq[120]["pub_name"] == "The Atlas"
+    assert by_seq[120]["sheet_label"] == "Atlas - 1"
+    atlas = {row["pub_name"]: row for row in _rows(PUBS)}["The Atlas"]
+    assert atlas["merchant_name_raw"] == "THE ATLAS FULHAM"
+    assert atlas["lat"] == "51.4862159"
+    assert atlas["lng"] == "-0.1961560"
+    assert "16 Seagrave Road" in atlas["note"]
+    assert "Fulham" in atlas["note"]
+    assert "SW6 1RX" in atlas["note"]
+    assert "Logged from a scorecard header, not a Chase visit" in atlas["note"]
+    assert not (atlas.get("photo_url") or "").strip()

@@ -190,6 +190,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
         "The Butcher's Hook",
         "The Queen's Arms",
         "Munkbron",
+        "The Atlas",
     }
     gone = {
         "Diogenes the Dog",

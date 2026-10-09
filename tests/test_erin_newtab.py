@@ -84,6 +84,10 @@ def test_newtab_script_targets_only_the_preview():
     assert '!== "/pub_map.html"' in script
     assert '"/pub_map/preview."' in script
     assert "querySelector(\"img\")" in script
+    assert "fitPhoneTables" in script
+    assert "@media (max-width: 640px)" in script
+    assert "white-space: normal" in script
+    assert "min-width: 0" in script
     proxy = _load_proxy()
     html = b"<html><body><p>hi</p></body></html>"
     injected = proxy.inject_newtab(html, b"console.log(1)")

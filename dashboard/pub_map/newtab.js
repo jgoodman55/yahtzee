@@ -1,5 +1,29 @@
-/* Retarget only the Top-tab pub map preview. Other /pub_map.html links stay. */
+/* Retarget only the Top-tab pub map preview. Other /pub_map.html links stay.
+   On a phone, let dashboard tables wrap so the scores stay on screen. */
 (function () {
+  function fitPhoneTables() {
+    if (document.getElementById("phone-tables")) return;
+    var style = document.createElement("style");
+    style.id = "phone-tables";
+    style.textContent = [
+      "@media (max-width: 640px) {",
+      "  table.w-full { min-width: 0 !important; width: 100% !important; }",
+      "  table.w-full th, table.w-full td {",
+      "    white-space: normal !important;",
+      "    padding-left: 4px !important;",
+      "    padding-right: 4px !important;",
+      "    overflow-wrap: anywhere;",
+      "    max-width: 11rem;",
+      "  }",
+      "  table.w-full th:first-child, table.w-full td:first-child {",
+      "    white-space: nowrap !important;",
+      "    max-width: 3.2rem;",
+      "  }",
+      "}"
+    ].join("\n");
+    (document.head || document.documentElement).appendChild(style);
+  }
+
   function pathOf(value) {
     try {
       return new URL(value, location.origin).pathname;
@@ -34,6 +58,7 @@
   }
 
   function start() {
+    fitPhoneTables();
     patch(document.body || document.documentElement);
     var observer = new MutationObserver(function (records) {
       records.forEach(function (record) {

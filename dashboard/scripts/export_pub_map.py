@@ -118,10 +118,11 @@ def attach_game_stats(pubs: list[dict], stats: dict[str, dict]) -> None:
 
 
 def append_game_location_pubs(pubs: list[dict], stats: dict[str, dict]) -> None:
-    """Pins for pubs that have logged games but no Chase visit row.
+    """Pins for pubs that have logged games but no visit-log row.
 
-    visit_count stays 0 so a scorecard pub is not given a fake card day.
-    The map colours that borough from games_played instead.
+    visit_count stays 0. Borough colour follows visits, so a pin with no
+    visit row stays off the choropleth. A scoresheet venue that counts as
+    one unique visit is one row in raw_pub_visits, not one row per game.
     """
     have = {pub.get("name") for pub in pubs}
     seeds = seed_pubs_by_name()

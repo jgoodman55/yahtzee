@@ -34,7 +34,7 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 
 | Layer | Default | What you see |
 |---|---|---|
-| **Boroughs** (Layer A) | Yes (no hash, or `#boroughs`) | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+| **Boroughs** (Layer A) | Yes (no hash, or `#boroughs`) | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Colour follows unique-day statement visits. A borough with logged games and no statement days is still filled, using the game count (the label says `5 games`, not a made-up visit). Dynamic labels show **name + that count**, scale with zoom, and **hide on collision** (higher totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
 | **Pubs** (Layer B) | `#pubs` | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
 
 Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Click or hover a pint pin for a Google-Maps-ish card: photo (when we have one), name, unique-day visits, and the seed address/note. Pins without a photo still open the card with a **No photo yet** strip and a Google Maps search link — the map never depends on photos loading.
@@ -129,6 +129,8 @@ lat/lng only; `bruin run` does not geocode.
 
 The map itself still loads Esri (or OSM) tiles in the **browser**. That is
 client-side Leaflet, not Bruin, and needs no `OFFLINE_TEST` flag.
+
+A **statement visit** is one unique calendar day the Chase card was used at that pub. It is not a Yahtzee game. `visit_count` 0 means the pin came from a scorecard header and the card was never charged there (The Atlas, The Butcher's Hook, The Queen's Arms, Munkbron). Borough colour still follows those days where they exist, because most games have no pub written on the sheet and a games-only scale would empty out boroughs we actually drink in. Where a borough's pins are all `visit_count` 0 but `games_played` is set, the borough is coloured by the sum of those games so it shows up on the default view.
 
 `visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
 row per merchant × Transaction Date (summed when proximity-dedup collapses

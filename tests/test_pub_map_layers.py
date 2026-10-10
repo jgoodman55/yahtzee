@@ -153,8 +153,12 @@ def test_boroughs_open_by_default_and_hashes_still_work():
     assert 'if (match) return { mode: "pubs", filter: decodeURIComponent(match[1]) };' in html
     assert 'setView("pubs", null)' in html
     assert "fitBounds(londonBounds" in html
-    assert "Darker = more visits. Tap a borough to see its pubs." in html
+    assert "Boroughs we only know from the games are coloured by those games." in html
     assert "Darker = more visits. Tap a pub to see it." in html
+    assert "function gamesOf" in html
+    assert "function boroughPlayed" in html
+    assert "boroughStats[name].games += gamesOf(feature)" in html
+    assert 'return games + " games"' in html
     assert "pale-lager" not in html
     assert "playedBoroughBounds" in html
     assert "calc(100vw - 64px)" in html

@@ -344,7 +344,7 @@
   <div class="chrome">
     <header class="card">
       <h1>Yahtzee pub map</h1>
-      <p id="tagline">Darker = more visits. Tap a borough to see its pubs.</p>
+      <p id="tagline">Darker = more visits. Boroughs we only know from the games are coloured by those games. Tap a borough to see its pubs.</p>
       <div class="seg" role="group" aria-label="Map layer">
         <button type="button" id="btn-boroughs" aria-pressed="true">Boroughs</button>
         <button type="button" id="btn-pubs" aria-pressed="false">Pubs</button>
@@ -419,6 +419,39 @@
       function visitLabel(n) {
         if (!n) return "";
         return n === 1 ? "1 visit" : n + " visits";
+      }
+
+      function gamesOf(feature) {
+        var n = Number(feature.properties && feature.properties.games_played);
+        return n > 0 ? n : 0;
+      }
+
+      // visits are unique days the card was used. games are Yahtzee games
+      // written on a scorecard. A borough with games and no card days still
+      // counts as played, and its colour follows the games.
+      function boroughPlayed(stats) {
+        return !!stats && (stats.visits > 0 || stats.games > 0);
+      }
+
+      function boroughMeasure(stats) {
+        if (!stats) return 0;
+        if (stats.visits > 0) return stats.visits;
+        return stats.games || 0;
+      }
+
+      function boroughCountPhrase(stats) {
+        if (stats && stats.visits > 0) {
+          return stats.visits === 1 ? "1 visit" : stats.visits + " visits";
+        }
+        var games = stats && stats.games ? stats.games : 0;
+        if (games === 1) return "1 game";
+        if (games > 1) return games + " games";
+        return "0 visits";
+      }
+
+      function boroughBadge(stats) {
+        if (stats && stats.visits > 0) return String(stats.visits);
+        return boroughCountPhrase(stats);
       }
 
       function publicAddress(note) {
@@ -762,20 +795,21 @@
 
       var boroughStats = {};
       boroughs.forEach(function (ft) {
-        boroughStats[ft.properties.name] = { name: ft.properties.name, visits: 0, pubs: 0, feature: ft };
+        boroughStats[ft.properties.name] = { name: ft.properties.name, visits: 0, games: 0, pubs: 0, feature: ft };
       });
-      boroughStats[OUTSIDE] = { name: OUTSIDE, visits: 0, pubs: 0, feature: null };
+      boroughStats[OUTSIDE] = { name: OUTSIDE, visits: 0, games: 0, pubs: 0, feature: null };
       features.forEach(function (feature) {
         var name = feature.properties.borough || OUTSIDE;
         if (!boroughStats[name]) {
-          boroughStats[name] = { name: name, visits: 0, pubs: 0, feature: null };
+          boroughStats[name] = { name: name, visits: 0, games: 0, pubs: 0, feature: null };
         }
         boroughStats[name].visits += visitsOf(feature);
+        boroughStats[name].games += gamesOf(feature);
         boroughStats[name].pubs += 1;
       });
       var maxBoroughVisits = Object.keys(boroughStats).reduce(function (max, key) {
         if (key === OUTSIDE) return max;
-        return Math.max(max, boroughStats[key].visits);
+        return Math.max(max, boroughMeasure(boroughStats[key]));
       }, 1);
 
       var map = L.map("map", {
@@ -799,20 +833,19 @@
         { type: "FeatureCollection", features: boroughs },
         {
           style: function (feature) {
-            var stats = boroughStats[feature.properties.name] || { visits: 0 };
-            var hasVisits = stats.visits > 0;
+            var stats = boroughStats[feature.properties.name] || { visits: 0, games: 0 };
+            var played = boroughPlayed(stats);
             return {
-              color: hasVisits ? "#5a3f2c" : "#e6d3b0",
-              weight: hasVisits ? 1.15 : 0.8,
-              opacity: hasVisits ? 0.9 : 0.4,
-              fillColor: boroughFill(stats.visits),
-              fillOpacity: hasVisits ? 0.78 : 0.16
+              color: played ? "#5a3f2c" : "#e6d3b0",
+              weight: played ? 1.15 : 0.8,
+              opacity: played ? 0.9 : 0.4,
+              fillColor: boroughFill(boroughMeasure(stats)),
+              fillOpacity: played ? 0.78 : 0.16
             };
           },
           onEachFeature: function (feature, layer) {
-            var stats = boroughStats[feature.properties.name] || { visits: 0, pubs: 0 };
-            var label =
-              stats.visits === 1 ? "1 visit" : stats.visits + " visits";
+            var stats = boroughStats[feature.properties.name] || { visits: 0, games: 0, pubs: 0 };
+            var label = boroughCountPhrase(stats);
             layer.bindTooltip(
               escapeHtml(feature.properties.name) + " · " + label,
               { sticky: true, direction: "top", opacity: 0.95 }
@@ -826,7 +859,7 @@
                 "</p>"
             );
             layer.on("click", function () {
-              if (stats.visits > 0) setView("pubs", feature.properties.name);
+              if (boroughPlayed(stats)) setView("pubs", feature.properties.name);
             });
           }
         }
@@ -837,19 +870,21 @@
       var boroughLabelItems = [];
       Object.keys(boroughStats).forEach(function (name) {
         var stats = boroughStats[name];
-        if (!stats.visits || !stats.feature) return;
+        if (!boroughPlayed(stats) || !stats.feature) return;
         var bounds = L.geoJSON(stats.feature).getBounds();
         if (!bounds.isValid()) return;
         var home = bounds.getCenter();
         var marker = L.marker(home, {
-          icon: boroughLabelIcon(name, stats.visits, 10, true),
+          icon: boroughLabelIcon(name, boroughBadge(stats), 10, true),
           interactive: false,
           keyboard: false
         });
         boroughLabelLayer.addLayer(marker);
         boroughLabelItems.push({
           name: name,
-          visits: stats.visits,
+          visits: boroughMeasure(stats),
+          badge: boroughBadge(stats),
+          bounds: bounds,
           area: (bounds.getEast() - bounds.getWest()) * (bounds.getNorth() - bounds.getSouth()),
           home: home,
           marker: marker
@@ -910,22 +945,43 @@
           .forEach(function (item) {
             var pt = map.latLngToContainerPoint(item.home);
             var short = displayBoroughName(item.name, zoom);
-            var width = Math.ceil((short + " " + item.visits).length * style.charW + style.pad);
+            var badge = item.badge || item.visits;
+            var width = Math.ceil((short + " " + badge).length * style.charW + style.pad);
             var hw = width / 2;
             var hh = style.h / 2;
-            var hidden = false;
-            for (var i = 0; i < placed.length; i++) {
-              var other = placed[i];
-              if (
-                Math.abs(pt.x - other.x) < hw + other.hw + gap &&
-                Math.abs(pt.y - other.y) < hh + other.hh + gap
-              ) {
-                hidden = true;
-                break;
+            function hits(point) {
+              for (var i = 0; i < placed.length; i++) {
+                var other = placed[i];
+                if (
+                  Math.abs(point.x - other.x) < hw + other.hw + gap &&
+                  Math.abs(point.y - other.y) < hh + other.hh + gap
+                ) {
+                  return true;
+                }
+              }
+              return false;
+            }
+            var latlng = item.home;
+            if (hits(pt) && item.bounds) {
+              var shifts = [
+                [-(hw * 2 + gap), 0],
+                [0, -(hh * 2 + gap)],
+                [0, hh * 2 + gap],
+                [-(hw * 2 + gap), -(hh * 2 + gap)]
+              ];
+              for (var s = 0; s < shifts.length; s++) {
+                var trial = L.point(pt.x + shifts[s][0], pt.y + shifts[s][1]);
+                var trialLat = map.containerPointToLatLng(trial);
+                if (item.bounds.contains(trialLat) && !hits(trial)) {
+                  pt = trial;
+                  latlng = trialLat;
+                  break;
+                }
               }
             }
-            item.marker.setLatLng(item.home);
-            item.marker.setIcon(boroughLabelIcon(item.name, item.visits, zoom, hidden));
+            var hidden = hits(pt);
+            item.marker.setLatLng(latlng);
+            item.marker.setIcon(boroughLabelIcon(item.name, badge, zoom, hidden));
             if (!hidden) placed.push({ x: pt.x, y: pt.y, hw: hw, hh: hh });
           });
       }
@@ -1029,7 +1085,7 @@
         var features = [];
         Object.keys(boroughStats).forEach(function (key) {
           var row = boroughStats[key];
-          if (!row || key === OUTSIDE || !row.visits || !row.feature) return;
+          if (!row || key === OUTSIDE || !boroughPlayed(row) || !row.feature) return;
           features.push(row.feature);
         });
         if (!features.length) return londonBounds;
@@ -1084,7 +1140,7 @@
           boroughLabelLayer.addTo(map);
           outsideLayer.addTo(map);
           crumb.classList.remove("is-on");
-          tagline.textContent = "Darker = more visits. Tap a borough to see its pubs.";
+          tagline.textContent = "Darker = more visits. Boroughs we only know from the games are coloured by those games. Tap a borough to see its pubs.";
           heading.textContent = "Boroughs";
           if (!skipFit) fitOverview();
           resolveBoroughLabelCollisions();
@@ -1095,7 +1151,7 @@
           syncPubLayer(filter);
           pubLayer.addTo(map);
           if (filter) {
-            var stats = boroughStats[filter] || { visits: 0, pubs: 0 };
+            var stats = boroughStats[filter] || { visits: 0, games: 0, pubs: 0 };
             crumb.classList.add("is-on");
             document.getElementById("crumb-label").textContent =
               filter +
@@ -1103,7 +1159,7 @@
               stats.pubs +
               (stats.pubs === 1 ? " pub" : " pubs") +
               " · " +
-              (stats.visits === 1 ? "1 visit" : stats.visits + " visits");
+              boroughCountPhrase(stats);
             var fittedPts = visiblePubItems(filter).map(function (item) {
               return item.marker.getLatLng();
             });
@@ -1142,9 +1198,11 @@
         if (mode === "boroughs") {
           var rows = Object.keys(boroughStats)
             .map(function (key) { return boroughStats[key]; })
-            .filter(function (row) { return row.visits > 0; })
+            .filter(function (row) { return boroughPlayed(row); })
             .sort(function (a, b) {
-              if (b.visits !== a.visits) return b.visits - a.visits;
+              var av = boroughMeasure(a);
+              var bv = boroughMeasure(b);
+              if (bv !== av) return bv - av;
               return a.name.localeCompare(b.name);
             });
           rows.forEach(function (row) {
@@ -1154,10 +1212,9 @@
             btn.innerHTML =
               '<span class="row"><span class="choropleth-chip"></span><span class="name"></span></span><span class="meta"></span>';
             btn.querySelector(".choropleth-chip").style.background =
-              row.name === OUTSIDE ? beerColor(Math.max(1, Math.round(row.visits / Math.max(row.pubs, 1)))) : boroughFill(row.visits);
+              row.name === OUTSIDE ? beerColor(Math.max(1, Math.round(row.visits / Math.max(row.pubs, 1)))) : boroughFill(boroughMeasure(row));
             btn.querySelector(".name").textContent = row.name;
-            btn.querySelector(".meta").textContent =
-              row.visits === 1 ? "1 visit" : row.visits + " visits";
+            btn.querySelector(".meta").textContent = boroughCountPhrase(row);
             btn.addEventListener("click", function () {
               setView("pubs", row.name);
             });
@@ -1229,7 +1286,7 @@
             row.appendChild(document.createTextNode(n === 1 ? "1" : String(n)));
             root.appendChild(row);
           });
-          hint.textContent = "Darker = more visits. Tap a borough to see its pubs.";
+          hint.textContent = "Darker = more visits. Boroughs we only know from the games are coloured by those games.";
         } else {
           title.textContent = "Visits (unique days)";
           var beerSamples = [1, 3, 5, Math.max(8, maxPubVisits)];

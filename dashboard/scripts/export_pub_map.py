@@ -120,7 +120,8 @@ def attach_game_stats(pubs: list[dict], stats: dict[str, dict]) -> None:
 def append_game_location_pubs(pubs: list[dict], stats: dict[str, dict]) -> None:
     """Pins for pubs that have logged games but no Chase visit row.
 
-    visit_count stays 0 so statement-visit colouring is not invented.
+    visit_count stays 0 so a scorecard pub is not given a fake card day.
+    The map colours that borough from games_played instead.
     """
     have = {pub.get("name") for pub in pubs}
     seeds = seed_pubs_by_name()

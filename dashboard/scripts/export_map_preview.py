@@ -292,14 +292,14 @@ def capture(url: str) -> None:
         page.goto(url, wait_until="networkidle", timeout=60000)
         page.wait_for_function(
             """() => document.querySelector('#btn-boroughs')?.getAttribute('aria-pressed') === 'true'
-              && document.querySelectorAll('#map path[fill-opacity="0.78"]').length >= 7
+              && document.querySelectorAll('#map path[fill-opacity="0.78"]').length >= 8
               && document.querySelectorAll('.leaflet-tile-loaded').length > 4"""
         )
         _prepare(page)
         page.wait_for_timeout(800)
         box = _played_box(page)
-        if box["n"] < 7:
-            raise SystemExit(f"expected 7 played boroughs, saw {box['n']}")
+        if box["n"] < 8:
+            raise SystemExit(f"expected 8 played boroughs, saw {box['n']}")
         clip = _clip(box, view_w, view_h)
         png = page.screenshot(clip=clip, type="png")
         browser.close()

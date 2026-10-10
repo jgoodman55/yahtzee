@@ -3,9 +3,10 @@
 Chase statement visits stay **separate** from games. Do not infer a pub
 from a transaction. When a scorecard header names a pub (`<pub> - <number
 of games>`, left to right), that game is in `seed_game_locations` and joins
-`seed_pubs` on the canonical `pub_name`. The map adds a pin for those pubs
-even with no statement visits, and the popup includes games played and
-each player's wins. Games with no header stay Unknown.
+`seed_pubs` on the canonical `pub_name`. A pub we have played that has no
+Chase day is one row in `raw_pub_visits` (one unique visit, not one per
+game). The map shows visits only: name, unique-day count, address, and
+photo. Games with no header stay Unknown.
 
 ## What DAC 0.21.0 can (and cannot) do
 
@@ -34,7 +35,7 @@ equivalent: pan/zoom, borough choropleth, pint pins, name + visit popups.
 
 | Layer | Default | What you see |
 |---|---|---|
-| **Boroughs** (Layer A) | Yes (no hash, or `#boroughs`) | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Dynamic labels show **name + visit count** (e.g. `Southwark 21`), scale with zoom, and **hide on collision** (higher visit totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
+| **Boroughs** (Layer A) | Yes (no hash, or `#boroughs`) | Choropleth of London boroughs using the **same pale-lager → stout ramp** as the pint pins. Colour follows unique-day visits. Dynamic labels show **name + visit count**, scale with zoom, and **hide on collision** (higher totals / larger area kept). Click a borough (or a row in the list) to switch to Pubs, filtered and zoomed to that borough’s pins. |
 | **Pubs** (Layer B) | `#pubs` | Same-size SVG pint-glass pins (~16×20px, not emoji). Fill colour ramps pale lager → deep stout/amber by unique-day `visit_count`. |
 
 Toggle **Boroughs / Pubs** in the header. A crumb **← Boroughs** appears after drill-down. Click or hover a pint pin for a Google-Maps-ish card: photo (when we have one), name, unique-day visits, and the seed address/note. Pins without a photo still open the card with a **No photo yet** strip and a Google Maps search link — the map never depends on photos loading.
@@ -118,7 +119,13 @@ backfilled the same way. Attribution is on the seed row and in the popup.
 
 Cadogan Arms and Vauxhall Marketplace use Jordan’s own exterior photos
 (`cadogan_arms.jpg` on Old Church Street SW3; `vauxhall_marketplace.jpg`
-for Market Place Vauxhall under the railway bridge). Removed (didn’t play
+for Market Place Vauxhall under the railway bridge). The Atlas
+(`the_atlas.jpg`, Steve Daniels, Geograph, CC BY-SA 2.0), The Butcher's Hook
+(`the_butchers_hook.jpg`, nick macneill, Geograph, CC BY-SA 2.0), and The
+Queen's Arms (`the_queens_arms.jpg`, Ewan Munro, Wikimedia Commons, CC BY-SA
+4.0) are the same kind of vendored exterior. Munkbron Bryggeri & Ölhall has
+no openly licensed photo of the venue; street pictures of Munkbron and Lilla
+Nygatan are not the pub. Removed (didn’t play
 there — not on the map): Diogenes the Dog, The Chalk Freehouse, Supercute
 Taproom, The Thirsty Farrier.
 
@@ -130,10 +137,15 @@ lat/lng only; `bruin run` does not geocode.
 The map itself still loads Esri (or OSM) tiles in the **browser**. That is
 client-side Leaflet, not Bruin, and needs no `OFFLINE_TEST` flag.
 
-`visit_count` is **unique calendar days** at that pin: one `raw_pub_visits`
-row per merchant × Transaction Date (summed when proximity-dedup collapses
-venues). Same-day Chase sales at the same location are one visit. It is not
-a game-to-pub join.
+A visit is one unique day at that pub. It is not a Yahtzee game. Chase
+statement days are one `raw_pub_visits` row per calendar day. A scoresheet
+venue with no card day is one row too (The Atlas, The Butcher's Hook, The
+Queen's Arms, Munkbron), so each of those is 1 visit. Borough colour follows
+those visit counts. The map does not show games or wins.
+
+`visit_count` is **unique days** at that pin: one `raw_pub_visits` row per
+day (summed when proximity-dedup collapses venues). Same-day Chase sales at
+the same location are one visit. It is not a game-to-pub join.
 
 Chase statement merchants classified `likely_pub=yes` (Jordan 2026-09-14)
 are in `seed_pubs.csv` / `raw_pub_visits.csv`. Excluded: Thomas Cubitt,
@@ -149,7 +161,10 @@ ANCHOR BANKSIDE maps to the existing Anchor Bar seed (alias row, same
 coords). Rebuild visit rows with `assets/python/build_pub_visits.py --chase
 Chase7977_Activity_20260830.csv` (unique days from `Sale` rows; the Chase
 file is not committed). Kept sample rows: Crown Tavern (2), THE RED LION
-LDN, and DOG N BONE PH LONDON. The original three sample ANCHOR BAR rows
+LDN, and DOG N BONE PH LONDON. Scoresheet venues with no Chase day are one
+row each: BUTCHERS HOOK, QUEENS ARMS PIMLICO, MUNKBRON STOCKHOLM, and THE
+ATLAS FULHAM. A later Chase rebuild keeps real statement days for those
+merchants and does not add a second row. The original three sample ANCHOR BAR rows
 were replaced by Chase Bankside days so visit_count is statement-based, not
 mixed demo+Chase.
 

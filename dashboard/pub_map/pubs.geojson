@@ -490,6 +490,29 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          18.0674809,
+          59.3244808
+        ]
+      },
+      "properties": {
+        "name": "Munkbron",
+        "merchant_name_raw": "MUNKBRON STOCKHOLM",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
+        "merged_from": "MUNKBRON STOCKHOLM",
+        "games_played": 3,
+        "erin_wins": 2,
+        "jordan_wins": 1,
+        "ties": 0,
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.0826189,
           51.5116889
         ]
@@ -622,6 +645,32 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.196156,
+          51.4862159
+        ]
+      },
+      "properties": {
+        "name": "The Atlas",
+        "merchant_name_raw": "THE ATLAS FULHAM",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "16 Seagrave Road, Fulham, London SW6 1RX. Logged from a scorecard header, not a Chase visit.",
+        "merged_from": "THE ATLAS FULHAM",
+        "games_played": 4,
+        "erin_wins": 2,
+        "jordan_wins": 2,
+        "ties": 0,
+        "photo_url": "pub_map/photos/the_atlas.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Steve Daniels / geograph.org.uk (CC BY-SA 2.0)",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Atlas+51.4862159%2C-0.196156"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -1.2557041,
           51.7515552
         ]
@@ -659,6 +708,32 @@
         "photo_source": "seed",
         "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Beehive+51.4848284%2C-0.1183509"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1890569,
+          51.4801902
+        ]
+      },
+      "properties": {
+        "name": "The Butcher's Hook",
+        "merchant_name_raw": "BUTCHERS HOOK",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "477 Fulham Road, Fulham, London SW6 1HL — OSM amenity=pub The Butcher's Hook (Greene King / CAMRA). Logged from a scorecard header, not a Chase visit.",
+        "merged_from": "BUTCHERS HOOK",
+        "games_played": 1,
+        "erin_wins": 1,
+        "jordan_wins": 0,
+        "ties": 0,
+        "photo_url": "pub_map/photos/the_butchers_hook.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "nick macneill / geograph.org.uk (CC BY-SA 2.0)",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Butcher%27s+Hook+51.4801902%2C-0.1890569"
       }
     },
     {
@@ -791,6 +866,32 @@
         "photo_source": "seed",
         "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Hanover+Arms+51.4813791%2C-0.1130873"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1391752,
+          51.4925913
+        ]
+      },
+      "properties": {
+        "name": "The Queen's Arms",
+        "merchant_name_raw": "QUEENS ARMS PIMLICO",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "11 Warwick Way, Pimlico, London SW1V 1QT — OSM amenity=pub The Queen's Arms (Brunning & Price). Logged from a scorecard header, not a Chase visit.",
+        "merged_from": "QUEENS ARMS PIMLICO",
+        "games_played": 4,
+        "erin_wins": 0,
+        "jordan_wins": 4,
+        "ties": 0,
+        "photo_url": "pub_map/photos/the_queens_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 4.0)",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Queen%27s+Arms+51.4925913%2C-0.1391752"
       }
     },
     {
@@ -946,94 +1047,6 @@
         "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Zetland+Arms+51.493427%2C-0.175945"
       }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          18.0674809,
-          59.3244808
-        ]
-      },
-      "properties": {
-        "name": "Munkbron",
-        "merchant_name_raw": "MUNKBRON STOCKHOLM",
-        "source": "game_location",
-        "visit_count": 0,
-        "note": "Munkbron Bryggeri & Ölhall, Lilla Nygatan 2, 111 28 Stockholm (Gamla stan), Sweden — logged from a scorecard header, not a Chase visit.",
-        "games_played": 3,
-        "erin_wins": 2,
-        "jordan_wins": 1,
-        "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.196156,
-          51.4862159
-        ]
-      },
-      "properties": {
-        "name": "The Atlas",
-        "merchant_name_raw": "THE ATLAS FULHAM",
-        "source": "game_location",
-        "visit_count": 0,
-        "note": "16 Seagrave Road, Fulham, London SW6 1RX. Logged from a scorecard header, not a Chase visit.",
-        "games_played": 4,
-        "erin_wins": 2,
-        "jordan_wins": 2,
-        "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Atlas+51.4862159%2C-0.196156"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1890569,
-          51.4801902
-        ]
-      },
-      "properties": {
-        "name": "The Butcher's Hook",
-        "merchant_name_raw": "BUTCHERS HOOK",
-        "source": "game_location",
-        "visit_count": 0,
-        "note": "477 Fulham Road, Fulham, London SW6 1HL — OSM amenity=pub The Butcher's Hook (Greene King / CAMRA). Logged from a scorecard header, not a Chase visit.",
-        "games_played": 1,
-        "erin_wins": 1,
-        "jordan_wins": 0,
-        "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Butcher%27s+Hook+51.4801902%2C-0.1890569"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1391752,
-          51.4925913
-        ]
-      },
-      "properties": {
-        "name": "The Queen's Arms",
-        "merchant_name_raw": "QUEENS ARMS PIMLICO",
-        "source": "game_location",
-        "visit_count": 0,
-        "note": "11 Warwick Way, Pimlico, London SW1V 1QT — OSM amenity=pub The Queen's Arms (Brunning & Price). Logged from a scorecard header, not a Chase visit.",
-        "games_played": 4,
-        "erin_wins": 0,
-        "jordan_wins": 4,
-        "ties": 0,
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Queen%27s+Arms+51.4925913%2C-0.1391752"
-      }
     }
   ],
   "metadata": {
@@ -1043,6 +1056,6 @@
       "lat": 51.5074
     },
     "confirmed_pub_count": 47,
-    "photo_count": 43
+    "photo_count": 46
   }
 }

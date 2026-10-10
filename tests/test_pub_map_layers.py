@@ -154,7 +154,11 @@ def test_boroughs_open_by_default_and_hashes_still_work():
     assert 'setView("pubs", null)' in html
     assert "fitBounds(londonBounds" in html
     assert "Darker = more visits. Tap a borough to see its pubs." in html
+    assert "only know from the games" not in html
     assert "Darker = more visits. Tap a pub to see it." in html
+    assert "function gamesOf" not in html
+    assert "function boroughPlayed" not in html
+    assert "Yahtzee game" not in html
     assert "pale-lager" not in html
     assert "playedBoroughBounds" in html
     assert "calc(100vw - 64px)" in html

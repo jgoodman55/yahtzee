@@ -41,6 +41,16 @@ KEPT_SAMPLE_ROWS = [
     "CROWN TAVERN EC1",
 ]
 
+# One unique visit from a scoresheet header, not one row per game.
+# Written only when Chase has no day for that merchant, so a later
+# statement rebuild keeps the real days and does not add a second row.
+SCORESHEET_ONE_VISIT = (
+    "BUTCHERS HOOK",
+    "QUEENS ARMS PIMLICO",
+    "MUNKBRON STOCKHOLM",
+    "THE ATLAS FULHAM",
+)
+
 # In visits but not seed_pubs (logged, unresolved coords).
 EXTRA_INCLUDED = [
     "GREENE KING",
@@ -166,6 +176,8 @@ def write_visits(by_merchant: dict[str, set]) -> list[str]:
     rows = ["merchant_name_raw", *KEPT_SAMPLE_ROWS]
     for merchant in merchant_order():
         n = visit_row_count(merchant, by_merchant.get(merchant, set()))
+        if n == 0 and merchant in SCORESHEET_ONE_VISIT:
+            n = 1
         rows.extend([merchant] * n)
     unexpected = sorted(set(by_merchant) - set(merchant_order()))
     for merchant in unexpected:
@@ -194,10 +206,18 @@ def main() -> None:
     chase_days = sum(
         visit_row_count(merchant, days) for merchant, days in by_merchant.items()
     )
+    scoresheet_only = sum(
+        1
+        for merchant in SCORESHEET_ONE_VISIT
+        if visit_row_count(merchant, by_merchant.get(merchant, set())) == 0
+    )
     print(f"Wrote {OUT_VISITS.relative_to(REPO_ROOT)}")
     print(f"  unique venue-days from Chase (after overrides): {chase_days}")
     print(f"  kept sample rows: {len(KEPT_SAMPLE_ROWS)}")
-    print(f"  total visit-log rows: {chase_days + len(KEPT_SAMPLE_ROWS)}")
+    print(f"  scoresheet visits with no Chase day: {scoresheet_only}")
+    print(
+        f"  total visit-log rows: {chase_days + len(KEPT_SAMPLE_ROWS) + scoresheet_only}"
+    )
     for merchant in (
         "MC AND SONS",
         "MC AND SONS VAUXHALL",

@@ -88,6 +88,8 @@ def test_html_popup_is_photo_card():
     assert "mouseover" in html
     assert "keepInView: false" in html
     assert "keepInView: true" not in html
+    assert "function nudgePopupClear" in html
+    assert "chromeBottom() + gap - box.top" in html
     assert "Photos later" not in html
     assert "isSafePhotoUrl" in html
 
@@ -180,18 +182,22 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert marketplace["photo_source"] == "seed"
     assert marketplace["photo_attribution"] == "Jordan"
     assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
-    assert data["metadata"]["photo_count"] == 43
+    assert data["metadata"]["photo_count"] == 46
+    atlas = by_name["The Atlas"]
+    hook = by_name["The Butcher's Hook"]
+    queens = by_name["The Queen's Arms"]
+    assert atlas["photo_url"] == "pub_map/photos/the_atlas.jpg"
+    assert atlas["photo_attribution"] == "Steve Daniels / geograph.org.uk (CC BY-SA 2.0)"
+    assert hook["photo_url"] == "pub_map/photos/the_butchers_hook.jpg"
+    assert hook["photo_attribution"] == "nick macneill / geograph.org.uk (CC BY-SA 2.0)"
+    assert queens["photo_url"] == "pub_map/photos/the_queens_arms.jpg"
+    assert queens["photo_attribution"] == "Ewan Munro / Wikimedia Commons (CC BY-SA 4.0)"
     names_without = {
         ft["properties"]["name"]
         for ft in features
         if not ft["properties"].get("photo_url")
     }
-    assert names_without == {
-        "The Butcher's Hook",
-        "The Queen's Arms",
-        "Munkbron",
-        "The Atlas",
-    }
+    assert names_without == {"Munkbron"}
     gone = {
         "Diogenes the Dog",
         "The Chalk Freehouse",

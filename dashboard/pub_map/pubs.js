@@ -660,9 +660,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 1,
         "note": "16 Seagrave Road, Fulham, London SW6 1RX. Logged from a scorecard header, not a Chase visit.",
         "merged_from": "THE ATLAS FULHAM",
-        "games_played": 4,
+        "games_played": 5,
         "erin_wins": 2,
-        "jordan_wins": 2,
+        "jordan_wins": 3,
         "ties": 0,
         "photo_url": "pub_map/photos/the_atlas.jpg",
         "photo_source": "seed",
@@ -877,6 +877,32 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1376134,
+          51.510566
+        ]
+      },
+      "properties": {
+        "name": "The Leicester Arms",
+        "merchant_name_raw": "LEICESTER ARMS SOHO",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "44 Glasshouse Street, Soho, London W1B 5DP — OSM amenity=pub The Leicester Arms (Greene King). Logged from a scorecard header, not a Chase visit.",
+        "merged_from": "LEICESTER ARMS SOHO",
+        "games_played": 2,
+        "erin_wins": 2,
+        "jordan_wins": 0,
+        "ties": 0,
+        "photo_url": "pub_map/photos/leicester_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 4.0)",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Leicester+Arms+51.510566%2C-0.1376134"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1391752,
           51.4925913
         ]
@@ -1059,7 +1085,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 47,
-    "photo_count": 47
+    "confirmed_pub_count": 48,
+    "photo_count": 48
   }
 };

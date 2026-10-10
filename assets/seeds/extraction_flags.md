@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2925 (123 games from 41 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2926 (126 games from 42 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -404,4 +404,28 @@ sheet does not add another.
 - game 3 (`123`), jordan, four_of_a_kind: **28** next to a three_of_a_kind of **7**. Unusual, kept as written.
 - Yahtzee bonus is **0** in all six columns.
 - Locations: games 121–123 reuse **The Atlas**. The sheet writes **Atlas - 3**. Games 1–111 still have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part11_flags.md
+
+# part11 extraction flags — IMG_2926 (games 124–126)
+
+One sheet after IMG_2925. Conceptual name `IMG_2926`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **124, 125, 126**.
+Jordan confirmed these readings. `recorded_total` equals `sum(score)` on
+every player-game.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`).
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2926.jpg`.
+
+Header, in column order: **Atlas - 1** then **Leicester Arms - 2**.
+
+- game 1 (`124`): The Atlas, same visit as the earlier Atlas games. Grands **E 184 / J 288**. Jordan wins.
+- game 2 (`125`): The Leicester Arms, 44 Glasshouse Street, Soho. Grands **E 247 / J 184**. Erin wins.
+- game 3 (`126`): The Leicester Arms. Grands **E 243 / J 210**. Erin wins.
+- game 2 (`125`), erin, chance: overwritten on the sheet. Read as **24** so the written lower section of **148** adds up (25+29+0+30+40+24+0).
+- Yahtzee bonus is **0** in all six columns.
+- Locations: game 124 reuses **The Atlas** and does not add a visit. Games 125–126 are **The Leicester Arms** (`LEICESTER ARMS SOHO`), one unique visit. The sheet writes **Leicester Arms - 2**. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

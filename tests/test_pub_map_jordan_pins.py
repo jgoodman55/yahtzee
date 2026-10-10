@@ -206,7 +206,7 @@ def test_map_uses_pint_pins_and_esri_basemap():
 def test_confirmed_pin_count():
     features = load_features()
     names = [f["properties"]["name"] for f in features]
-    assert len(features) == 47
+    assert len(features) == 48
     assert "The Butcher's Hook" in names
     assert "The Queen's Arms" in names
     visits = load_visits()
@@ -214,6 +214,7 @@ def test_confirmed_pin_count():
     assert visits["QUEENS ARMS PIMLICO"] == 1
     assert visits["MUNKBRON STOCKHOLM"] == 1
     assert visits["THE ATLAS FULHAM"] == 1
+    assert visits["LEICESTER ARMS SOHO"] == 1
     hook = next(f for f in features if f["properties"]["name"] == "The Butcher's Hook")
     queens = next(f for f in features if f["properties"]["name"] == "The Queen's Arms")
     assert hook["properties"]["visit_count"] == 1
@@ -237,14 +238,23 @@ def test_confirmed_pin_count():
     assert munkbron["geometry"]["coordinates"] == [18.0674809, 59.3244808]
     atlas = next(f for f in features if f["properties"]["name"] == "The Atlas")
     assert atlas["properties"]["visit_count"] == 1
-    assert atlas["properties"]["games_played"] == 4
+    assert atlas["properties"]["games_played"] == 5
     assert atlas["properties"]["erin_wins"] == 2
-    assert atlas["properties"]["jordan_wins"] == 2
+    assert atlas["properties"]["jordan_wins"] == 3
     assert atlas["properties"]["photo_url"] == "pub_map/photos/the_atlas.jpg"
     assert "Steve Daniels" in atlas["properties"]["photo_attribution"]
     assert "16 Seagrave Road" in atlas["properties"]["note"]
     assert "Fulham" in atlas["properties"]["note"]
     assert atlas["geometry"]["coordinates"] == [-0.196156, 51.4862159]
+    leicester = next(f for f in features if f["properties"]["name"] == "The Leicester Arms")
+    assert leicester["properties"]["visit_count"] == 1
+    assert leicester["properties"]["games_played"] == 2
+    assert leicester["properties"]["erin_wins"] == 2
+    assert leicester["properties"]["jordan_wins"] == 0
+    assert leicester["properties"]["photo_url"] == "pub_map/photos/leicester_arms.jpg"
+    assert "Ewan Munro" in leicester["properties"]["photo_attribution"]
+    assert "Glasshouse Street" in leicester["properties"]["note"]
+    assert leicester["geometry"]["coordinates"] == [-0.1376134, 51.5105660]
     assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
     assert "German Kraft" not in names

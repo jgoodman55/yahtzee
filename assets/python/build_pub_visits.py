@@ -49,6 +49,7 @@ SCORESHEET_ONE_VISIT = (
     "QUEENS ARMS PIMLICO",
     "MUNKBRON STOCKHOLM",
     "THE ATLAS FULHAM",
+    "LEICESTER ARMS SOHO",
 )
 
 # In visits but not seed_pubs (logged, unresolved coords).

@@ -232,6 +232,7 @@ def test_point_in_polygon_assignments():
         "The Crown": OUTSIDE,
         "Munkbron": OUTSIDE,
         "The Atlas": "Hammersmith and Fulham",
+        "The Leicester Arms": "Westminster",
         "Tamesis Dock": "Lambeth",
     }
     got = {}

@@ -1,4 +1,4 @@
-"""Grounding checks for Strategy marts (n=123 seed, 0 ties).
+"""Grounding checks for Strategy marts (n=126 seed, 0 ties).
 
 Run after `bruin run --workers 1`:
 
@@ -31,10 +31,10 @@ def test_swing_grounding():
             "select feature, holder_wins, n from mart_strategy_swing"
         ).fetchall()
     }
-    assert rows["Yahtzee = 50"] == (56, 67)
-    assert rows["Upper bonus (35)"] == (50, 60)
-    assert rows["Large straight = 40"] == (29, 39)
-    assert rows["Large straight = 0"] == (10, 39)
+    assert rows["Yahtzee = 50"] == (57, 68)
+    assert rows["Upper bonus (35)"] == (52, 62)
+    assert rows["Large straight = 40"] == (30, 40)
+    assert rows["Large straight = 0"] == (10, 40)
     assert rows["Small straight = 0"][1] < 10
 
 
@@ -64,14 +64,14 @@ def test_yz_matchup_exclusive_holders():
         ).fetchall()
     }
     assert rows["Erin"] == (30, 9, 39)
-    assert rows["Jordan"] == (26, 2, 28)
+    assert rows["Jordan"] == (27, 2, 29)
     wins, n = con.execute(
         """
         select sum(n) filter (where outcome = 'Holder won'), sum(n)
         from mart_yz_matchup
         """
     ).fetchone()
-    assert (wins, n) == (56, 67)
+    assert (wins, n) == (57, 68)
 
 
 if __name__ == "__main__":

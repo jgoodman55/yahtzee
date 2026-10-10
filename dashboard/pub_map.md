@@ -125,7 +125,9 @@ for Market Place Vauxhall under the railway bridge). The Atlas
 Queen's Arms (`the_queens_arms.jpg`, Ewan Munro, Wikimedia Commons, CC BY-SA
 4.0) are the same kind of vendored exterior. Munkbron
 (`munkbron.jpg`) is Jordan’s photo of the Petersenska huset facade on Lilla
-Nygatan, cropped to the doorway. Removed (didn’t play
+Nygatan, cropped to the doorway. The Leicester Arms
+(`leicester_arms.jpg`, Ewan Munro, Wikimedia Commons, CC BY-SA 4.0) is the
+same kind of vendored exterior. Removed (didn’t play
 there — not on the map): Diogenes the Dog, The Chalk Freehouse, Supercute
 Taproom, The Thirsty Farrier.
 
@@ -140,7 +142,7 @@ client-side Leaflet, not Bruin, and needs no `OFFLINE_TEST` flag.
 A visit is one unique day at that pub. It is not a Yahtzee game. Chase
 statement days are one `raw_pub_visits` row per calendar day. A scoresheet
 venue with no card day is one row too (The Atlas, The Butcher's Hook, The
-Queen's Arms, Munkbron), so each of those is 1 visit. Borough colour follows
+Queen's Arms, Munkbron, The Leicester Arms), so each of those is 1 visit. Borough colour follows
 those visit counts. The map does not show games or wins.
 
 `visit_count` is **unique days** at that pin: one `raw_pub_visits` row per
@@ -162,8 +164,8 @@ coords). Rebuild visit rows with `assets/python/build_pub_visits.py --chase
 Chase7977_Activity_20260830.csv` (unique days from `Sale` rows; the Chase
 file is not committed). Kept sample rows: Crown Tavern (2), THE RED LION
 LDN, and DOG N BONE PH LONDON. Scoresheet venues with no Chase day are one
-row each: BUTCHERS HOOK, QUEENS ARMS PIMLICO, MUNKBRON STOCKHOLM, and THE
-ATLAS FULHAM. A later Chase rebuild keeps real statement days for those
+row each: BUTCHERS HOOK, QUEENS ARMS PIMLICO, MUNKBRON STOCKHOLM, THE
+ATLAS FULHAM, and LEICESTER ARMS SOHO. A later Chase rebuild keeps real statement days for those
 merchants and does not add a second row. The original three sample ANCHOR BAR rows
 were replaced by Chase Bankside days so visit_count is statement-based, not
 mixed demo+Chase.

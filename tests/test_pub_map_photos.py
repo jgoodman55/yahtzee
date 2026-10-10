@@ -182,7 +182,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert marketplace["photo_source"] == "seed"
     assert marketplace["photo_attribution"] == "Jordan"
     assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
-    assert data["metadata"]["photo_count"] == 47
+    assert data["metadata"]["photo_count"] == 48
     atlas = by_name["The Atlas"]
     hook = by_name["The Butcher's Hook"]
     queens = by_name["The Queen's Arms"]

@@ -88,6 +88,8 @@ def test_html_popup_is_photo_card():
     assert "mouseover" in html
     assert "keepInView: false" in html
     assert "keepInView: true" not in html
+    assert "function nudgePopupClear" in html
+    assert "chromeBottom() + gap - box.top" in html
     assert "Photos later" not in html
     assert "isSafePhotoUrl" in html
 

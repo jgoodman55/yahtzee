@@ -735,6 +735,33 @@
         return html;
       }
 
+      function chromeBottom() {
+        var header = document.querySelector("header.card");
+        if (!header) return 0;
+        var bottom = header.getBoundingClientRect().bottom;
+        var list = document.getElementById("side-list");
+        if (list && getComputedStyle(list).display !== "none") {
+          var box = list.getBoundingClientRect();
+          if (box.height > 8) bottom = Math.max(bottom, box.bottom);
+        }
+        return bottom;
+      }
+
+      // Leaflet only keeps a popup inside the map. The header card sits on
+      // top of the map, so pan until the card is fully below that panel.
+      function nudgePopupClear(popup) {
+        var el = popup && popup.getElement && popup.getElement();
+        var header = document.querySelector("header.card");
+        if (!el || !header || !map) return;
+        var head = header.getBoundingClientRect();
+        var box = el.getBoundingClientRect();
+        var crosses = box.left < head.right - 2 && box.right > head.left + 2;
+        if (!crosses) return;
+        var gap = 10;
+        var dy = chromeBottom() + gap - box.top;
+        if (dy > 1) map.panBy([0, -Math.ceil(dy)], { animate: false });
+      }
+
       function bindVenuePopup(marker, props) {
         marker.bindPopup(pubPopupHtml(props), {
           maxWidth: 220,
@@ -746,6 +773,7 @@
           autoClose: true
         });
         marker.on("popupopen", function (ev) {
+          nudgePopupClear(ev.popup);
           var img = ev.popup.getElement() && ev.popup.getElement().querySelector(".venue-photo img");
           if (!img) return;
           img.addEventListener("error", function () {

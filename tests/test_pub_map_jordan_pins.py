@@ -230,7 +230,8 @@ def test_confirmed_pin_count():
     assert munkbron["properties"]["games_played"] == 3
     assert munkbron["properties"]["erin_wins"] == 2
     assert munkbron["properties"]["jordan_wins"] == 1
-    assert "photo_url" not in munkbron["properties"]
+    assert munkbron["properties"]["photo_url"] == "pub_map/photos/munkbron.jpg"
+    assert munkbron["properties"]["photo_attribution"] == "Jordan"
     assert "Munkbron Bryggeri & Ölhall" in munkbron["properties"]["note"]
     assert "Lilla Nygatan" in munkbron["properties"]["note"]
     assert munkbron["geometry"]["coordinates"] == [18.0674809, 59.3244808]

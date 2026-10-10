@@ -506,6 +506,9 @@ window.PUB_MAP_DATA = {
         "erin_wins": 2,
         "jordan_wins": 1,
         "ties": 0,
+        "photo_url": "pub_map/photos/munkbron.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Jordan",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Munkbron+59.3244808%2C18.0674809"
       }
     },
@@ -1057,6 +1060,6 @@ window.PUB_MAP_DATA = {
       "lat": 51.5074
     },
     "confirmed_pub_count": 47,
-    "photo_count": 46
+    "photo_count": 47
   }
 };

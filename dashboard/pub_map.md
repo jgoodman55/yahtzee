@@ -123,9 +123,9 @@ for Market Place Vauxhall under the railway bridge). The Atlas
 (`the_atlas.jpg`, Steve Daniels, Geograph, CC BY-SA 2.0), The Butcher's Hook
 (`the_butchers_hook.jpg`, nick macneill, Geograph, CC BY-SA 2.0), and The
 Queen's Arms (`the_queens_arms.jpg`, Ewan Munro, Wikimedia Commons, CC BY-SA
-4.0) are the same kind of vendored exterior. Munkbron Bryggeri & Ölhall has
-no openly licensed photo of the venue; street pictures of Munkbron and Lilla
-Nygatan are not the pub. Removed (didn’t play
+4.0) are the same kind of vendored exterior. Munkbron
+(`munkbron.jpg`) is Jordan’s photo of the Petersenska huset facade on Lilla
+Nygatan, cropped to the doorway. Removed (didn’t play
 there — not on the map): Diogenes the Dog, The Chalk Freehouse, Supercute
 Taproom, The Thirsty Farrier.
 

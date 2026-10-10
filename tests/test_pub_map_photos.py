@@ -182,7 +182,7 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
     assert marketplace["photo_source"] == "seed"
     assert marketplace["photo_attribution"] == "Jordan"
     assert marketplace["maps_url"].startswith("https://www.google.com/maps/search/")
-    assert data["metadata"]["photo_count"] == 46
+    assert data["metadata"]["photo_count"] == 47
     atlas = by_name["The Atlas"]
     hook = by_name["The Butcher's Hook"]
     queens = by_name["The Queen's Arms"]
@@ -197,7 +197,10 @@ def test_exported_geojson_has_churchill_photo_and_maps_links():
         for ft in features
         if not ft["properties"].get("photo_url")
     }
-    assert names_without == {"Munkbron"}
+    assert names_without == set()
+    munkbron = by_name["Munkbron"]
+    assert munkbron["photo_url"] == "pub_map/photos/munkbron.jpg"
+    assert munkbron["photo_attribution"] == "Jordan"
     gone = {
         "Diogenes the Dog",
         "The Chalk Freehouse",

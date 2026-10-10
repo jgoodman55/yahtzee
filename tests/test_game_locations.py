@@ -57,7 +57,8 @@ def test_img_2923_queens_arms_and_munkbron():
     assert "Munkbron Bryggeri & Ölhall" in munkbron["note"]
     assert "Lilla Nygatan" in munkbron["note"]
     assert "Stockholm" in munkbron["note"]
-    assert not (munkbron.get("photo_url") or "").strip()
+    assert munkbron["photo_url"] == "pub_map/photos/munkbron.jpg"
+    assert munkbron["photo_attribution"] == "Jordan"
 
 
 def test_img_2924_munkbron_and_atlas():

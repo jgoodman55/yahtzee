@@ -234,7 +234,8 @@ def test_confirmed_pin_count():
     assert atlas["properties"]["games_played"] == 4
     assert atlas["properties"]["erin_wins"] == 2
     assert atlas["properties"]["jordan_wins"] == 2
-    assert "photo_url" not in atlas["properties"]
+    assert atlas["properties"]["photo_url"] == "pub_map/photos/the_atlas.jpg"
+    assert "Steve Daniels" in atlas["properties"]["photo_attribution"]
     assert "16 Seagrave Road" in atlas["properties"]["note"]
     assert "Fulham" in atlas["properties"]["note"]
     assert atlas["geometry"]["coordinates"] == [-0.196156, 51.4862159]

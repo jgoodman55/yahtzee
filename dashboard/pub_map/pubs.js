@@ -989,6 +989,9 @@ window.PUB_MAP_DATA = {
         "erin_wins": 2,
         "jordan_wins": 2,
         "ties": 0,
+        "photo_url": "pub_map/photos/the_atlas.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Steve Daniels / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Atlas+51.4862159%2C-0.196156"
       }
     },
@@ -1011,6 +1014,9 @@ window.PUB_MAP_DATA = {
         "erin_wins": 1,
         "jordan_wins": 0,
         "ties": 0,
+        "photo_url": "pub_map/photos/the_butchers_hook.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "nick macneill / geograph.org.uk (CC BY-SA 2.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Butcher%27s+Hook+51.4801902%2C-0.1890569"
       }
     },
@@ -1033,6 +1039,9 @@ window.PUB_MAP_DATA = {
         "erin_wins": 0,
         "jordan_wins": 4,
         "ties": 0,
+        "photo_url": "pub_map/photos/the_queens_arms.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Ewan Munro / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Queen%27s+Arms+51.4925913%2C-0.1391752"
       }
     }
@@ -1044,6 +1053,6 @@ window.PUB_MAP_DATA = {
       "lat": 51.5074
     },
     "confirmed_pub_count": 47,
-    "photo_count": 43
+    "photo_count": 46
   }
 };

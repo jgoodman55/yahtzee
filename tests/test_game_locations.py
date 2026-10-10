@@ -76,7 +76,9 @@ def test_img_2924_munkbron_and_atlas():
     assert "Fulham" in atlas["note"]
     assert "SW6 1RX" in atlas["note"]
     assert "Logged from a scorecard header, not a Chase visit" in atlas["note"]
-    assert not (atlas.get("photo_url") or "").strip()
+    assert atlas["photo_url"] == "pub_map/photos/the_atlas.jpg"
+    assert "Steve Daniels" in atlas["photo_attribution"]
+    assert "CC BY-SA 2.0" in atlas["photo_attribution"]
 
 
 def test_img_2925_atlas_three_games():

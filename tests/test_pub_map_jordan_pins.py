@@ -255,6 +255,14 @@ def test_confirmed_pin_count():
     assert "Ewan Munro" in leicester["properties"]["photo_attribution"]
     assert "Glasshouse Street" in leicester["properties"]["note"]
     assert leicester["geometry"]["coordinates"] == [-0.1376134, 51.5105660]
+    assert visits["ANCHOR BANKSIDE"] == 9
+    anchor = next(f for f in features if f["properties"]["name"] == "Anchor Bar")
+    assert anchor["properties"]["visit_count"] == 9
+    assert anchor["properties"]["games_played"] == 3
+    assert anchor["properties"]["erin_wins"] == 0
+    assert anchor["properties"]["jordan_wins"] == 3
+    assert anchor["geometry"]["coordinates"] == [-0.0931, 51.5073]
+    assert sum(1 for f in features if f["properties"]["name"] == "Anchor Bar") == 1
     assert "The Walrus & Carpenter" not in names
     assert "The Buccaneer" not in names
     assert "German Kraft" not in names

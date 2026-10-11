@@ -36,7 +36,7 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 126
+    assert max(game_seqs) == 129
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
 
@@ -109,3 +109,13 @@ def test_img_2926_atlas_and_leicester_arms():
     assert pub["photo_url"] == "pub_map/photos/leicester_arms.jpg"
     assert "Ewan Munro" in pub["photo_attribution"]
     assert "CC BY-SA 4.0" in pub["photo_attribution"]
+
+
+def test_img_2927_anchor_bar_three_games():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    for seq in (127, 128, 129):
+        assert by_seq[seq]["pub_name"] == "Anchor Bar"
+        assert by_seq[seq]["sheet_label"] == "Anchor - 3"
+    pubs = [row for row in _rows(PUBS) if row["pub_name"] == "Anchor Bar"]
+    assert {row["merchant_name_raw"] for row in pubs} == {"ANCHOR BAR", "ANCHOR BANKSIDE"}
+    assert len({(row["lat"], row["lng"]) for row in pubs}) == 1

@@ -168,7 +168,12 @@ row each: BUTCHERS HOOK, QUEENS ARMS PIMLICO, MUNKBRON STOCKHOLM, THE
 ATLAS FULHAM, and LEICESTER ARMS SOHO. A later Chase rebuild keeps real statement days for those
 merchants and does not add a second row. The original three sample ANCHOR BAR rows
 were replaced by Chase Bankside days so visit_count is statement-based, not
-mixed demo+Chase.
+mixed demo+Chase. Games 127–129 add one scoresheet day at Anchor Bar,
+2026-10-11 (`SCORESHEET_DATED_DAYS`). That day is unioned with the Chase
+`ANCHOR BANKSIDE` days, so a later statement for 2026-10-11 does not add
+another row. The visit log has no date column; the date lives in the
+rebuild script. The Chase export those eight days came from ends 2026-08-30,
+so 2026-10-11 is not already one of them.
 
 **MC and Sons** (both seed pins kept): Southwark (`MC AND SONS`) statement
 days 2026-08-09, 2026-07-25, 2026-07-18 → **3** visits; Vauxhall

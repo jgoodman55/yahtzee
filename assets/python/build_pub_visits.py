@@ -26,7 +26,7 @@ import csv
 import html
 import re
 from collections import defaultdict
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -51,6 +51,13 @@ SCORESHEET_ONE_VISIT = (
     "THE ATLAS FULHAM",
     "LEICESTER ARMS SOHO",
 )
+
+# A scoresheet day at a venue that already has Chase days. Unioned with
+# those days, so a later statement for the same calendar day does not
+# add a second row. The visit log has no date column; the date lives here.
+SCORESHEET_DATED_DAYS = {
+    "ANCHOR BANKSIDE": {date(2026, 10, 11)},
+}
 
 # In visits but not seed_pubs (logged, unresolved coords).
 EXTRA_INCLUDED = [
@@ -173,10 +180,15 @@ def visit_row_count(merchant: str, days: set) -> int:
     return len(days)
 
 
+def combined_days(merchant: str, chase_days: set) -> set:
+    """Chase unique days plus a scoresheet day that is not already there."""
+    return set(chase_days) | set(SCORESHEET_DATED_DAYS.get(merchant, ()))
+
+
 def write_visits(by_merchant: dict[str, set]) -> list[str]:
     rows = ["merchant_name_raw", *KEPT_SAMPLE_ROWS]
     for merchant in merchant_order():
-        n = visit_row_count(merchant, by_merchant.get(merchant, set()))
+        n = visit_row_count(merchant, combined_days(merchant, by_merchant.get(merchant, set())))
         if n == 0 and merchant in SCORESHEET_ONE_VISIT:
             n = 1
         rows.extend([merchant] * n)
@@ -212,12 +224,18 @@ def main() -> None:
         for merchant in SCORESHEET_ONE_VISIT
         if visit_row_count(merchant, by_merchant.get(merchant, set())) == 0
     )
+    dated_only = sum(
+        len(SCORESHEET_DATED_DAYS[merchant] - by_merchant.get(merchant, set()))
+        for merchant in SCORESHEET_DATED_DAYS
+    )
     print(f"Wrote {OUT_VISITS.relative_to(REPO_ROOT)}")
     print(f"  unique venue-days from Chase (after overrides): {chase_days}")
     print(f"  kept sample rows: {len(KEPT_SAMPLE_ROWS)}")
     print(f"  scoresheet visits with no Chase day: {scoresheet_only}")
+    print(f"  scoresheet days not already on a Chase statement: {dated_only}")
     print(
-        f"  total visit-log rows: {chase_days + len(KEPT_SAMPLE_ROWS) + scoresheet_only}"
+        "  total visit-log rows: "
+        f"{chase_days + len(KEPT_SAMPLE_ROWS) + scoresheet_only + dated_only}"
     )
     for merchant in (
         "MC AND SONS",
@@ -229,8 +247,8 @@ def main() -> None:
         "MONUMENT",
         "BEEHIVE",
     ):
-        days = sorted(by_merchant.get(merchant, set()))
-        n = visit_row_count(merchant, by_merchant.get(merchant, set()))
+        days = sorted(combined_days(merchant, by_merchant.get(merchant, set())))
+        n = visit_row_count(merchant, set(days))
         note = ""
         if merchant in VISIT_COUNT_OVERRIDES:
             note = f" (override {VISIT_COUNT_OVERRIDES[merchant]}; Chase days {len(days)})"

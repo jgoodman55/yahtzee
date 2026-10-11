@@ -6,7 +6,7 @@ conversion-box flags + `int_win_loss.winner`).
 
 That intermediate is the layer: swing, rescue, and Yahtzee matchup share
 the same exclusive-feature logic. Putting the pivot only in DAC YAML would
-duplicate cohort definitions and make the 13/24-style checks harder to
+duplicate cohort definitions and make the 13/25-style checks harder to
 re-run. The dashboard queries are thin `select`s from these marts.
 
 Oak / chance are intentionally absent — weak signals, not strategy.
@@ -16,13 +16,13 @@ Oak / chance are intentionally absent — weak signals, not strategy.
 Games where **exactly one** player has the binary feature. Rate = that
 holder's win rate.
 
-| Feature | Seed (n=126, 0 ties) |
+| Feature | Seed (n=129, 0 ties) |
 |---|---|
 | Yahtzee bonus > 0 | 15/15 = 100% |
-| Upper bonus (35) | 52/62 ≈ 84% |
-| Yahtzee = 50 | 57/68 ≈ 84% |
-| Large straight = 40 | 30/40 = 75% |
-| Large straight = 0 | 10/40 = 25% |
+| Upper bonus (35) | 54/64 ≈ 84% |
+| Yahtzee = 50 | 58/70 ≈ 83% |
+| Large straight = 40 | 32/42 ≈ 76% |
+| Large straight = 0 | 10/42 ≈ 24% |
 | Full house = 0 | 11/26 ≈ 42% |
 | Small straight = 0 | 1/4 = 25% — **n < 10, grey on the chart** |
 
@@ -39,8 +39,8 @@ bonus (35, no YZ) / Has both / Has neither.
 Rows: LS=0, SS=0, FH=0, No Yahtzee.
 
 Grounding: exclusive **LS=0 + any Yahtzee** (Has Yahtzee + Has both) =
-**13/24 ≈ 54%**. That includes games where both missed LS but only one
-also had Yahtzee. The exclusive-miss cut of the same question is 9/20 —
+**13/25 ≈ 52%**. That includes games where both missed LS but only one
+also had Yahtzee. The exclusive-miss cut of the same question is 9/21 —
 do not quote that as the rescue rate.
 
 ## `mart_yz_matchup`
@@ -54,8 +54,8 @@ Y-axis is that holder's outcome **share (0–100%)**; labels keep raw W/L.
 Combined exclusive holder rate is the swing-factor Yahtzee = 50 row
 (57/68 ≈ 84%) — not a separate dashboard visual.
 
-| Holder | Seed (n=126, 0 ties) |
+| Holder | Seed (n=129, 0 ties) |
 |---|---|
-| Erin alone | 30W / 9L of 39 ≈ 77% |
-| Jordan alone | 27W / 2L of 29 ≈ 93% |
-| Combined | 57 / 68 ≈ 84% |
+| Erin alone | 30W / 10L of 40 = 75% |
+| Jordan alone | 28W / 2L of 30 ≈ 93% |
+| Combined | 58 / 70 ≈ 83% |

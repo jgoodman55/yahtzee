@@ -424,10 +424,16 @@
       function publicAddress(note) {
         if (!note) return "";
         var text = String(note);
+        text = text.replace(/^Jordan[^:]{0,48}:\s*/i, "");
         text = text.replace(/\s*[—–-]\s*OSM amenity=[^.]*\./gi, "");
         text = text.replace(/\s*[—–-]?\s*Logged from a scorecard header, not a Chase visit\.?/gi, "");
+        text = text.replace(/\s*\([^)]*(?:Chase|Nominatim|OSM|override|unique day|statement|alias|merchant|same pin)[^)]*\)/gi, "");
+        text = text.replace(/\s*[—–-]\s*(?:Chase|Nominatim|OSM|neighbor|separate pin|same pin|Logged from|one pin|statement).*/gi, "");
         text = text.replace(/\s*[—–-]\s*$/, "");
-        return text.trim();
+        text = text.replace(/\s{2,}/g, " ").trim();
+        if (/\b(?:chase|alias|merchant|nominatim|statement|flint)\b/i.test(text)) return "";
+        if (/\bOSM\b/.test(text) || /same pin/i.test(text)) return "";
+        return text;
       }
 
       function lerp(a, b, t) {

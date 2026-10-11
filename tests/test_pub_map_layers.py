@@ -205,6 +205,27 @@ def test_export_script_joins_notes_not_borough():
     assert "client-side" in src
 
 
+def test_public_notes_hide_pipeline_wording():
+    import csv
+    import re
+
+    forbidden = re.compile(
+        r"chase|alias|merchant|\bseed\b|statement|same pin|nominatim|\bOSM\b|"
+        r"flint|override|unique day|separate pin|\bTST-",
+        re.I,
+    )
+    seed = REPO / "assets" / "seeds" / "seed_pubs.csv"
+    with seed.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            assert not forbidden.search(row["note"] or ""), (row["pub_name"], row["note"])
+    pubs = load_json(GEOJSON)["features"]
+    anchor = next(ft for ft in pubs if ft["properties"]["name"] == "Anchor Bar")
+    assert anchor["properties"]["note"] == "34 Park Street, Bankside, London SE1 9EF"
+    for ft in pubs:
+        note = ft["properties"].get("note") or ""
+        assert not forbidden.search(note), (ft["properties"]["name"], note)
+
+
 def test_pubs_export_includes_notes():
     features = load_json(GEOJSON)["features"]
     with_notes = [ft for ft in features if ft["properties"].get("note")]
@@ -265,6 +286,7 @@ if __name__ == "__main__":
         test_boroughs_open_by_default_and_hashes_still_work,
         test_html_layers_and_pint_svg,
         test_export_script_joins_notes_not_borough,
+        test_public_notes_hide_pipeline_wording,
         test_pubs_export_includes_notes,
         test_point_in_polygon_assignments,
         test_borough_visit_totals_sum_unique_days,

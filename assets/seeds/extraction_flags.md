@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2926 (126 games from 42 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2927 (129 games from 43 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -428,4 +428,30 @@ Header, in column order: **Atlas - 1** then **Leicester Arms - 2**.
 - game 2 (`125`), erin, chance: overwritten on the sheet. Read as **24** so the written lower section of **148** adds up (25+29+0+30+40+24+0).
 - Yahtzee bonus is **0** in all six columns.
 - Locations: game 124 reuses **The Atlas** and does not add a visit. Games 125–126 are **The Leicester Arms** (`LEICESTER ARMS SOHO`), one unique visit. The sheet writes **Leicester Arms - 2**. Games 1–111 still have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part12_flags.md
+
+# part12 extraction flags — IMG_2927 (games 127–129)
+
+One sheet after IMG_2926. Conceptual name `IMG_2927`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **127, 128, 129**.
+Played 2026-10-11. Jordan confirmed these readings. `recorded_total` equals
+`sum(score)` on every player-game.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`). The visit date is
+`SCORESHEET_DATED_DAYS` in `build_pub_visits.py`.
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2927.jpg`.
+
+Header: **Anchor - 3**. All three games are the existing Anchor Bar pin.
+
+- game 1 (`127`): grands **E 202 / J 289**. Jordan wins.
+- game 2 (`128`): grands **E 209 / J 275**. Jordan wins.
+- game 3 (`129`): grands **E 219 / J 276**. Jordan wins.
+- game 1 (`127`), erin, full_house: written like **29**. A full house is **25**. Stored **25**.
+- game 2 (`128`), erin, three_of_a_kind: looks like **12**. The written lower section of **150** adds up with **22**. Stored **22**.
+- Yahtzee bonus is **0** in all six columns.
+- Locations: games 127–129 reuse **Anchor Bar** (`ANCHOR BANKSIDE`). The sheet writes **Anchor - 3**. This session is one new unique day, **2026-10-11**, on top of the existing Chase days. A later Chase sale on that same date does not add another row. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

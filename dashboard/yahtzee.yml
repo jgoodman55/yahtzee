@@ -1901,7 +1901,7 @@ rows:
           columns: [photo_url, alt_text, heading]
           rows:
             - - /scorecards/samples/game_1.png
-              - Game 1 original photo beside the seed-rendered scorecard
+              - Game 1 photo beside the digitized scorecard
               - Game 1
         src: photo_url
         alt: alt_text
@@ -2058,11 +2058,12 @@ rows:
         col: 12
         sql: |
           select
-            coalesce(pub_name, merchant_name_raw) as place,
-            coalesce(visit_count, 1)::integer as visit_count,
-            is_confirmed_pub
+            pub_name as place,
+            visit_count::integer as visit_count
           from mart_pub_locations
-          order by is_confirmed_pub desc, visit_count desc, place
+          where pub_name is not null
+            and is_confirmed_pub
+          order by visit_count desc, place
         columns:
           - name: place
             label: Place
@@ -2070,5 +2071,3 @@ rows:
             label: Visits
             number: number
             align: right
-          - name: is_confirmed_pub
-            label: Confirmed

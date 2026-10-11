@@ -76,7 +76,7 @@ def test_img_2924_munkbron_and_atlas():
     assert "16 Seagrave Road" in atlas["note"]
     assert "Fulham" in atlas["note"]
     assert "SW6 1RX" in atlas["note"]
-    assert "Logged from a scorecard header, not a Chase visit" in atlas["note"]
+    assert "Chase" not in atlas["note"]
     assert atlas["photo_url"] == "pub_map/photos/the_atlas.jpg"
     assert "Steve Daniels" in atlas["photo_attribution"]
     assert "CC BY-SA 2.0" in atlas["photo_attribution"]
@@ -119,3 +119,4 @@ def test_img_2927_anchor_bar_three_games():
     pubs = [row for row in _rows(PUBS) if row["pub_name"] == "Anchor Bar"]
     assert {row["merchant_name_raw"] for row in pubs} == {"ANCHOR BAR", "ANCHOR BANKSIDE"}
     assert len({(row["lat"], row["lng"]) for row in pubs}) == 1
+    assert {row["note"] for row in pubs} == {"34 Park Street, Bankside, London SE1 9EF"}

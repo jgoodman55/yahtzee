@@ -144,6 +144,23 @@ assert.strictEqual(
   desk.line,
   "Sources confirm Jordan has reached 66 in the upper section at Anchor Bar. Erin has not. More at 11."
 );
+assert.strictEqual(replay.textReadyMs("sports", desk.line), 800 + (desk.line.length - 1) * 12);
+assert.ok(replay.textReadyMs("sports", desk.line) < 2500);
+assert.strictEqual(
+  replay.readHold(desk.line),
+  Math.max(desk.line.split(/\s+/).filter(Boolean).length * 250, 2500)
+);
+const docLine = hook.scenes.find((scene) => scene.cue === "documentary").line;
+assert.strictEqual(replay.textReadyMs("documentary", docLine), 3600);
+assert.strictEqual(replay.readHold(docLine), 15 * 250);
+assert.strictEqual(replay.sceneDuration("documentary", docLine), 3600 + 3750);
+assert.strictEqual(replay.textReadyMs("regulars", regulars.line), 880);
+const atlasCourt = atlas.steps.find((step) => step.cutaway && step.cutaway.cue === "courtroom").cutaway;
+assert.strictEqual(
+  atlasCourt.readyMs,
+  (atlasCourt.line.split(/\s+/).filter(Boolean).length - 1) * 227
+);
+assert.strictEqual(atlasCourt.ms, atlasCourt.readyMs + replay.readHold(atlasCourt.line));
 
 const again = replay.buildTimeline(game);
 assert.deepStrictEqual(again.cutaways, timeline.cutaways);
@@ -154,6 +171,21 @@ payload.games.forEach((row) => {
   built.steps.concat([built.finale]).forEach((step) => {
     assert.strictEqual(/throwing away|threw away/.test(step.caption), false, step.caption);
   });
+  built.steps.forEach((step) => {
+    if (!step.cutaway) return;
+    const line = step.cutaway.line;
+    const words = String(line).split(/\s+/).filter(Boolean).length;
+    const ready = replay.textReadyMs(step.cutaway.cue, line);
+    const hold = Math.max(Math.max(words, 1) * 250, 2500);
+    assert.strictEqual(step.cutaway.readyMs, ready, line);
+    assert.strictEqual(step.cutaway.ms, ready + hold, line);
+    assert.ok(step.cutaway.ms - ready >= 2500, line);
+    if (step.cutaway.cue === "sports") assert.ok(ready < hold, line);
+  });
+  assert.strictEqual(
+    built.durationMs,
+    built.steps.reduce((sum, step) => sum + step.holdMs, 0)
+  );
   built.scenes.forEach((scene) => {
     assert.strictEqual(/\b(erin|jordan)\b/.test(scene.line), false, scene.line);
     assert.strictEqual(/five of a kind/i.test(scene.line), false, scene.line);

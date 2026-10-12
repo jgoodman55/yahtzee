@@ -230,14 +230,16 @@
   function fillCourt(host, scene) {
     var words = String(scene.line || "").split(/\s+/).filter(Boolean);
     var h1 = host.querySelector("h1");
+    var ready = scene.readyMs != null ? Number(scene.readyMs) : Math.max(words.length - 1, 0) * 227;
+    var step = words.length > 1 ? ready / (words.length - 1) : 0;
     words.forEach(function (word, index) {
       var span = document.createElement("span");
       span.className = "word";
-      span.style.animationDelay = (index * 227) + "ms";
+      span.style.animationDelay = (index * step) + "ms";
       span.textContent = word + (index < words.length - 1 ? " " : "");
       h1.appendChild(span);
     });
-    host.style.setProperty("--bang", ((Math.max(words.length, 1) - 1) * 227) + "ms");
+    host.style.setProperty("--bang", ready + "ms");
     var docket = host.querySelector(".docket");
     docket.appendChild(document.createTextNode((scene.label || "Box") + ". "));
     ["Erin", "Jordan"].forEach(function (name, index) {
@@ -268,14 +270,20 @@
       crawl.textContent = line;
       return;
     }
+    var per = 12;
+    var chars = line.length;
+    var ready = scene.readyMs != null
+      ? Number(scene.readyMs)
+      : (chars <= 1 ? 800 : 800 + (chars - 1) * per);
+    var start = chars <= 1 ? ready : Math.max(0, ready - (chars - 1) * per);
     var index = 0;
     function tick() {
       if (!host.isConnected) return;
       index += 1;
       crawl.textContent = line.slice(0, index);
-      if (index < line.length) setTimeout(tick, 24);
+      if (index < chars) setTimeout(tick, per);
     }
-    setTimeout(tick, 747);
+    setTimeout(tick, start);
   }
 
   function mount(host, scene, options) {
@@ -289,6 +297,11 @@
     host.setAttribute("aria-label", scene.line || "Cutaway");
     host.innerHTML = draw(scene);
     if (scene.cue === "courtroom") fillCourt(host, scene);
+    if (scene.cue === "documentary" && globalThis.matchMedia && globalThis.matchMedia("(max-width: 700px)").matches) {
+      var docSvg = host.querySelector("svg");
+      docSvg.setAttribute("viewBox", "190 110 400 320");
+      docSvg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    }
     if (scene.cue === "regulars") {
       fillRegulars(host, scene);
       if (globalThis.matchMedia && globalThis.matchMedia("(max-width: 700px)").matches) {

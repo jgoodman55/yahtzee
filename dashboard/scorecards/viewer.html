@@ -22,6 +22,8 @@
 
     <p class="story" id="story" hidden></p>
 
+    <section class="replay" id="replay" aria-label="Replay" hidden></section>
+
     <div class="compare">
       <section class="panel">
         <h2>Original sheet photo</h2>
@@ -39,6 +41,7 @@
     </div>
   </div>
   <script src="games.js"></script>
+  <script src="replay.js"></script>
   <script>
     const UPPER = [
       ["ones", "Aces"],
@@ -222,6 +225,24 @@
 
       photoBlock(game);
       document.getElementById("card").appendChild(renderCard(sheetGames, game.game_seq));
+
+      const replayRoot = document.getElementById("replay");
+      if (window.YahtzeeReplay && replayRoot) {
+        replayRoot.hidden = false;
+        const timeline = window.YahtzeeReplay.buildTimeline(game);
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const wantReplay = params.get("replay") === "1" || location.hash === "#replay";
+        const player = window.YahtzeeReplay.mount(replayRoot, timeline, {
+          autoplay: wantReplay && !reduced,
+          reduced: reduced,
+        });
+        replayRoot._player = player;
+        if (wantReplay) {
+          requestAnimationFrame(function () {
+            replayRoot.scrollIntoView({ block: "start" });
+          });
+        }
+      }
     }
   </script>
 </body>

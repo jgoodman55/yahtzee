@@ -67,6 +67,26 @@ _HIT = {"full_house", "small_straight", "large_straight"}
 _PRIORITY = {key: index for index, key in enumerate(_BOXES)}
 _NAMES = {"erin": "Erin", "jordan": "Jordan"}
 
+# Tally order for the scorecard replay. This is the order Jordan asked the
+# boxes to add up in (Yahtzee, then chance, then Yahtzee bonuses).
+_REPLAY_ORDER = (
+    "ones",
+    "twos",
+    "threes",
+    "fours",
+    "fives",
+    "sixes",
+    "upper_bonus",
+    "three_of_a_kind",
+    "four_of_a_kind",
+    "full_house",
+    "small_straight",
+    "large_straight",
+    "yahtzee",
+    "chance",
+    "yahtzee_bonus",
+)
+
 # Ignore 1-point upper-section noise unless nothing bigger exists.
 _STRONG = 10
 _FILL = 5
@@ -212,8 +232,13 @@ def _misses(swings: list[dict]) -> list[str]:
     return names
 
 
-def game_story(erin_scores: dict, jordan_scores: dict) -> str:
-    """Plain sentence or two. Scores are category to points; missing boxes are 0."""
+def _focus_in_order(keys) -> list[str]:
+    wanted = set(keys)
+    return [key for key in _REPLAY_ORDER if key in wanted]
+
+
+def _tell(erin_scores: dict, jordan_scores: dict) -> tuple[str, list[str]]:
+    """The sentence, and the box keys that sentence names."""
     erin = {_key: _points(erin_scores, _key) for _key in _BOXES}
     jordan = {_key: _points(jordan_scores, _key) for _key in _BOXES}
     erin_total = sum(erin.values())
@@ -221,7 +246,7 @@ def game_story(erin_scores: dict, jordan_scores: dict) -> str:
 
     if erin_total == jordan_total:
         if erin == jordan:
-            return "They finished level, box for box."
+            return "They finished level, box for box.", []
         erin_best = _ranked(erin, jordan)[0]
         jordan_best = _ranked(jordan, erin)[0]
         first, second = (erin_best, jordan_best)
@@ -232,11 +257,12 @@ def game_story(erin_scores: dict, jordan_scores: dict) -> str:
         ):
             first, second = jordan_best, erin_best
             first_name, second_name = "Jordan", "Erin"
-        return (
+        text = (
             "They finished level. The widest split was "
             f"{first_name}'s {_noun(first['key'], first['gap'], first['leader_score'])} "
             f"against {second_name}'s {_noun(second['key'], second['gap'], second['leader_score'])}."
         )
+        return text, _focus_in_order([erin_best["key"], jordan_best["key"]])
 
     if jordan_total > erin_total:
         winner, loser = "jordan", "erin"
@@ -251,9 +277,12 @@ def game_story(erin_scores: dict, jordan_scores: dict) -> str:
     winner_name = _NAMES[winner]
     loser_name = _NAMES[loser]
     winner_bits = _join([row["noun"] for row in swings])
+    named = [part["key"] for row in swings for part in row["parts"]]
 
     bright_rows = _ranked(loser_scores, winner_scores)
     bright = bright_rows[0] if bright_rows and bright_rows[0]["gap"] >= _NOTABLE else None
+    if bright is not None:
+        named.append(bright["key"])
 
     if bright is not None:
         verb = _bright_verb(bright["key"], bright["gap"], bright["leader_score"])
@@ -270,7 +299,21 @@ def game_story(erin_scores: dict, jordan_scores: dict) -> str:
 
     if margin >= _BLOWOUT:
         text = "Never close: " + text
-    return text
+    return text, _focus_in_order(named)
+
+
+def game_story(erin_scores: dict, jordan_scores: dict) -> str:
+    """Plain sentence or two. Scores are category to points; missing boxes are 0."""
+    return _tell(erin_scores, jordan_scores)[0]
+
+
+def story_focus(erin_scores: dict, jordan_scores: dict) -> list[str]:
+    """Box keys named by ``game_story``, in replay order.
+
+    The scorecard replay pauses on these. Same picker as the sentence, so the
+    highlight cannot drift from the words.
+    """
+    return _tell(erin_scores, jordan_scores)[1]
 
 
 def materialize():

@@ -192,14 +192,14 @@ def _game_story_fn():
     spec = importlib.util.spec_from_file_location("build_game_story", path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    return module.game_story
+    return module.game_story, module.story_focus
 
 
 def build_games(db_path: Path) -> list[dict]:
     crosswalk = load_crosswalk()
     scores = load_scores()
     trends = load_trends(db_path)
-    story_for = _game_story_fn()
+    story_for, focus_for = _game_story_fn()
     games = []
     for seq in sorted(crosswalk):
         cw = crosswalk[seq]
@@ -230,6 +230,7 @@ def build_games(db_path: Path) -> list[dict]:
                 "jordan": jordan,
                 "photo": resolve_photo(cw["sheet"]),
                 "story": story_for(erin["scores"], jordan["scores"]),
+                "focus": focus_for(erin["scores"], jordan["scores"]),
             }
         )
     return games

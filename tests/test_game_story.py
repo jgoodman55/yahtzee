@@ -10,6 +10,7 @@ import csv
 import importlib.util
 import json
 import re
+import subprocess
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -182,13 +183,78 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     viewer = (REPO / "dashboard" / "scorecards" / "viewer.html").read_text()
     assert 'id="story"' in viewer
     assert "game.story" in viewer
+    assert 'id="replay"' in viewer
+    assert "replay.js" in viewer
     assert "Seed-rendered" not in viewer
     css = (REPO / "dashboard" / "scorecards" / "scorecards.css").read_text()
     assert ".story" in css
+    assert "prefers-reduced-motion" in css
     script = (REPO / "dashboard" / "pub_map" / "newtab.js").read_text()
     assert 'indexOf("DECIDED")' in script
+    assert "Watch replay" in script
     export = (REPO / "dashboard" / "scripts" / "export_scorecards.py").read_text()
     assert "game_story" in export
+    assert "story_focus" in export
+    replay = (REPO / "dashboard" / "scorecards" / "replay.js").read_text()
+    assert "buildTimeline" in replay
+    assert "prefers-reduced-motion" in replay
+    assert "function mount" in replay
+    assert "cutaway" in replay
+    assert "className = \"cutaway\"" not in replay
+
+
+def test_replay_timeline_matches_game_128():
+    subprocess.check_call(["node", str(REPO / "tests" / "test_replay_timeline.js")])
+
+
+def test_story_focus_names_the_boxes_in_the_sentence():
+    module = _load()
+    focus = module.story_focus(
+        _zeros(
+            ones=3,
+            twos=6,
+            threes=9,
+            fours=12,
+            fives=15,
+            sixes=18,
+            upper_bonus=35,
+            three_of_a_kind=15,
+            chance=20,
+            yahtzee=50,
+        ),
+        _zeros(
+            ones=2,
+            twos=4,
+            threes=6,
+            fours=8,
+            fives=10,
+            sixes=12,
+            three_of_a_kind=21,
+            four_of_a_kind=24,
+            full_house=25,
+            small_straight=30,
+            large_straight=40,
+            chance=18,
+        ),
+    )
+    assert focus == ["full_house", "small_straight", "large_straight", "yahtzee"]
+
+
+def test_game_128_focus_is_yahtzee_against_the_straight():
+    module = _load()
+    players = _scores()[128]
+    focus = module.story_focus(players["erin"], players["jordan"])
+    assert focus == ["upper_bonus", "four_of_a_kind", "large_straight", "yahtzee"]
+    story = module.game_story(players["erin"], players["jordan"])
+    assert "Yahtzee" in story
+    assert "large straight" in story
+    assert "upper bonus" in story
+
+
+def test_identical_tie_has_no_focus_boxes():
+    module = _load()
+    scores = _zeros(yahtzee=50, large_straight=40, chance=20)
+    assert module.story_focus(scores, dict(scores)) == []
 
 
 def test_games_js_embeds_the_same_story():
@@ -199,3 +265,5 @@ def test_games_js_embeds_the_same_story():
     game = next(row for row in payload["games"] if row["game_seq"] == 129)
     assert game["story"] == module.game_story(scores[129]["erin"], scores[129]["jordan"])
     assert all(row.get("story") for row in payload["games"])
+    game_128 = next(row for row in payload["games"] if row["game_seq"] == 128)
+    assert game_128["focus"] == module.story_focus(scores[128]["erin"], scores[128]["jordan"])

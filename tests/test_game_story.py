@@ -194,10 +194,13 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "Watch replay" in script
     assert "padding: 12px 16px 14px" in script
     assert "padding: 8px 2px 10px" not in script
-    assert "cutaways.js" not in viewer
+    assert "cutaways.js" in viewer
+    assert "cutaways.css" in viewer
     export = (REPO / "dashboard" / "scripts" / "export_scorecards.py").read_text()
     assert "game_story" in export
     assert "story_focus" in export
+    assert "def load_venues" in export
+    assert "seed_game_locations.csv" in export
     replay = (REPO / "dashboard" / "scorecards" / "replay.js").read_text()
     assert "buildTimeline" in replay
     assert "prefers-reduced-motion" in replay
@@ -206,7 +209,15 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "className = \"cutaway\"" not in replay
     assert "replay-margin" not in replay
     assert "polyline" not in replay
-    assert "YahtzeeCutaways" not in replay
+    assert "YahtzeeCutaways" in replay
+    scenes = (REPO / "dashboard" / "scorecards" / "cutaways.js").read_text()
+    css = (REPO / "dashboard" / "scorecards" / "cutaways.css").read_text()
+    assert "Skip" in scenes
+    assert "five of a kind" not in scenes
+    assert "Audio(" not in scenes
+    assert "prefers-reduced-motion" in css
+    assert "pint-raise" in scenes
+    assert "M42 48h74v16" not in scenes
 
 
 def test_replay_timeline_matches_game_128():

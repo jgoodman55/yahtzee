@@ -54,17 +54,89 @@ assert.strictEqual(yahtzee.holdMs, replay.FOCUS_MS);
 assert.ok(yahtzee.caption.includes("Yahtzee"));
 
 assert.ok(timeline.durationMs >= 10000 && timeline.durationMs <= 20000);
-
-const cues = Object.fromEntries(timeline.cutaways.map((row) => [row.box, row.cue]));
-assert.strictEqual(cues.yahtzee, "yahtzee");
-assert.strictEqual(cues.upper_bonus, "bonus");
-assert.strictEqual(cues.large_straight, "scratch");
-timeline.cutaways.forEach((row) => {
-  assert.ok(["yahtzee", "bonus", "scratch", "comeback"].includes(row.cue));
-});
+assert.strictEqual(
+  timeline.durationMs,
+  timeline.steps.reduce((sum, step) => sum + step.holdMs, 0)
+);
+assert.strictEqual(game.venue, "Anchor Bar");
+assert.ok(timeline.cutaways.length <= 2);
+assert.deepStrictEqual(
+  timeline.cutaways.map((row) => row.box + ":" + row.cue),
+  ["large_straight:courtroom", "yahtzee:documentary"]
+);
 const yahtzeeStep = timeline.steps.find((step) => step.box === "yahtzee");
-assert.deepStrictEqual(yahtzeeStep.cutaway, { cue: "yahtzee" });
+assert.strictEqual(yahtzeeStep.cutaway.cue, "documentary");
+assert.ok(yahtzeeStep.cutaway.line.includes("rolled a Yahtzee"));
+assert.ok(yahtzeeStep.cutaway.line.includes("Anchor Bar"));
 assert.strictEqual(timeline.finale.cutaway, null);
+const straight = timeline.scenes.find((scene) => scene.cue === "courtroom" && scene.box === "large_straight");
+assert.strictEqual(straight.drama, 40);
+assert.strictEqual(straight.who, "Erin");
+const sports128 = timeline.scenes.find((scene) => scene.cue === "sports");
+assert.ok(sports128.line.includes("Erin has not"));
+assert.ok(sports128.line.includes("74"));
+
+function scenesFor(seq) {
+  return replay.buildTimeline(payload.games.find((row) => row.game_seq === seq));
+}
+
+const hook = scenesFor(112);
+assert.strictEqual(hook.scenes[0].line, "Rarely seen in the wild, the Erin has rolled a Yahtzee at The Butcher's Hook.");
+
+const atlas = scenesFor(122);
+const regulars = atlas.scenes.find((scene) => scene.cue === "regulars");
+assert.strictEqual(regulars.deficit, 42);
+assert.strictEqual(regulars.line, "Back from 42 down, Jordan? I've seen pints with less fizz.");
+assert.deepStrictEqual(
+  atlas.cutaways.map((row) => row.box + ":" + row.cue),
+  ["yahtzee:documentary", "chance:regulars"]
+);
+assert.strictEqual(atlas.cutaways[1].about, "yahtzee");
+const atlasPlan = replay.planPlayback(atlas.steps);
+const atlasScenes = atlasPlan.filter((action) => action.kind === "scene" || action.kind === "scene-after");
+assert.strictEqual(atlasScenes.length, 2);
+assert.strictEqual(atlasScenes[1].kind, "scene-after");
+
+function boardBetween(plan) {
+  const first = plan.findIndex((action) => action.kind === "scene" || action.kind === "scene-after");
+  const second = plan.findIndex((action, index) => index > first && (action.kind === "scene" || action.kind === "scene-after"));
+  return plan.slice(first + 1, second).reduce((sum, action) => {
+    return sum + (action.kind === "board" || action.kind === "bridge" ? action.wait : 0);
+  }, 0);
+}
+const spaced = [];
+for (let i = 0; i < 8; i += 1) spaced.push({ holdMs: 700, cutaway: null });
+spaced[1].cutaway = { cue: "documentary" };
+spaced[2].cutaway = { cue: "regulars" };
+const spacedPlan = replay.planPlayback(spaced);
+const spacedScenes = spacedPlan.filter((action) => action.kind === "scene" || action.kind === "scene-after");
+assert.strictEqual(spacedScenes[1].kind, "scene");
+assert.ok(boardBetween(spacedPlan) >= replay.BOARD_GAP_MS);
+
+const bothBonus = scenesFor(124);
+assert.ok(!bothBonus.scenes.some((scene) => scene.cue === "sports"));
+
+const anchor = scenesFor(129);
+const desk = anchor.scenes.find((scene) => scene.cue === "sports");
+assert.strictEqual(desk.upper, 66);
+assert.strictEqual(desk.otherUpper, 60);
+assert.strictEqual(
+  desk.line,
+  "Sources confirm Jordan has reached 66 in the upper section at Anchor Bar. Erin has not. More at 11."
+);
+
+const again = replay.buildTimeline(game);
+assert.deepStrictEqual(again.cutaways, timeline.cutaways);
+
+payload.games.forEach((row) => {
+  const built = replay.buildTimeline(row);
+  assert.ok(built.cutaways.length <= 2);
+  built.scenes.forEach((scene) => {
+    assert.strictEqual(/\b(erin|jordan)\b/.test(scene.line), false, scene.line);
+    assert.strictEqual(/five of a kind/i.test(scene.line), false, scene.line);
+    if (row.venue && scene.cue !== "regulars") assert.ok(scene.line.includes(row.venue), scene.line);
+  });
+});
 
 const comeback = replay.buildTimeline({
   erin: { scores: { sixes: 30 } },
@@ -74,7 +146,7 @@ const comeback = replay.buildTimeline({
 });
 assert.deepStrictEqual(
   comeback.cutaways.map((row) => row.box + ":" + row.cue),
-  ["three_of_a_kind:comeback"]
+  ["three_of_a_kind:courtroom", "four_of_a_kind:regulars"]
 );
 
 const quiet = replay.buildTimeline({

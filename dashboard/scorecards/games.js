@@ -65,8 +65,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fours",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 2,
@@ -122,8 +121,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "small_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 3,
@@ -178,8 +176,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 4,
@@ -234,8 +231,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "threes",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 5,
@@ -290,8 +286,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "three_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 6,
@@ -347,8 +342,7 @@ window.SCORECARD_DATA = {
         "fives",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 7,
@@ -405,8 +399,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 8,
@@ -461,8 +454,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 9,
@@ -517,8 +509,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 10,
@@ -573,8 +564,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 11,
@@ -629,8 +619,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 12,
@@ -686,8 +675,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "full_house",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 13,
@@ -742,8 +730,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 14,
@@ -798,8 +785,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 15,
@@ -856,8 +842,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "small_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 16,
@@ -913,8 +898,7 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 17,
@@ -970,8 +954,7 @@ window.SCORECARD_DATA = {
         "fours",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 18,
@@ -1026,8 +1009,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "twos",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 19,
@@ -1083,8 +1065,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 20,
@@ -1140,8 +1121,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 21,
@@ -1197,8 +1177,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 22,
@@ -1254,8 +1233,7 @@ window.SCORECARD_DATA = {
         "fives",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 23,
@@ -1310,8 +1288,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "yahtzee",
         "chance"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 24,
@@ -1365,8 +1342,7 @@ window.SCORECARD_DATA = {
       "story": "Erin's Yahtzee (+50) decided it. Jordan missed Yahtzee.",
       "focus": [
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 25,
@@ -1421,8 +1397,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fives",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 26,
@@ -1478,8 +1453,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "full_house",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 27,
@@ -1535,8 +1509,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 28,
@@ -1591,8 +1564,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 29,
@@ -1648,8 +1620,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "full_house",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 30,
@@ -1705,8 +1676,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 31,
@@ -1761,8 +1731,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 32,
@@ -1819,8 +1788,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 33,
@@ -1876,8 +1844,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "chance",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 34,
@@ -1933,8 +1900,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 35,
@@ -1990,8 +1956,7 @@ window.SCORECARD_DATA = {
         "threes",
         "four_of_a_kind",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 36,
@@ -2046,8 +2011,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 37,
@@ -2104,8 +2068,7 @@ window.SCORECARD_DATA = {
         "small_straight",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 38,
@@ -2159,8 +2122,7 @@ window.SCORECARD_DATA = {
       "story": "Erin's sixes (+18) decided it.",
       "focus": [
         "sixes"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 39,
@@ -2215,8 +2177,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 40,
@@ -2273,8 +2234,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 41,
@@ -2330,8 +2290,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 42,
@@ -2387,8 +2346,7 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 43,
@@ -2444,8 +2402,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "chance",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 44,
@@ -2500,8 +2457,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 45,
@@ -2557,8 +2513,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 46,
@@ -2615,8 +2570,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "full_house",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 47,
@@ -2672,8 +2626,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 48,
@@ -2729,8 +2682,7 @@ window.SCORECARD_DATA = {
         "large_straight",
         "yahtzee",
         "chance"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 49,
@@ -2786,8 +2738,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 50,
@@ -2844,8 +2795,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "full_house"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 51,
@@ -2900,8 +2850,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 52,
@@ -2957,8 +2906,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 53,
@@ -3014,8 +2962,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 54,
@@ -3071,8 +3018,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "small_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 55,
@@ -3128,8 +3074,7 @@ window.SCORECARD_DATA = {
         "fours",
         "full_house",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 56,
@@ -3185,8 +3130,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 57,
@@ -3241,8 +3185,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 58,
@@ -3297,8 +3240,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "full_house",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 59,
@@ -3353,8 +3295,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fives",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 60,
@@ -3409,8 +3350,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "threes",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 61,
@@ -3467,8 +3407,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 62,
@@ -3525,8 +3464,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 63,
@@ -3581,8 +3519,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 64,
@@ -3638,8 +3575,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 65,
@@ -3695,8 +3631,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 66,
@@ -3752,8 +3687,7 @@ window.SCORECARD_DATA = {
         "fours",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 67,
@@ -3808,8 +3742,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fours",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 68,
@@ -3864,8 +3797,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fours",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 69,
@@ -3920,8 +3852,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 70,
@@ -3976,8 +3907,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "chance"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 71,
@@ -4033,8 +3963,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "large_straight",
         "chance"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 72,
@@ -4089,8 +4018,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 73,
@@ -4144,8 +4072,7 @@ window.SCORECARD_DATA = {
       "story": "Erin's four of a kind (+9) decided it. Jordan missed four of a kind.",
       "focus": [
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 74,
@@ -4201,8 +4128,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 75,
@@ -4258,8 +4184,7 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 76,
@@ -4314,8 +4239,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 77,
@@ -4369,8 +4293,7 @@ window.SCORECARD_DATA = {
       "story": "Erin's three of a kind (+9) decided it.",
       "focus": [
         "three_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 78,
@@ -4426,8 +4349,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 79,
@@ -4482,8 +4404,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 80,
@@ -4538,8 +4459,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fours",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 81,
@@ -4594,8 +4514,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 82,
@@ -4651,8 +4570,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 83,
@@ -4708,8 +4626,7 @@ window.SCORECARD_DATA = {
         "fives",
         "large_straight",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 84,
@@ -4766,8 +4683,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 85,
@@ -4823,8 +4739,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "three_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 86,
@@ -4880,8 +4795,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "full_house"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 87,
@@ -4938,8 +4852,7 @@ window.SCORECARD_DATA = {
         "large_straight",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 88,
@@ -4995,8 +4908,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "full_house",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 89,
@@ -5053,8 +4965,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 90,
@@ -5109,8 +5020,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 91,
@@ -5165,8 +5075,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 92,
@@ -5222,8 +5131,7 @@ window.SCORECARD_DATA = {
         "fours",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 93,
@@ -5279,8 +5187,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 94,
@@ -5336,8 +5243,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 95,
@@ -5393,8 +5299,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "large_straight",
         "chance"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 96,
@@ -5451,8 +5356,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 97,
@@ -5507,8 +5411,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 98,
@@ -5564,8 +5467,7 @@ window.SCORECARD_DATA = {
         "fours",
         "upper_bonus",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 99,
@@ -5622,8 +5524,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "full_house",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 100,
@@ -5679,8 +5580,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 101,
@@ -5736,8 +5636,7 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "full_house"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 102,
@@ -5792,8 +5691,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 103,
@@ -5848,8 +5746,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 104,
@@ -5904,8 +5801,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "large_straight"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 105,
@@ -5961,8 +5857,7 @@ window.SCORECARD_DATA = {
         "sixes",
         "upper_bonus",
         "full_house"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 106,
@@ -6018,8 +5913,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 107,
@@ -6073,8 +5967,7 @@ window.SCORECARD_DATA = {
       "story": "Jordan's four of a kind (+26) decided it. Erin missed four of a kind.",
       "focus": [
         "four_of_a_kind"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 108,
@@ -6129,8 +6022,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "fives",
         "upper_bonus"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 109,
@@ -6186,8 +6078,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 110,
@@ -6243,8 +6134,7 @@ window.SCORECARD_DATA = {
         "fives",
         "three_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 111,
@@ -6300,8 +6190,7 @@ window.SCORECARD_DATA = {
         "fours",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": null
+      ]
     },
     {
       "game_seq": 112,
@@ -6356,8 +6245,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": "The Butcher's Hook"
+      ]
     },
     {
       "game_seq": 113,
@@ -6411,8 +6299,7 @@ window.SCORECARD_DATA = {
       "story": "Jordan's fives (+5) decided it.",
       "focus": [
         "fives"
-      ],
-      "venue": "The Queen's Arms"
+      ]
     },
     {
       "game_seq": 114,
@@ -6469,8 +6356,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "full_house",
         "large_straight"
-      ],
-      "venue": "The Queen's Arms"
+      ]
     },
     {
       "game_seq": 115,
@@ -6525,8 +6411,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "chance"
-      ],
-      "venue": "The Queen's Arms"
+      ]
     },
     {
       "game_seq": 116,
@@ -6582,8 +6467,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "full_house"
-      ],
-      "venue": "The Queen's Arms"
+      ]
     },
     {
       "game_seq": 117,
@@ -6638,8 +6522,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": "Munkbron"
+      ]
     },
     {
       "game_seq": 118,
@@ -6695,8 +6578,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ],
-      "venue": "Munkbron"
+      ]
     },
     {
       "game_seq": 119,
@@ -6751,8 +6633,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": "Munkbron"
+      ]
     },
     {
       "game_seq": 120,
@@ -6808,8 +6689,7 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": "The Atlas"
+      ]
     },
     {
       "game_seq": 121,
@@ -6864,8 +6744,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "yahtzee"
-      ],
-      "venue": "The Atlas"
+      ]
     },
     {
       "game_seq": 122,
@@ -6921,8 +6800,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": "The Atlas"
+      ]
     },
     {
       "game_seq": 123,
@@ -6979,8 +6857,7 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ],
-      "venue": "The Atlas"
+      ]
     },
     {
       "game_seq": 124,
@@ -7036,8 +6913,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": "The Atlas"
+      ]
     },
     {
       "game_seq": 125,
@@ -7094,8 +6970,7 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "full_house"
-      ],
-      "venue": "The Leicester Arms"
+      ]
     },
     {
       "game_seq": 126,
@@ -7152,8 +7027,7 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "full_house"
-      ],
-      "venue": "The Leicester Arms"
+      ]
     },
     {
       "game_seq": 127,
@@ -7208,8 +7082,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "large_straight",
         "yahtzee"
-      ],
-      "venue": "Anchor Bar"
+      ]
     },
     {
       "game_seq": 128,
@@ -7266,8 +7139,7 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "large_straight",
         "yahtzee"
-      ],
-      "venue": "Anchor Bar"
+      ]
     },
     {
       "game_seq": 129,
@@ -7322,8 +7194,7 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "chance"
-      ],
-      "venue": "Anchor Bar"
+      ]
     }
   ]
 };

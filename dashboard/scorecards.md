@@ -30,10 +30,9 @@ python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 ```
 
 Writes `dashboard/scorecards/games.js` (and optional PNG composites). The
-viewer and index are static HTML. `replay.js` builds a timed list of box
-steps from `games.js` and draws that list. `cutaways.js` interrupts a few
-of those steps with a short original scene, then the tally continues.
-Caddy serves both with the rest of `/scorecards`. No video files.
+viewer and index are static HTML. `replay.js` is static too: it builds a
+timed list of box steps from `games.js` and draws that list. Caddy serves
+it with the rest of `/scorecards`. No video files.
 
 On [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves this folder
 at `/scorecards` (and `/scorecards/*`). `dac serve` does **not** publish

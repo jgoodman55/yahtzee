@@ -44,7 +44,6 @@ SAMPLE_PHOTOS = OUT_DIR / "samples" / "photos"
 SAMPLE_DIR = OUT_DIR / "samples"
 GAMES_CSV = REPO_ROOT / "assets" / "seeds" / "raw_games.csv"
 CROSSWALK_CSV = REPO_ROOT / "assets" / "seeds" / "sheet_game_crosswalk.csv"
-LOCATIONS_CSV = REPO_ROOT / "assets" / "seeds" / "seed_game_locations.csv"
 
 ERIN = "#FF2D92"
 JORDAN = "#2D9CFF"
@@ -196,23 +195,10 @@ def _game_story_fn():
     return module.game_story, module.story_focus
 
 
-def load_venues() -> dict[int, str]:
-    venues: dict[int, str] = {}
-    if not LOCATIONS_CSV.exists():
-        return venues
-    with LOCATIONS_CSV.open(newline="", encoding="utf-8") as fh:
-        for rec in csv.DictReader(fh):
-            name = (rec.get("pub_name") or "").strip()
-            if name:
-                venues[int(rec["game_seq"])] = name
-    return venues
-
-
 def build_games(db_path: Path) -> list[dict]:
     crosswalk = load_crosswalk()
     scores = load_scores()
     trends = load_trends(db_path)
-    venues = load_venues()
     story_for, focus_for = _game_story_fn()
     games = []
     for seq in sorted(crosswalk):
@@ -245,7 +231,6 @@ def build_games(db_path: Path) -> list[dict]:
                 "photo": resolve_photo(cw["sheet"]),
                 "story": story_for(erin["scores"], jordan["scores"]),
                 "focus": focus_for(erin["scores"], jordan["scores"]),
-                "venue": venues.get(seq),
             }
         )
     return games

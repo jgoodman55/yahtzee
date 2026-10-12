@@ -87,8 +87,10 @@ assert.strictEqual(
 );
 assert.strictEqual(fourKind.line.includes("27"), false);
 const sports128 = timeline.scenes.find((scene) => scene.cue === "sports");
-assert.ok(sports128.line.includes("Erin has not"));
-assert.ok(sports128.line.includes("74"));
+assert.strictEqual(
+  sports128.line,
+  "Sources confirm Jordan has earned the upper bonus at Anchor Bar. Erin has not. More at 11."
+);
 
 function scenesFor(seq) {
   return replay.buildTimeline(payload.games.find((row) => row.game_seq === seq));
@@ -142,8 +144,9 @@ assert.strictEqual(desk.upper, 66);
 assert.strictEqual(desk.otherUpper, 60);
 assert.strictEqual(
   desk.line,
-  "Sources confirm Jordan has reached 66 in the upper section at Anchor Bar. Erin has not. More at 11."
+  "Sources confirm Jordan has earned the upper bonus at Anchor Bar. Erin has not. More at 11."
 );
+assert.strictEqual(desk.line.includes(String(desk.upper)), false);
 assert.strictEqual(replay.textReadyMs("sports", desk.line), 800 + (desk.line.length - 1) * 12);
 assert.ok(replay.textReadyMs("sports", desk.line) < 2500);
 assert.strictEqual(
@@ -190,6 +193,13 @@ payload.games.forEach((row) => {
     assert.strictEqual(/\b(erin|jordan)\b/.test(scene.line), false, scene.line);
     assert.strictEqual(/five of a kind/i.test(scene.line), false, scene.line);
     if (row.venue && scene.cue !== "regulars") assert.ok(scene.line.includes(row.venue), scene.line);
+    if (scene.cue === "sports") {
+      assert.match(scene.line, /^Sources confirm (Erin|Jordan) has earned the upper bonus/);
+      assert.ok(scene.line.endsWith(". More at 11."));
+      assert.strictEqual(/reached|upper section/.test(scene.line), false, scene.line);
+      assert.strictEqual(scene.line.includes(String(scene.upper)), false, scene.line);
+      return;
+    }
     if (scene.cue !== "courtroom") return;
     if (scene.box === "full_house" || scene.box === "small_straight" || scene.box === "large_straight") {
       const fixed = { full_house: ["25", "full house"], small_straight: ["30", "small straight"], large_straight: ["40", "large straight"] };

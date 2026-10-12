@@ -154,8 +154,8 @@
           otherUpper: otherUpper,
           erinUpper: upperTotal(erinScores),
           jordanUpper: upperTotal(jordanScores),
-          line: "Sources confirm " + whoBonus + " has reached " + upper +
-            " in the upper section" + place(venue) + ". " + other + " has not. More at 11.",
+          line: "Sources confirm " + whoBonus + " has earned the upper bonus" +
+            place(venue) + ". " + other + " has not. More at 11.",
           gameSeq: seq,
           venue: venue,
         });

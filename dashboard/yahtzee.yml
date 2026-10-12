@@ -1769,7 +1769,7 @@ rows:
         col: 12
         content: |
           Newest games first. The comment is the first column after the game number.
-          The next column says what decided the game.
+          The next column says what decided the game. Watch replay plays the boxes adding up.
 
           Tables show the game number. Click a game in the lists to open the
           photo beside the digitized card, or
@@ -1783,6 +1783,7 @@ rows:
         sql: |
           select
             h.game_seq,
+            'Watch replay' as replay,
             replace(replace(h.comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as comment,
             h.story,
             upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
@@ -1795,6 +1796,8 @@ rows:
           - name: game_seq
             label: Game
             frozen: true
+          - name: replay
+            label: Replay
           - name: comment
             label: Comment
           - name: story

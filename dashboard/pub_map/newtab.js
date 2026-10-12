@@ -1,7 +1,7 @@
 /* Retarget only the Top-tab pub map preview. Other /pub_map.html links stay.
    The comment and what-decided-it columns wrap on word boundaries. On a
    phone those two sit on their own lines, and Winner, Erin, and Jordan
-   stay on one line with the game number. */
+   stay on one line with the game number. Watch replay is its own line. */
 (function () {
   function fitPhoneTables() {
     if (document.getElementById("phone-tables")) return;
@@ -78,6 +78,12 @@
       "  table.yahtzee-story-table td[data-col='Jordan'] { order: 4; }",
       "  table.yahtzee-story-table td.yahtzee-comment { order: 5; }",
       "  table.yahtzee-story-table td.yahtzee-story { order: 6; }",
+      "  table.yahtzee-story-table td.yahtzee-replay {",
+      "    order: 7;",
+      "    flex: 1 0 100%;",
+      "    width: 100% !important;",
+      "    white-space: normal !important;",
+      "  }",
       "}"
     ].join("\n");
     (document.head || document.documentElement).appendChild(style);
@@ -122,11 +128,33 @@
           var label = labels[index] || "";
           if (label.indexOf("COMMENT") !== -1) cell.classList.add("yahtzee-comment");
           if (label.indexOf("DECIDED") !== -1) cell.classList.add("yahtzee-story");
+          if (label.indexOf("REPLAY") !== -1) {
+            cell.classList.add("yahtzee-replay");
+            if (cell.tagName === "TD") linkReplay(cell, row, labels);
+          }
           var chip = chipLabel(label);
           if (hasStory && cell.tagName === "TD" && chip) cell.setAttribute("data-col", chip);
         });
       });
     });
+  }
+
+  function linkReplay(cell, row, labels) {
+    if (cell.querySelector("a")) return;
+    var gameIndex = -1;
+    labels.forEach(function (label, index) {
+      if (label.indexOf("GAME") === 0) gameIndex = index;
+    });
+    var gameCell = gameIndex >= 0 ? row.children[gameIndex] : null;
+    var gameNo = gameCell ? String(gameCell.textContent || "").replace(/\D/g, "") : "";
+    if (!/^\d+$/.test(gameNo)) return;
+    var link = document.createElement("a");
+    link.href = "/scorecards/viewer.html?game=" + gameNo + "&replay=1#replay";
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.textContent = "Watch replay";
+    cell.textContent = "";
+    cell.appendChild(link);
   }
 
   function pathOf(value) {

@@ -20,13 +20,15 @@
       </nav>
     </div>
 
+    <p class="story" id="story" hidden></p>
+
     <div class="compare">
       <section class="panel">
         <h2>Original sheet photo</h2>
         <div class="photo-slot" id="photo"></div>
       </section>
       <section class="panel">
-        <h2>Seed-rendered scorecard</h2>
+        <h2>Digitized scorecard</h2>
         <div class="card-scroll" id="card"></div>
         <div class="legend">
           <span><i class="swatch erin"></i>Erin #FF2D92</span>
@@ -201,6 +203,11 @@
         return key;
       }
       const w = displayName(game.winner);
+      const story = document.getElementById("story");
+      if (game.story) {
+        story.hidden = false;
+        story.textContent = game.story;
+      }
       document.getElementById("subtitle").textContent =
         `${game.sheet} · game ${game.game_on_sheet} of ${sheetGames.length} on this sheet · winner ${w} · margin ${game.margin} · Erin ${game.erin.recorded_total} / Jordan ${game.jordan.recorded_total}`;
 

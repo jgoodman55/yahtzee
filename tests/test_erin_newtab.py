@@ -89,6 +89,8 @@ def test_newtab_script_targets_only_the_preview():
     assert "@media (max-width: 640px)" in script
     assert "white-space: nowrap" in script
     assert "yahtzee-comment" in script
+    assert "yahtzee-story" in script
+    assert 'indexOf("DECIDED")' in script
     assert "overflow-wrap: anywhere" not in script
     proxy = _load_proxy()
     html = b"<html><body><p>hi</p></body></html>"

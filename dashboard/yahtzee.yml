@@ -1769,6 +1769,7 @@ rows:
         col: 12
         content: |
           Newest games first. The comment is the first column after the game number.
+          The next column says what decided the game.
 
           Tables show the game number. Click a game in the lists to open the
           photo beside the digitized card, or
@@ -1783,6 +1784,7 @@ rows:
           select
             h.game_seq,
             replace(replace(h.comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as comment,
+            h.story,
             upper(substr(h.winner, 1, 1)) || substr(h.winner, 2) as winner,
             t.erin_recorded_total as erin_score,
             t.jordan_recorded_total as jordan_score
@@ -1795,6 +1797,8 @@ rows:
             frozen: true
           - name: comment
             label: Comment
+          - name: story
+            label: What decided it
           - name: winner
             label: Winner
           - name: erin_score

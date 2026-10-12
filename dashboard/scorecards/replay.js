@@ -38,10 +38,16 @@
     ["chance", "Chance"],
     ["yahtzee_bonus", "Yahtzee bonus"],
   ];
-  var NORMAL_MS = 700;
-  var FOCUS_MS = 1400;
-  var SCENE_MS = 3200;
-  var BOARD_GAP_MS = 2000;
+  function slowed(ms) {
+    return Math.round(ms * 4 / 3);
+  }
+  var NORMAL_MS = slowed(700);
+  var FOCUS_MS = slowed(1400);
+  var SCENE_MS = slowed(3200);
+  var BOARD_GAP_MS = slowed(2000);
+  var LEAD_MS = slowed(380);
+  var BRIDGE_MS = slowed(420);
+  var FIXED_POINTS = { full_house: 25, small_straight: 30, large_straight: 40 };
   var RANK = { documentary: 0, regulars: 1, courtroom: 2, sports: 3 };
   var UPPER_KEYS = ["ones", "twos", "threes", "fours", "fives", "sixes"];
 
@@ -59,6 +65,11 @@
 
   function place(venue) {
     return venue ? " at " + venue : "";
+  }
+
+  function chargeName(step) {
+    if (step.box === "yahtzee" || step.box === "yahtzee_bonus") return step.label;
+    return step.label.charAt(0).toLowerCase() + step.label.slice(1);
   }
 
   function collectScenes(steps, game) {
@@ -116,28 +127,33 @@
           venue: venue,
         });
       }
-      if (step.box !== "yahtzee" && step.box !== "upper_bonus") {
+      if (step.box !== "upper_bonus") {
         var charged = "";
-        var taken = 0;
-        if (erinPoints === 0 && jordanPoints >= 25) {
+        var otherScore = 0;
+        if (erinPoints === 0 && jordanPoints > 0) {
           charged = "Erin";
-          taken = jordanPoints;
-        } else if (jordanPoints === 0 && erinPoints >= 25) {
+          otherScore = jordanPoints;
+        } else if (jordanPoints === 0 && erinPoints > 0) {
           charged = "Jordan";
-          taken = erinPoints;
+          otherScore = erinPoints;
         }
         if (charged) {
+          var fixed = FIXED_POINTS[step.box];
+          var name = chargeName(step);
+          var line = fixed
+            ? charged + ", you are charged with throwing away " + fixed + " points on " + name + place(venue) + "."
+            : charged + ", you are charged with scoring 0 on " + name + place(venue) + ".";
           scenes.push({
             index: index,
             box: step.box,
             cue: "courtroom",
-            drama: taken,
+            drama: fixed || otherScore,
             who: charged,
-            points: taken,
+            points: fixed || 0,
             label: step.label,
             erin: erinPoints,
             jordan: jordanPoints,
-            line: charged + ", you are charged with throwing away " + taken + " points" + place(venue) + ".",
+            line: line,
             docket: step.label + ". Erin " + erinPoints + ". Jordan " + jordanPoints + ".",
             gameSeq: seq,
             venue: venue,
@@ -232,10 +248,10 @@
     steps.forEach(function (step, index) {
       if (step.cutaway && step.cutaway.cue) pending = index;
       if (pending >= 0 && gap >= BOARD_GAP_MS) {
-        actions.push({ index: pending, kind: "scene", wait: 380 });
+        actions.push({ index: pending, kind: "scene", wait: LEAD_MS });
         pending = -1;
-        actions.push({ index: index, kind: "bridge", wait: 420 });
-        gap = 420;
+        actions.push({ index: index, kind: "bridge", wait: BRIDGE_MS });
+        gap = BRIDGE_MS;
         return;
       }
       var hold = step.holdMs;
@@ -244,8 +260,8 @@
         if (need > 0) actions.push({ index: index, kind: "board", wait: need });
         actions.push({ index: pending, kind: "scene", wait: 0 });
         pending = -1;
-        actions.push({ index: index, kind: "bridge", wait: 420 });
-        gap = 420;
+        actions.push({ index: index, kind: "bridge", wait: BRIDGE_MS });
+        gap = BRIDGE_MS;
         return;
       }
       actions.push({ index: index, kind: "board", wait: hold });

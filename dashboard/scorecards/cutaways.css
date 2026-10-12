@@ -1,6 +1,7 @@
 /* Full-viewport cutaway scenes. Scoped so the scorecard page is unchanged. */
 
 .cutaway-layer {
+  --slow: 1.333;
   --paper: #f4efe4;
   --ink: #1a140e;
   --text: #f3f6fa;
@@ -104,11 +105,11 @@
 .cutaway-layer .gavel {
   transform-box: fill-box;
   transform-origin: 5px 96px;
-  animation: gavel-bang 0.16s var(--bang, 1.8s) ease-in forwards;
+  animation: gavel-bang calc(0.16s * var(--slow)) var(--bang, 2.4s) ease-in forwards;
 }
 
 .cutaway-layer[data-scene="courtroom"] .stage {
-  animation: gavel-shake 0.34s var(--bang, 1.8s) ease-out both;
+  animation: gavel-shake calc(0.34s * var(--slow)) var(--bang, 2.4s) ease-out both;
 }
 
 .cutaway-layer[data-scene="documentary"] { background: #06110c; }
@@ -121,7 +122,7 @@
   padding: 22px 8vw 26px;
   background: #000;
   opacity: 0;
-  animation: fade-in 0.55s 2.15s ease forwards;
+  animation: fade-in calc(0.55s * var(--slow)) calc(2.15s * var(--slow)) ease forwards;
 }
 
 .cutaway-layer .narration {
@@ -157,11 +158,11 @@
   color: var(--muted);
 }
 
-.cutaway-layer .die-1 { animation: tumble-1 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
-.cutaway-layer .die-2 { animation: tumble-2 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
-.cutaway-layer .die-3 { animation: tumble-3 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
-.cutaway-layer .die-4 { animation: tumble-4 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
-.cutaway-layer .die-5 { animation: tumble-5 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-1 { animation: tumble-1 calc(2.1s * var(--slow)) cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-2 { animation: tumble-2 calc(2.1s * var(--slow)) cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-3 { animation: tumble-3 calc(2.1s * var(--slow)) cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-4 { animation: tumble-4 calc(2.1s * var(--slow)) cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-5 { animation: tumble-5 calc(2.1s * var(--slow)) cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
 
 .cutaway-layer[data-scene="regulars"] .bubble {
   position: absolute;
@@ -180,7 +181,7 @@
   opacity: 0;
   transform: scale(0.72);
   transform-origin: 24px 100%;
-  animation: pop-in 0.38s 0.28s cubic-bezier(0.15, 1.35, 0.35, 1) forwards;
+  animation: pop-in calc(0.38s * var(--slow)) calc(0.28s * var(--slow)) cubic-bezier(0.15, 1.35, 0.35, 1) forwards;
 }
 
 .cutaway-layer[data-scene="regulars"] .bubble:after {
@@ -208,7 +209,7 @@
 .cutaway-layer .pint-raise {
   transform-box: fill-box;
   transform-origin: center bottom;
-  animation: raise-pint 0.7s 0.85s ease-out forwards;
+  animation: raise-pint calc(0.7s * var(--slow)) calc(0.85s * var(--slow)) ease-out forwards;
 }
 
 .cutaway-layer[data-scene="sports"] {
@@ -230,7 +231,7 @@
   align-items: stretch;
   background: #12080c;
   border-top: 6px solid #e10600;
-  animation: banner-in 0.45s 0.12s ease-out both;
+  animation: banner-in calc(0.45s * var(--slow)) calc(0.12s * var(--slow)) ease-out both;
 }
 
 .cutaway-layer .flag {

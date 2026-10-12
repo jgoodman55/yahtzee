@@ -171,7 +171,7 @@ nav.links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.9rem; }
   height: 100%;
   width: 0;
   border-radius: inherit;
-  transition: width 420ms ease;
+  transition: width 560ms ease;
 }
 
 .lane.erin .fill { background: var(--erin); }
@@ -192,7 +192,7 @@ nav.links { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.9rem; }
   to { transform: none; opacity: 1; }
 }
 
-.lane.is-pop .total { animation: replay-pop 420ms ease; }
+.lane.is-pop .total { animation: replay-pop 560ms ease; }
 
 .compare {
   display: grid;

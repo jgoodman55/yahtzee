@@ -338,6 +338,25 @@
   .cutaway-layer .letterbox { padding: 16px 16px 20px; }
   .cutaway-layer .narration { font-size: 1.2rem; }
   .cutaway-layer .species { left: 12px; top: 12px; }
+  .cutaway-layer[data-scene="documentary"] {
+    display: flex;
+    flex-direction: column;
+  }
+  .cutaway-layer[data-scene="documentary"] .stage {
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+  }
+  .cutaway-layer[data-scene="documentary"] .letterbox {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex: 0 0 auto;
+  }
+  .cutaway-layer[data-scene="documentary"] .narration { font-size: 1.15rem; }
   .cutaway-layer[data-scene="regulars"] {
     display: flex;
     flex-direction: column;

@@ -32,7 +32,9 @@ python3 dashboard/scripts/export_scorecards.py --png-samples 1,47,100
 Writes `dashboard/scorecards/games.js` (and optional PNG composites). The
 viewer and index are static HTML. `replay.js` is static too: it builds a
 timed list of box steps from `games.js` and draws that list. `cutaways.js`
-plays at most two scenes on the steps that earn them. Caddy serves
+plays at most two scenes on the steps that earn them. Each scene stays up
+after its line has fully appeared: about a quarter-second per word, and at
+least two and a half seconds. Caddy serves
 it with the rest of `/scorecards`. No video files.
 
 On [yahtzee.jginfo.xyz](https://yahtzee.jginfo.xyz), Caddy serves this folder

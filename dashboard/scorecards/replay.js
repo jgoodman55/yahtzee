@@ -13,8 +13,10 @@
    cutaway is null, or a scene to play after that box: courtroom, documentary,
    regulars, or sports. At most two scenes are kept, the most dramatic ones.
    YahtzeeCutaways draws the scene. Scene time is not part of durationMs.
-   Two scenes leave at least two seconds of the scoreboard between them.
-   If the replay runs out of boxes first, the second scene plays after it.
+   After the line is fully on screen the scene holds a quarter-second per
+   word, and at least 2.5 seconds. Two scenes leave at least two seconds of
+   the scoreboard between them. If the replay runs out of boxes first, the
+   second scene plays after it.
 */
 (function (root, factory) {
   var api = factory();
@@ -47,6 +49,11 @@
   var BOARD_GAP_MS = slowed(2000);
   var LEAD_MS = slowed(380);
   var BRIDGE_MS = slowed(420);
+  var WORD_HOLD_MS = 250;
+  var MIN_READ_MS = 2500;
+  var SPORTS_TYPE_START = 800;
+  var SPORTS_PER_CHAR = 12;
+  var COURT_WORD_MS = 227;
   var FIXED_POINTS = { full_house: 25, small_straight: 30, large_straight: 40 };
   var RANK = { documentary: 0, regulars: 1, courtroom: 2, sports: 3 };
   var UPPER_KEYS = ["ones", "twos", "threes", "fours", "fives", "sixes"];
@@ -65,6 +72,32 @@
 
   function place(venue) {
     return venue ? " at " + venue : "";
+  }
+
+  function wordCount(line) {
+    return String(line || "").split(/\s+/).filter(Boolean).length;
+  }
+
+  function readHold(line) {
+    return Math.max(Math.max(wordCount(line), 1) * WORD_HOLD_MS, MIN_READ_MS);
+  }
+
+  function textReadyMs(cue, line) {
+    var text = String(line || "");
+    var words = Math.max(wordCount(text), 1);
+    if (cue === "courtroom") return (words - 1) * COURT_WORD_MS;
+    if (cue === "documentary") return slowed(2700);
+    if (cue === "regulars") return slowed(660);
+    if (cue === "sports") {
+      var chars = text.length;
+      if (chars <= 1) return SPORTS_TYPE_START;
+      return SPORTS_TYPE_START + (chars - 1) * SPORTS_PER_CHAR;
+    }
+    return 0;
+  }
+
+  function sceneDuration(cue, line) {
+    return textReadyMs(cue, line) + readHold(line);
   }
 
   function chargeName(step) {
@@ -203,7 +236,8 @@
     return {
       cue: scene.cue,
       drama: scene.drama,
-      ms: SCENE_MS,
+      ms: sceneDuration(scene.cue, scene.line),
+      readyMs: textReadyMs(scene.cue, scene.line),
       who: scene.who || "",
       other: scene.other || "",
       line: scene.line,
@@ -561,6 +595,9 @@
     FOCUS_MS: FOCUS_MS,
     SCENE_MS: SCENE_MS,
     BOARD_GAP_MS: BOARD_GAP_MS,
+    readHold: readHold,
+    textReadyMs: textReadyMs,
+    sceneDuration: sceneDuration,
     planPlayback: planPlayback,
     buildTimeline: buildTimeline,
     mount: mount,

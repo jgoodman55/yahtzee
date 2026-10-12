@@ -184,23 +184,31 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert 'id="story"' in viewer
     assert "game.story" in viewer
     assert 'id="replay"' in viewer
+    assert "cutaways.js" in viewer
+    assert viewer.index("cutaways.js") < viewer.index("replay.js")
     assert "replay.js" in viewer
     assert "Seed-rendered" not in viewer
     css = (REPO / "dashboard" / "scorecards" / "scorecards.css").read_text()
     assert ".story" in css
     assert "prefers-reduced-motion" in css
+    assert ".cutaway" in css
+    assert "animation: none" in css
     script = (REPO / "dashboard" / "pub_map" / "newtab.js").read_text()
     assert 'indexOf("DECIDED")' in script
     assert "Watch replay" in script
     export = (REPO / "dashboard" / "scripts" / "export_scorecards.py").read_text()
     assert "game_story" in export
     assert "story_focus" in export
+    assert "seed_game_locations" in export
     replay = (REPO / "dashboard" / "scorecards" / "replay.js").read_text()
     assert "buildTimeline" in replay
     assert "prefers-reduced-motion" in replay
     assert "function mount" in replay
     assert "cutaway" in replay
-    assert "className = \"cutaway\"" not in replay
+    assert 'className = "cutaway"' in replay
+    assert "Skip" in replay
+    assert "Audio(" not in replay
+    assert "YahtzeeCutaways" in replay
 
 
 def test_replay_timeline_matches_game_128():
@@ -267,3 +275,6 @@ def test_games_js_embeds_the_same_story():
     assert all(row.get("story") for row in payload["games"])
     game_128 = next(row for row in payload["games"] if row["game_seq"] == 128)
     assert game_128["focus"] == module.story_focus(scores[128]["erin"], scores[128]["jordan"])
+    assert game_128["venue"] == "Anchor Bar"
+    game_1 = next(row for row in payload["games"] if row["game_seq"] == 1)
+    assert game_1["venue"] is None

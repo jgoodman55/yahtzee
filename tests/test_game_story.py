@@ -58,6 +58,8 @@ def _assert_plain(story: str) -> None:
     assert FORBIDDEN.search(story) is None
     assert re.search(r"\b(erin|jordan)\b", story) is None
     assert re.search(r"yahtzee", story) is None
+    assert "throwing away" not in story
+    assert "threw away" not in story
     assert "  " not in story
 
 

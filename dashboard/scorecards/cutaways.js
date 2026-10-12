@@ -233,11 +233,11 @@
     words.forEach(function (word, index) {
       var span = document.createElement("span");
       span.className = "word";
-      span.style.animationDelay = (index * 170) + "ms";
+      span.style.animationDelay = (index * 227) + "ms";
       span.textContent = word + (index < words.length - 1 ? " " : "");
       h1.appendChild(span);
     });
-    host.style.setProperty("--bang", ((Math.max(words.length, 1) - 1) * 170) + "ms");
+    host.style.setProperty("--bang", ((Math.max(words.length, 1) - 1) * 227) + "ms");
     var docket = host.querySelector(".docket");
     docket.appendChild(document.createTextNode((scene.label || "Box") + ". "));
     ["Erin", "Jordan"].forEach(function (name, index) {
@@ -273,9 +273,9 @@
       if (!host.isConnected) return;
       index += 1;
       crawl.textContent = line.slice(0, index);
-      if (index < line.length) setTimeout(tick, 18);
+      if (index < line.length) setTimeout(tick, 24);
     }
-    setTimeout(tick, 560);
+    setTimeout(tick, 747);
   }
 
   function mount(host, scene, options) {

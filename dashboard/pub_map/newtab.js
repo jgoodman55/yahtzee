@@ -46,7 +46,7 @@
       "    align-items: baseline;",
       "    column-gap: 10px;",
       "    row-gap: 4px;",
-      "    padding: 8px 2px 10px;",
+      "    padding: 12px 16px 14px;",
       "    border-bottom: 1px solid var(--dac-border, #2a3344);",
       "  }",
       "  table.yahtzee-story-table td {",

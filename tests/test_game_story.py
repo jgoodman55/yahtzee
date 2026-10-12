@@ -209,6 +209,10 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "Skip" in replay
     assert "Audio(" not in replay
     assert "YahtzeeCutaways" in replay
+    assert "replay-margin" not in replay
+    assert "polyline" not in replay
+    assert "padding: 12px 16px 14px" in script
+    assert "padding: 8px 2px 10px" not in script
 
 
 def test_replay_timeline_matches_game_128():

@@ -92,6 +92,26 @@ assert.deepStrictEqual(
   ["yahtzee:documentary", "chance:regulars"]
 );
 assert.strictEqual(atlas.cutaways[1].about, "yahtzee");
+const atlasPlan = replay.planPlayback(atlas.steps);
+const atlasScenes = atlasPlan.filter((action) => action.kind === "scene" || action.kind === "scene-after");
+assert.strictEqual(atlasScenes.length, 2);
+assert.strictEqual(atlasScenes[1].kind, "scene-after");
+
+function boardBetween(plan) {
+  const first = plan.findIndex((action) => action.kind === "scene" || action.kind === "scene-after");
+  const second = plan.findIndex((action, index) => index > first && (action.kind === "scene" || action.kind === "scene-after"));
+  return plan.slice(first + 1, second).reduce((sum, action) => {
+    return sum + (action.kind === "board" || action.kind === "bridge" ? action.wait : 0);
+  }, 0);
+}
+const spaced = [];
+for (let i = 0; i < 8; i += 1) spaced.push({ holdMs: 700, cutaway: null });
+spaced[1].cutaway = { cue: "documentary" };
+spaced[2].cutaway = { cue: "regulars" };
+const spacedPlan = replay.planPlayback(spaced);
+const spacedScenes = spacedPlan.filter((action) => action.kind === "scene" || action.kind === "scene-after");
+assert.strictEqual(spacedScenes[1].kind, "scene");
+assert.ok(boardBetween(spacedPlan) >= replay.BOARD_GAP_MS);
 
 const bothBonus = scenesFor(124);
 assert.ok(!bothBonus.scenes.some((scene) => scene.cue === "sports"));

@@ -124,9 +124,9 @@
 
   function pint(x, extra) {
     return (
-      '<g class="' + extra + '">' +
-        '<rect x="' + x + '" y="256" width="26" height="56" rx="3" fill="#e7c56a" />' +
-        '<rect x="' + (x - 4) + '" y="248" width="34" height="14" rx="5" fill="#f3f6fa" />' +
+      '<g class="pint ' + extra + '">' +
+        '<rect x="' + x + '" y="244" width="26" height="60" rx="3" fill="#e7c56a" />' +
+        '<rect x="' + (x - 4) + '" y="236" width="34" height="14" rx="5" fill="#f3f6fa" />' +
       "</g>"
     );
   }
@@ -152,7 +152,7 @@
           '<rect width="800" height="520" fill="#100e0c" />' +
           '<rect x="0" y="0" width="800" height="300" fill="#1a1612" />' +
           sign +
-          '<g transform="translate(180 150)">' +
+          '<g class="regular" transform="translate(180 150)">' +
             '<circle cx="70" cy="46" r="36" fill="#f0c9a0" />' +
             '<path d="M40 40c8-28 62-28 64 2-20 4-48 6-64 0z" fill="#d7dde6" />' +
             '<path d="M58 58c6 8 22 8 28 0" fill="none" stroke="#1a140e" stroke-width="3" stroke-linecap="round" />' +
@@ -160,10 +160,14 @@
             '<circle cx="84" cy="50" r="3" fill="#1a140e" />' +
             '<rect x="28" y="86" width="86" height="90" rx="10" fill="#3c4a44" />' +
           "</g>" +
-          '<g transform="translate(360 140)">' +
+          '<g class="regular" transform="translate(360 140)">' +
             '<circle cx="78" cy="58" r="38" fill="#e7b892" />' +
-            '<path d="M42 48h74v16H42z" fill="#2a3344" />' +
             '<path d="M48 40c10-24 58-22 66 8" fill="#6d5a48" />' +
+            '<path d="M52 50c8-7 16-6 22 1" fill="none" stroke="#1a140e" stroke-width="2.5" stroke-linecap="round" />' +
+            '<path d="M82 50c8-7 16-6 22 1" fill="none" stroke="#1a140e" stroke-width="2.5" stroke-linecap="round" />' +
+            '<circle cx="64" cy="62" r="11" fill="none" stroke="#1a140e" stroke-width="3" />' +
+            '<circle cx="92" cy="62" r="11" fill="none" stroke="#1a140e" stroke-width="3" />' +
+            '<line x1="75" y1="62" x2="81" y2="62" stroke="#1a140e" stroke-width="3" />' +
             '<path d="M58 78h28" stroke="#6d5a48" stroke-width="6" stroke-linecap="round" />' +
             '<circle cx="64" cy="62" r="3" fill="#1a140e" />' +
             '<circle cx="92" cy="62" r="3" fill="#1a140e" />' +
@@ -173,6 +177,8 @@
           '<rect x="0" y="300" width="800" height="28" fill="#6e4b2c" />' +
           '<rect x="0" y="328" width="800" height="192" fill="#3d2918" />' +
           '<rect x="0" y="328" width="800" height="14" fill="#8a6240" />' +
+          '<ellipse cx="311" cy="306" rx="18" ry="4" fill="#2a1c10" opacity="0.55" />' +
+          '<ellipse cx="501" cy="306" rx="18" ry="4" fill="#2a1c10" opacity="0.55" />' +
           pint(298, "") +
           pint(488, "pint-raise") +
         "</svg>" +
@@ -283,7 +289,14 @@
     host.setAttribute("aria-label", scene.line || "Cutaway");
     host.innerHTML = draw(scene);
     if (scene.cue === "courtroom") fillCourt(host, scene);
-    if (scene.cue === "regulars") fillRegulars(host, scene);
+    if (scene.cue === "regulars") {
+      fillRegulars(host, scene);
+      if (globalThis.matchMedia && globalThis.matchMedia("(max-width: 700px)").matches) {
+        var svg = host.querySelector("svg");
+        svg.setAttribute("viewBox", "40 0 560 430");
+        svg.setAttribute("preserveAspectRatio", "xMidYMax meet");
+      }
+    }
     if (scene.cue === "sports") fillSports(host, scene, settled);
     var skip = document.createElement("button");
     skip.type = "button";

@@ -13,6 +13,8 @@
    cutaway is null, or a scene to play after that box: courtroom, documentary,
    regulars, or sports. At most two scenes are kept, the most dramatic ones.
    YahtzeeCutaways draws the scene. Scene time is not part of durationMs.
+   Two scenes leave at least two seconds of the scoreboard between them.
+   If the replay runs out of boxes first, the second scene plays after it.
 */
 (function (root, factory) {
   var api = factory();
@@ -39,6 +41,7 @@
   var NORMAL_MS = 700;
   var FOCUS_MS = 1400;
   var SCENE_MS = 3200;
+  var BOARD_GAP_MS = 2000;
   var RANK = { documentary: 0, regulars: 1, courtroom: 2, sports: 3 };
   var UPPER_KEYS = ["ones", "twos", "threes", "fours", "fives", "sixes"];
 
@@ -220,6 +223,36 @@
       steps[index].cutaway = scenePayload(scene, steps[index]);
     });
     return ranked;
+  }
+
+  function planPlayback(steps) {
+    var gap = BOARD_GAP_MS;
+    var pending = -1;
+    var actions = [];
+    steps.forEach(function (step, index) {
+      if (step.cutaway && step.cutaway.cue) pending = index;
+      if (pending >= 0 && gap >= BOARD_GAP_MS) {
+        actions.push({ index: pending, kind: "scene", wait: 380 });
+        pending = -1;
+        actions.push({ index: index, kind: "bridge", wait: 420 });
+        gap = 420;
+        return;
+      }
+      var hold = step.holdMs;
+      if (pending >= 0 && gap + hold >= BOARD_GAP_MS) {
+        var need = BOARD_GAP_MS - gap;
+        if (need > 0) actions.push({ index: index, kind: "board", wait: need });
+        actions.push({ index: pending, kind: "scene", wait: 0 });
+        pending = -1;
+        actions.push({ index: index, kind: "bridge", wait: 420 });
+        gap = 420;
+        return;
+      }
+      actions.push({ index: index, kind: "board", wait: hold });
+      gap += hold;
+    });
+    if (pending >= 0) actions.push({ index: pending, kind: "scene-after", wait: 0 });
+    return actions;
   }
 
   function leadLine(margin) {
@@ -429,23 +462,10 @@
       playing = true;
       button.disabled = true;
       button.textContent = "Playing";
-      var index = 0;
+      var actions = planPlayback(timeline.steps);
+      var cursor = 0;
       function alive() {
         return token === generation;
-      }
-      function advance() {
-        if (!alive()) return;
-        index += 1;
-        if (index >= timeline.steps.length) {
-          finish();
-          return;
-        }
-        runStep();
-      }
-      function afterScene() {
-        if (!alive()) return;
-        closeOverlay();
-        timer = setTimeout(advance, 420);
       }
       function openScene(step, onDone) {
         if (!globalThis.YahtzeeCutaways) {
@@ -467,20 +487,33 @@
         globalThis.YahtzeeCutaways.mount(overlay, step.cutaway, { onSkip: done });
         timer = setTimeout(done, step.cutaway.ms || SCENE_MS);
       }
-      function runStep() {
+      function run() {
         if (!alive()) return;
-        var step = timeline.steps[index];
-        showStep(index, true);
-        if (step.cutaway && step.cutaway.cue) {
-          timer = setTimeout(function () {
-            if (!alive()) return;
-            openScene(step, afterScene);
-          }, 380);
+        if (cursor >= actions.length) {
+          finish();
           return;
         }
-        timer = setTimeout(advance, step.holdMs);
+        var action = actions[cursor];
+        cursor += 1;
+        if (action.kind === "board") showStep(action.index, true);
+        if (action.kind === "board" || action.kind === "bridge") {
+          timer = setTimeout(run, action.wait);
+          return;
+        }
+        var step = timeline.steps[action.index];
+        function next() {
+          if (!alive()) return;
+          closeOverlay();
+          if (action.kind === "scene-after") finish();
+          else run();
+        }
+        if (action.kind === "scene") showStep(action.index, true);
+        timer = setTimeout(function () {
+          if (!alive()) return;
+          openScene(step, next);
+        }, action.wait || 0);
       }
-      runStep();
+      run();
     }
 
     button.addEventListener("click", function () {
@@ -511,6 +544,8 @@
     NORMAL_MS: NORMAL_MS,
     FOCUS_MS: FOCUS_MS,
     SCENE_MS: SCENE_MS,
+    BOARD_GAP_MS: BOARD_GAP_MS,
+    planPlayback: planPlayback,
     buildTimeline: buildTimeline,
     mount: mount,
     leadLine: leadLine,

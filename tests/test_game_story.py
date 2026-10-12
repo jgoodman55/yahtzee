@@ -217,6 +217,7 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "Audio(" not in scenes
     assert "prefers-reduced-motion" in css
     assert "pint-raise" in scenes
+    assert "M42 48h74v16" not in scenes
 
 
 def test_replay_timeline_matches_game_128():

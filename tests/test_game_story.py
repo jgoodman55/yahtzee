@@ -199,6 +199,8 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "buildTimeline" in replay
     assert "prefers-reduced-motion" in replay
     assert "function mount" in replay
+    assert "cutaway" in replay
+    assert "className = \"cutaway\"" not in replay
 
 
 def test_replay_timeline_matches_game_128():

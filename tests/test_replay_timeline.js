@@ -55,6 +55,28 @@ assert.ok(yahtzee.caption.includes("Yahtzee"));
 
 assert.ok(timeline.durationMs >= 10000 && timeline.durationMs <= 20000);
 
+const cues = Object.fromEntries(timeline.cutaways.map((row) => [row.box, row.cue]));
+assert.strictEqual(cues.yahtzee, "yahtzee");
+assert.strictEqual(cues.upper_bonus, "bonus");
+assert.strictEqual(cues.large_straight, "scratch");
+timeline.cutaways.forEach((row) => {
+  assert.ok(["yahtzee", "bonus", "scratch", "comeback"].includes(row.cue));
+});
+const yahtzeeStep = timeline.steps.find((step) => step.box === "yahtzee");
+assert.deepStrictEqual(yahtzeeStep.cutaway, { cue: "yahtzee" });
+assert.strictEqual(timeline.finale.cutaway, null);
+
+const comeback = replay.buildTimeline({
+  erin: { scores: { sixes: 30 } },
+  jordan: { scores: { three_of_a_kind: 40 } },
+  focus: [],
+  story: "",
+});
+assert.deepStrictEqual(
+  comeback.cutaways.map((row) => row.box + ":" + row.cue),
+  ["three_of_a_kind:comeback"]
+);
+
 const quiet = replay.buildTimeline({
   erin: { scores: { chance: 10 } },
   jordan: { scores: { chance: 10 } },

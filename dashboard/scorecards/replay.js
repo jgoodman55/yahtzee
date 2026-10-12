@@ -6,9 +6,13 @@
    story picker.
 
    Each box step:
-     kind, t, box, label, points, running, margin, focus, caption, holdMs
+     kind, t, box, label, points, running, margin, focus, caption, holdMs, cutaway
    t is milliseconds from the start. margin is Jordan minus Erin.
    focus is true when the game story names that box.
+
+   cutaway is null, or { cue } where cue is "yahtzee", "bonus", "scratch",
+   or "comeback". That is the hook for a later cutaway scene. This player
+   does not draw one. A later pass can pick an original gag from the cue.
 */
 (function (root, factory) {
   var api = factory();
@@ -34,6 +38,31 @@
   ];
   var NORMAL_MS = 700;
   var FOCUS_MS = 1400;
+  var COMEBACK_DEFICIT = 25;
+  var FULL = {
+    yahtzee: 50,
+    large_straight: 40,
+    small_straight: 30,
+    full_house: 25,
+    upper_bonus: 35,
+  };
+
+  function cutawayFor(box, erinPoints, jordanPoints, previousMargin, margin) {
+    if (box === "yahtzee" && (erinPoints === 50 || jordanPoints === 50)) {
+      return { cue: "yahtzee" };
+    }
+    if (box === "upper_bonus" && (erinPoints === 35 || jordanPoints === 35)) {
+      return { cue: "bonus" };
+    }
+    var full = FULL[box];
+    if (full && ((erinPoints === 0 && jordanPoints === full) || (jordanPoints === 0 && erinPoints === full))) {
+      return { cue: "scratch" };
+    }
+    var comeback = (previousMargin <= -COMEBACK_DEFICIT && margin > 0) ||
+      (previousMargin >= COMEBACK_DEFICIT && margin < 0);
+    if (comeback) return { cue: "comeback" };
+    return null;
+  }
 
   function pointsOf(scores, key) {
     if (!scores) return 0;
@@ -61,6 +90,7 @@
     var erin = 0;
     var jordan = 0;
     var t = 0;
+    var previousMargin = 0;
     var steps = ORDER.map(function (pair) {
       var key = pair[0];
       var label = pair[1];
@@ -68,6 +98,7 @@
       var jordanPoints = pointsOf(jordanScores, key);
       erin += erinPoints;
       jordan += jordanPoints;
+      var margin = jordan - erin;
       var isFocus = !!focus[key];
       var holdMs = isFocus ? FOCUS_MS : NORMAL_MS;
       var step = {
@@ -77,11 +108,13 @@
         label: label,
         points: { erin: erinPoints, jordan: jordanPoints },
         running: { erin: erin, jordan: jordan },
-        margin: jordan - erin,
+        margin: margin,
         focus: isFocus,
         caption: label + ". Erin " + erinPoints + ". Jordan " + jordanPoints + ".",
         holdMs: holdMs,
+        cutaway: cutawayFor(key, erinPoints, jordanPoints, previousMargin, margin),
       };
+      previousMargin = margin;
       t += holdMs;
       return step;
     });
@@ -94,12 +127,16 @@
       scoreLine: scoreLine(erin, jordan),
       caption: game.story || "",
       holdMs: 0,
+      cutaway: null,
     };
     return {
       steps: steps,
       finale: finale,
       durationMs: t,
       maxTotal: Math.max(erin, jordan, 1),
+      cutaways: steps.filter(function (step) { return step.cutaway; }).map(function (step) {
+        return { t: step.t, box: step.box, cue: step.cutaway.cue };
+      }),
     };
   }
 
@@ -237,6 +274,7 @@
     function showStep(index, animate) {
       var step = timeline.steps[index];
       if (!step) return;
+      // step.cutaway is the later scene hook. Nothing is drawn for it here.
       container.classList.toggle("is-focus", step.focus);
       container.classList.remove("is-done");
       applyRunning(step.running, animate);

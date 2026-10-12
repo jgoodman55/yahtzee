@@ -6245,7 +6245,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Butcher's Hook"
     },
     {
       "game_seq": 113,
@@ -6299,7 +6300,8 @@ window.SCORECARD_DATA = {
       "story": "Jordan's fives (+5) decided it.",
       "focus": [
         "fives"
-      ]
+      ],
+      "venue": "The Queen's Arms"
     },
     {
       "game_seq": 114,
@@ -6356,7 +6358,8 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "full_house",
         "large_straight"
-      ]
+      ],
+      "venue": "The Queen's Arms"
     },
     {
       "game_seq": 115,
@@ -6411,7 +6414,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "three_of_a_kind",
         "chance"
-      ]
+      ],
+      "venue": "The Queen's Arms"
     },
     {
       "game_seq": 116,
@@ -6467,7 +6471,8 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "full_house"
-      ]
+      ],
+      "venue": "The Queen's Arms"
     },
     {
       "game_seq": 117,
@@ -6522,7 +6527,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "yahtzee",
         "yahtzee_bonus"
-      ]
+      ],
+      "venue": "Munkbron"
     },
     {
       "game_seq": 118,
@@ -6578,7 +6584,8 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "yahtzee",
         "yahtzee_bonus"
-      ]
+      ],
+      "venue": "Munkbron"
     },
     {
       "game_seq": 119,
@@ -6633,7 +6640,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "four_of_a_kind",
         "yahtzee"
-      ]
+      ],
+      "venue": "Munkbron"
     },
     {
       "game_seq": 120,
@@ -6689,7 +6697,8 @@ window.SCORECARD_DATA = {
         "full_house",
         "large_straight",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Atlas"
     },
     {
       "game_seq": 121,
@@ -6744,7 +6753,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "sixes",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Atlas"
     },
     {
       "game_seq": 122,
@@ -6800,7 +6810,8 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Atlas"
     },
     {
       "game_seq": 123,
@@ -6857,7 +6868,8 @@ window.SCORECARD_DATA = {
         "upper_bonus",
         "four_of_a_kind",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Atlas"
     },
     {
       "game_seq": 124,
@@ -6913,7 +6925,8 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "large_straight",
         "yahtzee"
-      ]
+      ],
+      "venue": "The Atlas"
     },
     {
       "game_seq": 125,
@@ -6970,7 +6983,8 @@ window.SCORECARD_DATA = {
         "three_of_a_kind",
         "four_of_a_kind",
         "full_house"
-      ]
+      ],
+      "venue": "The Leicester Arms"
     },
     {
       "game_seq": 126,
@@ -7027,7 +7041,8 @@ window.SCORECARD_DATA = {
         "fives",
         "upper_bonus",
         "full_house"
-      ]
+      ],
+      "venue": "The Leicester Arms"
     },
     {
       "game_seq": 127,
@@ -7082,7 +7097,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "large_straight",
         "yahtzee"
-      ]
+      ],
+      "venue": "Anchor Bar"
     },
     {
       "game_seq": 128,
@@ -7139,7 +7155,8 @@ window.SCORECARD_DATA = {
         "four_of_a_kind",
         "large_straight",
         "yahtzee"
-      ]
+      ],
+      "venue": "Anchor Bar"
     },
     {
       "game_seq": 129,
@@ -7194,7 +7211,8 @@ window.SCORECARD_DATA = {
       "focus": [
         "upper_bonus",
         "chance"
-      ]
+      ],
+      "venue": "Anchor Bar"
     }
   ]
 };

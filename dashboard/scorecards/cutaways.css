@@ -1,0 +1,418 @@
+/* Full-viewport cutaway scenes. Scoped so the scorecard page is unchanged. */
+
+.cutaway-layer {
+  --paper: #f4efe4;
+  --ink: #1a140e;
+  --text: #f3f6fa;
+  --muted: #a8b3c5;
+  --erin: #ff2d92;
+  --jordan: #2d9cff;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  background: #0a0c10;
+  color: var(--text);
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+.cutaway-layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cutaway-layer .stage {
+  position: absolute;
+  inset: 0;
+}
+
+.cutaway-layer .skip {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  z-index: 5;
+  min-height: 44px;
+  min-width: 72px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(243, 246, 250, 0.35);
+  background: rgba(10, 12, 16, 0.72);
+  color: var(--text);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.cutaway-layer[data-scene="courtroom"] {
+  background: #090b10;
+  display: flex;
+  align-items: center;
+}
+
+.cutaway-layer[data-scene="courtroom"] .stage {
+  position: relative;
+  flex: 1.15;
+  height: 100%;
+  inset: auto;
+}
+
+.cutaway-layer[data-scene="courtroom"] .charge {
+  position: relative;
+  flex: 0.85;
+  margin: 48px 56px 48px 8px;
+  padding: 36px 40px 32px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px 8px 6px 4px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+.cutaway-layer .where {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a5a32;
+}
+
+.cutaway-layer[data-scene="courtroom"] h1 {
+  margin: 0;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  font-weight: 500;
+  font-size: clamp(1.7rem, 2.5vw, 2.55rem);
+  line-height: 1.22;
+  letter-spacing: -0.01em;
+}
+
+.cutaway-layer .word {
+  opacity: 0;
+  animation: word-in 1ms linear forwards;
+}
+
+.cutaway-layer .docket {
+  margin: 22px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid #e0d3bc;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+  color: #3d3428;
+}
+
+.cutaway-layer .docket b { font-weight: 700; }
+
+.cutaway-layer .gavel {
+  transform-box: fill-box;
+  transform-origin: 5px 96px;
+  animation: gavel-bang 0.16s var(--bang, 1.8s) ease-in forwards;
+}
+
+.cutaway-layer[data-scene="courtroom"] .stage {
+  animation: gavel-shake 0.34s var(--bang, 1.8s) ease-out both;
+}
+
+.cutaway-layer[data-scene="documentary"] { background: #06110c; }
+
+.cutaway-layer .letterbox {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 8vw 26px;
+  background: #000;
+  opacity: 0;
+  animation: fade-in 0.55s 2.15s ease forwards;
+}
+
+.cutaway-layer .narration {
+  margin: 0 auto;
+  max-width: 920px;
+  font-family: Georgia, "Iowan Old Style", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2.3vw, 2.05rem);
+  line-height: 1.35;
+  text-align: center;
+}
+
+.cutaway-layer .species {
+  position: absolute;
+  left: 28px;
+  top: 22px;
+  margin: 0;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(243, 246, 250, 0.2);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1.45;
+}
+
+.cutaway-layer .species span {
+  display: block;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.cutaway-layer .die-1 { animation: tumble-1 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-2 { animation: tumble-2 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-3 { animation: tumble-3 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-4 { animation: tumble-4 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+.cutaway-layer .die-5 { animation: tumble-5 2.1s cubic-bezier(0.18, 0.7, 0.2, 1) forwards; }
+
+.cutaway-layer[data-scene="regulars"] .bubble {
+  position: absolute;
+  right: 6vw;
+  top: 11vh;
+  width: min(420px, 38vw);
+  margin: 0;
+  padding: 18px 20px 16px;
+  background: var(--text);
+  color: #14181f;
+  border-radius: 18px;
+  font-size: clamp(1.25rem, 2vw, 1.85rem);
+  font-weight: 650;
+  line-height: 1.28;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  transform: scale(0.72);
+  transform-origin: 24px 100%;
+  animation: pop-in 0.38s 0.28s cubic-bezier(0.15, 1.35, 0.35, 1) forwards;
+}
+
+.cutaway-layer[data-scene="regulars"] .bubble:after {
+  content: "";
+  position: absolute;
+  left: 36px;
+  bottom: -12px;
+  border-width: 12px 10px 0 0;
+  border-style: solid;
+  border-color: var(--text) transparent transparent transparent;
+}
+
+.cutaway-layer .chalk {
+  position: absolute;
+  left: 28px;
+  bottom: 22px;
+  margin: 0;
+  color: #d7e2c8;
+  font-family: "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+}
+
+.cutaway-layer .pint-raise {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: raise-pint 0.7s 0.85s ease-out forwards;
+}
+
+.cutaway-layer[data-scene="sports"] {
+  display: flex;
+  flex-direction: column;
+}
+
+.cutaway-layer[data-scene="sports"] .stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  inset: auto;
+}
+
+.cutaway-layer .banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: stretch;
+  background: #12080c;
+  border-top: 6px solid #e10600;
+  animation: banner-in 0.45s 0.12s ease-out both;
+}
+
+.cutaway-layer .flag {
+  margin: 0;
+  padding: 16px 22px;
+  background: #e10600;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  display: flex;
+  align-items: center;
+}
+
+.cutaway-layer .crawl {
+  margin: 0;
+  padding: 14px 22px;
+  font-size: clamp(1.15rem, 2vw, 1.7rem);
+  font-weight: 650;
+  line-height: 1.28;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.cutaway-layer .bug {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  margin: 0;
+  padding: 8px 12px;
+  background: rgba(10, 12, 16, 0.72);
+  border-left: 4px solid var(--jordan);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@keyframes word-in { to { opacity: 1; } }
+
+@keyframes gavel-bang {
+  0% { transform: rotate(0deg); }
+  80% { transform: rotate(42deg) translateY(6px); }
+  100% { transform: rotate(34deg) translateY(2px); }
+}
+
+@keyframes gavel-shake {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(4px, -2px); }
+  75% { transform: translate(-2px, 1px); }
+}
+
+@keyframes fade-in { to { opacity: 1; } }
+
+@keyframes pop-in { to { opacity: 1; transform: scale(1); } }
+
+@keyframes raise-pint { to { transform: translateY(-28px); } }
+
+@keyframes banner-in {
+  from { transform: translateY(110%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes tumble-1 {
+  from { transform: translate(-36px, -150px) rotate(-78deg); }
+  to { transform: none; }
+}
+@keyframes tumble-2 {
+  from { transform: translate(48px, -170px) rotate(64deg); }
+  to { transform: none; }
+}
+@keyframes tumble-3 {
+  from { transform: translate(70px, -140px) rotate(-58deg); }
+  to { transform: none; }
+}
+@keyframes tumble-4 {
+  from { transform: translate(-24px, -160px) rotate(52deg); }
+  to { transform: none; }
+}
+@keyframes tumble-5 {
+  from { transform: translate(40px, -180px) rotate(-86deg); }
+  to { transform: none; }
+}
+
+@media (max-width: 700px) {
+  .cutaway-layer[data-scene="courtroom"] { display: block; }
+  .cutaway-layer[data-scene="courtroom"] .stage {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 48%;
+  }
+  .cutaway-layer[data-scene="courtroom"] .charge {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: auto;
+    bottom: 16px;
+    margin: 0;
+    padding: 22px 18px 18px;
+  }
+  .cutaway-layer[data-scene="courtroom"] h1 { font-size: 1.45rem; }
+  .cutaway-layer .docket { margin-top: 14px; padding-top: 12px; font-size: 0.98rem; }
+  .cutaway-layer .letterbox { padding: 16px 16px 20px; }
+  .cutaway-layer .narration { font-size: 1.2rem; }
+  .cutaway-layer .species { left: 12px; top: 12px; }
+  .cutaway-layer[data-scene="regulars"] .stage { bottom: 168px; }
+  .cutaway-layer[data-scene="regulars"] .bubble {
+    top: auto;
+    right: 16px;
+    left: 16px;
+    bottom: 58px;
+    width: auto;
+    font-size: 1.28rem;
+  }
+  .cutaway-layer[data-scene="regulars"] .bubble:after {
+    left: 42px;
+    top: -12px;
+    bottom: auto;
+    border-width: 0 12px 12px 0;
+    border-color: transparent transparent var(--text) transparent;
+  }
+  .cutaway-layer .chalk { left: 16px; bottom: 16px; font-size: 1.05rem; }
+  .cutaway-layer .banner { grid-template-columns: 1fr; }
+  .cutaway-layer .flag { justify-content: center; padding: 10px 16px; }
+  .cutaway-layer .crawl { padding: 12px 16px 18px; font-size: 1.12rem; }
+  .cutaway-layer .bug { top: 12px; left: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cutaway-layer .word,
+  .cutaway-layer .letterbox,
+  .cutaway-layer .bubble {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+  .cutaway-layer .gavel {
+    animation: none;
+    transform: rotate(34deg) translateY(2px);
+  }
+  .cutaway-layer .stage,
+  .cutaway-layer .die-1,
+  .cutaway-layer .die-2,
+  .cutaway-layer .die-3,
+  .cutaway-layer .die-4,
+  .cutaway-layer .die-5,
+  .cutaway-layer .banner {
+    animation: none;
+    transform: none;
+  }
+  .cutaway-layer .pint-raise {
+    animation: none;
+    transform: translateY(-28px);
+  }
+}
+
+.cutaway-layer.is-settled .word,
+.cutaway-layer.is-settled .letterbox,
+.cutaway-layer.is-settled .bubble {
+  opacity: 1;
+  animation: none;
+  transform: none;
+}
+
+.cutaway-layer.is-settled .gavel {
+  animation: none;
+  transform: rotate(34deg) translateY(2px);
+}
+
+.cutaway-layer.is-settled .stage,
+.cutaway-layer.is-settled .die-1,
+.cutaway-layer.is-settled .die-2,
+.cutaway-layer.is-settled .die-3,
+.cutaway-layer.is-settled .die-4,
+.cutaway-layer.is-settled .die-5,
+.cutaway-layer.is-settled .banner {
+  animation: none;
+  transform: none;
+}
+
+.cutaway-layer.is-settled .pint-raise {
+  animation: none;
+  transform: translateY(-28px);
+}

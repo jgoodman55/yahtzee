@@ -198,27 +198,10 @@
     caption.className = "replay-caption";
     caption.setAttribute("aria-live", "polite");
 
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("class", "replay-margin");
-    svg.setAttribute("viewBox", "0 0 100 32");
-    svg.setAttribute("preserveAspectRatio", "none");
-    svg.setAttribute("aria-hidden", "true");
-    var axis = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    axis.setAttribute("x1", "0");
-    axis.setAttribute("x2", "100");
-    axis.setAttribute("y1", "16");
-    axis.setAttribute("y2", "16");
-    axis.setAttribute("class", "replay-axis");
-    var poly = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-    poly.setAttribute("class", "replay-line");
-    svg.appendChild(axis);
-    svg.appendChild(poly);
-
     container.appendChild(head);
     container.appendChild(lead);
     container.appendChild(lanes);
     container.appendChild(caption);
-    container.appendChild(svg);
 
     function stop() {
       if (timer) clearTimeout(timer);
@@ -228,27 +211,6 @@
 
     function barWidth(value) {
       return Math.max(0, Math.min(100, (value / timeline.maxTotal) * 100));
-    }
-
-    function drawLine(count) {
-      var shown = timeline.steps.slice(0, Math.max(0, count));
-      if (!shown.length) {
-        poly.setAttribute("points", "");
-        return;
-      }
-      var peak = 1;
-      timeline.steps.forEach(function (step) {
-        peak = Math.max(peak, Math.abs(step.margin));
-      });
-      var last = shown.length - 1;
-      var points = shown.map(function (step, index) {
-        var x = shown.length === 1 ? 0 : (index / last) * 100;
-        var y = 16 - (step.margin / peak) * 12;
-        return x.toFixed(2) + "," + y.toFixed(2);
-      }).join(" ");
-      poly.setAttribute("points", points);
-      var margin = shown[shown.length - 1].margin;
-      poly.setAttribute("stroke", margin > 0 ? "#2D9CFF" : margin < 0 ? "#FF2D92" : "#8B95A8");
     }
 
     function applyRunning(running, animate) {
@@ -266,7 +228,6 @@
       applyRunning({ erin: 0, jordan: 0 }, false);
       lead.textContent = "Level.";
       caption.textContent = "Play to watch each box add up.";
-      drawLine(0);
       button.textContent = "Play";
       button.disabled = false;
     }
@@ -280,7 +241,6 @@
       applyRunning(step.running, animate);
       lead.textContent = leadLine(step.margin);
       caption.textContent = step.caption;
-      drawLine(index + 1);
     }
 
     function finish() {
@@ -291,7 +251,6 @@
       applyRunning(end.running, false);
       lead.textContent = end.scoreLine;
       caption.textContent = end.caption || end.scoreLine;
-      drawLine(timeline.steps.length);
       button.textContent = "Replay";
       button.disabled = false;
     }

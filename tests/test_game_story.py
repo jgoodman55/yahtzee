@@ -192,6 +192,9 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     script = (REPO / "dashboard" / "pub_map" / "newtab.js").read_text()
     assert 'indexOf("DECIDED")' in script
     assert "Watch replay" in script
+    assert "padding: 12px 16px 14px" in script
+    assert "padding: 8px 2px 10px" not in script
+    assert "cutaways.js" not in viewer
     export = (REPO / "dashboard" / "scripts" / "export_scorecards.py").read_text()
     assert "game_story" in export
     assert "story_focus" in export
@@ -201,6 +204,9 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "function mount" in replay
     assert "cutaway" in replay
     assert "className = \"cutaway\"" not in replay
+    assert "replay-margin" not in replay
+    assert "polyline" not in replay
+    assert "YahtzeeCutaways" not in replay
 
 
 def test_replay_timeline_matches_game_128():

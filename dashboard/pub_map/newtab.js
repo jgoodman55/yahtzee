@@ -1,6 +1,7 @@
 /* Retarget only the Top-tab pub map preview. Other /pub_map.html links stay.
-   On a phone, only the comment column wraps. Winner, Erin, and Jordan
-   stay on one line, and the score columns stay as wide as the numbers. */
+   On a phone, only the comment and what-decided-it columns wrap. Winner,
+   Erin, and Jordan stay on one line, and the score columns stay as wide
+   as the numbers. */
 (function () {
   function fitPhoneTables() {
     if (document.getElementById("phone-tables")) return;
@@ -43,15 +44,19 @@
     }
     tables.forEach(function (table) {
       var headers = table.querySelectorAll("thead th");
-      var commentIndex = -1;
+      var wrapIndexes = [];
       headers.forEach(function (th, index) {
         var label = (th.innerText || "").replace(/\s+/g, " ").toUpperCase();
-        if (label.indexOf("COMMENT") !== -1) commentIndex = index;
+        if (label.indexOf("COMMENT") !== -1 || label.indexOf("DECIDED") !== -1) {
+          wrapIndexes.push(index);
+        }
       });
-      if (commentIndex < 0) return;
+      if (!wrapIndexes.length) return;
       table.querySelectorAll("tr").forEach(function (row) {
-        var cell = row.children[commentIndex];
-        if (cell) cell.classList.add("yahtzee-comment");
+        wrapIndexes.forEach(function (index) {
+          var cell = row.children[index];
+          if (cell) cell.classList.add("yahtzee-comment");
+        });
       });
     });
   }

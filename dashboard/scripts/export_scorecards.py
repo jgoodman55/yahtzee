@@ -185,10 +185,21 @@ def display_winner(winner: str) -> str:
     return {"erin": "Erin", "jordan": "Jordan"}.get(winner, winner)
 
 
+def _game_story_fn():
+    import importlib.util
+
+    path = REPO_ROOT / "assets" / "python" / "build_game_story.py"
+    spec = importlib.util.spec_from_file_location("build_game_story", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.game_story
+
+
 def build_games(db_path: Path) -> list[dict]:
     crosswalk = load_crosswalk()
     scores = load_scores()
     trends = load_trends(db_path)
+    story_for = _game_story_fn()
     games = []
     for seq in sorted(crosswalk):
         cw = crosswalk[seq]
@@ -218,6 +229,7 @@ def build_games(db_path: Path) -> list[dict]:
                 "erin": erin,
                 "jordan": jordan,
                 "photo": resolve_photo(cw["sheet"]),
+                "story": story_for(erin["scores"], jordan["scores"]),
             }
         )
     return games

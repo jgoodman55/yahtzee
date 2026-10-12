@@ -6,6 +6,7 @@ materialization:
 depends:
   - int_win_loss
   - int_commentary
+  - int_game_story
 @bruin */
 
 select
@@ -16,7 +17,9 @@ select
     w.margin,
     w.jordan_cum_wins,
     w.erin_cum_wins,
-    c.comment
+    c.comment,
+    s.story
 from int_win_loss w
 left join int_commentary c using (game_seq)
+left join int_game_story s using (game_seq)
 order by w.game_seq

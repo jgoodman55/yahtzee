@@ -100,7 +100,7 @@ and `games.js` prefers those. Details: `dashboard/scorecards.md`.
 
 ## Pipeline
 
-Seeds feed `stg_games` → `fact_games` (computed vs recorded totals) → `int_win_loss` / `int_commentary` → `mart_head_to_head`. After replacing `raw_games.csv`:
+Seeds feed `stg_games` → `fact_games` (computed vs recorded totals) → `int_win_loss` / `int_commentary` / `int_game_story` → `mart_head_to_head`. After replacing `raw_games.csv`:
 
 ```bash
 cp -n .bruin.yml.example .bruin.yml

@@ -50,8 +50,11 @@ Grain: sequence-ordered (`game_seq`), not date-ordered — no reliable dates.
   `game_seq`) samples from `seed_commentary` based on the game's situation,
   then keeps the single sharpest line. Seeded, not truly random, so
   re-running the pipeline doesn't change the joke.
-- `mart_head_to_head` — `int_win_loss` joined with `int_commentary` — feeds
-  the dashboard commentary table and the animation.
+- `int_game_story` — **Python** asset beside that joke: a pure function of
+  the 15 boxes (`stg_games`), one or two sentences on what decided the
+  game. No phrase bank. The same function fills the scorecard viewer.
+- `mart_head_to_head` — `int_win_loss` joined with `int_commentary` and
+  `int_game_story` — feeds the dashboard commentary table and the animation.
 - `mart_player_kpis` / `mart_headline_kpis` / `mart_game_trends` /
   `mart_category_stats` — dashboard marts (lifetime KPIs, race series, zeros
   and category miss rates; upper `avg_dice_count` = score / face). High scores
@@ -228,7 +231,7 @@ The dashboard uses the `local_duckdb` connection (same `yahtzee.duckdb` file,
 another `bruin run` — DuckDB still cannot mix a writer with open readers.
 
 That builds `stg_*` → `dim_player`/`fact_games` → `int_win_loss` →
-`int_commentary` → `mart_head_to_head` plus the dashboard marts
+`int_commentary` / `int_game_story` → `mart_head_to_head` plus the dashboard marts
 (`mart_player_kpis`, `mart_headline_kpis`, `mart_game_trends`,
 `mart_category_stats`, `int_strategy_features` → `mart_strategy_swing` /
 `mart_strategy_rescue` / `mart_yz_matchup`), and `mart_pub_locations`

@@ -221,6 +221,8 @@ def test_story_sits_beside_commentary_and_on_the_viewer():
     assert "pint-raise" in scenes
     assert "M42 48h74v16" not in scenes
     assert "190 110 400 320" in scenes
+    assert ">BREAKING NEWS<" in scenes
+    assert ">BREAKING<" not in scenes
     assert '.cutaway-layer[data-scene="documentary"] .letterbox' in css
 
 

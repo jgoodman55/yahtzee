@@ -216,7 +216,7 @@
         "</svg>" +
       "</div>" +
       '<p class="bug"></p>' +
-      '<div class="banner"><p class="flag">BREAKING</p><p class="crawl"></p></div>'
+      '<div class="banner"><p class="flag">BREAKING NEWS</p><p class="crawl"></p></div>'
     );
   }
 

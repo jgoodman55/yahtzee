@@ -167,7 +167,7 @@ def test_kinds_merge_when_both_are_swings():
 def test_every_real_game_has_a_short_story():
     module = _load()
     scores = _scores()
-    assert set(scores) == set(range(1, 130))
+    assert set(scores) == set(range(1, 133))
     for seq, players in scores.items():
         first = module.game_story(players["erin"], players["jordan"])
         second = module.game_story(players["erin"], players["jordan"])

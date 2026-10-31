@@ -56,7 +56,8 @@ SCORESHEET_ONE_VISIT = (
 # those days, so a later statement for the same calendar day does not
 # add a second row. The visit log has no date column; the date lives here.
 SCORESHEET_DATED_DAYS = {
-    "ANCHOR BANKSIDE": {date(2026, 10, 11)},
+    "ANCHOR BANKSIDE": {date(2026, 10, 11), date(2026, 10, 31)},
+    "THREE JOHNS": {date(2026, 10, 31)},
 }
 
 # In visits but not seed_pubs (logged, unresolved coords).
@@ -242,6 +243,7 @@ def main() -> None:
         "MC AND SONS VAUXHALL",
         "VAUXHALL MARKETPLACE",
         "ANCHOR BANKSIDE",
+        "THREE JOHNS",
         "THE BLACK DOG VAUX",
         "CROWN 052892",
         "MONUMENT",

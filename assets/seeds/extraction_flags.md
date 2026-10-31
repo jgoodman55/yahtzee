@@ -1,6 +1,6 @@
 # Yahtzee scorecard extraction flags
 
-Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2927 (129 games from 43 sheets, including IMG_2890 game 3 as `game_seq` 18).
+Source: Drive folder IMG_2885→IMG_2918 plus sheets IMG_2919→IMG_2928 (132 games from 44 sheets, including IMG_2890 game 3 as `game_seq` 18).
 
 ## part1_flags.md
 
@@ -454,4 +454,28 @@ Header: **Anchor - 3**. All three games are the existing Anchor Bar pin.
 - game 2 (`128`), erin, three_of_a_kind: looks like **12**. The written lower section of **150** adds up with **22**. Stored **22**.
 - Yahtzee bonus is **0** in all six columns.
 - Locations: games 127–129 reuse **Anchor Bar** (`ANCHOR BANKSIDE`). The sheet writes **Anchor - 3**. This session is one new unique day, **2026-10-11**, on top of the existing Chase days. A later Chase sale on that same date does not add another row. Games 1–111 still have no row and read as Unknown.
+- No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.
+
+## part13_flags.md
+
+# part13 extraction flags — IMG_2928 (games 130–132)
+
+One sheet after IMG_2927. Conceptual name `IMG_2928`. Columns `E J E J E J`
+left to right = game_on_sheet 1, 2, 3 → `game_seq` **130, 131, 132**.
+Played 2026-10-31. Jordan confirmed these readings. `recorded_total` equals
+`sum(score)` on every player-game, and those sums are the written grands.
+
+The committed JPEG has no EXIF and no GPS (1200×1600). `raw_games.csv` still
+has no date column (games stay ordered by `game_seq`). The visit dates are
+`SCORESHEET_DATED_DAYS` in `build_pub_visits.py`.
+
+Downscaled photo: `dashboard/scorecards/samples/photos/IMG_2928.jpg`.
+
+Header: **Anchor - 2** then **Three Johns Islington - 1**.
+
+- game 1 (`130`): grands **E 188 / J 256**. Jordan wins. Anchor Bar.
+- game 2 (`131`): grands **E 268 / J 236**. Erin wins. Anchor Bar. Erin sixes **18** (small mark beside the digit). Jordan sixes **24**. The written upper total **99** and grand **236** need 24, not 18. Jordan three of a kind is the circled **20**.
+- game 3 (`132`): grands **E 254 / J 319**. Jordan wins. The Three Johns. Both Yahtzee **50**, Yahtzee bonus **0**. Erin upper bonus is a slash, stored **0** (upper faces sum to 58).
+- game 1 (`130`), jordan, yahtzee_bonus: a scribble in the bonus boxes, not a coloured box. Jordan confirmed no Yahtzee bonus. The written lower **156** and grand **256** include no 100. Stored **0**.
+- Locations: games 130–131 reuse **Anchor Bar** (`ANCHOR BANKSIDE`). This session is one new unique day, **2026-10-31**, on top of the Chase days and the 2026-10-11 scoresheet day. Game 132 reuses **The Three Johns** (`THREE JOHNS`) and adds that same day as one visit. A later Chase sale on that date does not add another row. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

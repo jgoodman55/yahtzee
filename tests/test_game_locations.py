@@ -36,7 +36,7 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 129
+    assert max(game_seqs) == 132
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
 
@@ -120,3 +120,18 @@ def test_img_2927_anchor_bar_three_games():
     assert {row["merchant_name_raw"] for row in pubs} == {"ANCHOR BAR", "ANCHOR BANKSIDE"}
     assert len({(row["lat"], row["lng"]) for row in pubs}) == 1
     assert {row["note"] for row in pubs} == {"34 Park Street, Bankside, London SE1 9EF"}
+
+
+def test_img_2928_anchor_and_three_johns():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    assert by_seq[130]["pub_name"] == "Anchor Bar"
+    assert by_seq[130]["sheet_label"] == "Anchor - 2"
+    assert by_seq[131]["pub_name"] == "Anchor Bar"
+    assert by_seq[131]["sheet_label"] == "Anchor - 2"
+    assert by_seq[132]["pub_name"] == "The Three Johns"
+    assert by_seq[132]["sheet_label"] == "Three Johns Islington - 1"
+    johns = {row["pub_name"]: row for row in _rows(PUBS)}["The Three Johns"]
+    assert johns["merchant_name_raw"] == "THREE JOHNS"
+    assert johns["photo_url"] == "pub_map/photos/three_johns.jpg"
+    assert johns["photo_attribution"] == "Jordan"
+    assert "73 White Lion Street" in johns["note"]

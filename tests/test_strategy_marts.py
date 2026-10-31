@@ -1,4 +1,4 @@
-"""Grounding checks for Strategy marts (n=129 seed, 0 ties).
+"""Grounding checks for Strategy marts (n=132 seed, 0 ties).
 
 Run after `bruin run --workers 1`:
 
@@ -32,9 +32,9 @@ def test_swing_grounding():
         ).fetchall()
     }
     assert rows["Yahtzee = 50"] == (58, 70)
-    assert rows["Upper bonus (35)"] == (54, 64)
-    assert rows["Large straight = 40"] == (32, 42)
-    assert rows["Large straight = 0"] == (10, 42)
+    assert rows["Upper bonus (35)"] == (55, 65)
+    assert rows["Large straight = 40"] == (33, 43)
+    assert rows["Large straight = 0"] == (10, 43)
     assert rows["Small straight = 0"][1] < 10
 
 

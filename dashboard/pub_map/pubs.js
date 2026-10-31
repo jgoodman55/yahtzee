@@ -15,12 +15,12 @@ window.PUB_MAP_DATA = {
         "name": "Anchor Bar",
         "merchant_name_raw": "ANCHOR BANKSIDE",
         "source": "seed",
-        "visit_count": 9,
+        "visit_count": 10,
         "note": "34 Park Street, Bankside, London SE1 9EF",
         "merged_from": "ANCHOR BANKSIDE",
-        "games_played": 3,
-        "erin_wins": 0,
-        "jordan_wins": 3,
+        "games_played": 5,
+        "erin_wins": 1,
+        "jordan_wins": 4,
         "ties": 0,
         "photo_url": "pub_map/photos/anchor_bar.jpg",
         "photo_source": "seed",
@@ -165,6 +165,32 @@ window.PUB_MAP_DATA = {
       "geometry": {
         "type": "Point",
         "coordinates": [
+          -0.1090829,
+          51.532915
+        ]
+      },
+      "properties": {
+        "name": "The Three Johns",
+        "merchant_name_raw": "THREE JOHNS",
+        "source": "seed",
+        "visit_count": 3,
+        "note": "73 White Lion Street, Islington",
+        "merged_from": "THREE JOHNS",
+        "games_played": 1,
+        "erin_wins": 0,
+        "jordan_wins": 1,
+        "ties": 0,
+        "photo_url": "pub_map/photos/three_johns.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Jordan",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Three+Johns+51.532915%2C-0.1090829"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
           -0.1230148,
           51.485713
         ]
@@ -246,28 +272,6 @@ window.PUB_MAP_DATA = {
         "photo_source": "seed",
         "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Monument+51.5100863%2C-0.0862828"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -0.1090829,
-          51.532915
-        ]
-      },
-      "properties": {
-        "name": "The Three Johns",
-        "merchant_name_raw": "THREE JOHNS",
-        "source": "seed",
-        "visit_count": 2,
-        "note": "73 White Lion Street, Islington",
-        "merged_from": "THREE JOHNS",
-        "photo_url": "pub_map/photos/three_johns.jpg",
-        "photo_source": "seed",
-        "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Three+Johns+51.532915%2C-0.1090829"
       }
     },
     {

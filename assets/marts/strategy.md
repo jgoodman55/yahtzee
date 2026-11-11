@@ -16,13 +16,13 @@ Oak / chance are intentionally absent — weak signals, not strategy.
 Games where **exactly one** player has the binary feature. Rate = that
 holder's win rate.
 
-| Feature | Seed (n=132, 0 ties) |
+| Feature | Seed (n=135, 0 ties) |
 |---|---|
-| Yahtzee bonus > 0 | 15/15 = 100% |
+| Yahtzee bonus > 0 | 17/17 = 100% |
 | Upper bonus (35) | 55/65 ≈ 85% |
 | Yahtzee = 50 | 58/70 ≈ 83% |
-| Large straight = 40 | 33/43 ≈ 77% |
-| Large straight = 0 | 10/43 ≈ 23% |
+| Large straight = 40 | 33/44 = 75% |
+| Large straight = 0 | 11/44 = 25% |
 | Full house = 0 | 11/27 ≈ 41% |
 | Small straight = 0 | 1/4 = 25% — **n < 10, grey on the chart** |
 
@@ -54,7 +54,7 @@ Y-axis is that holder's outcome **share (0–100%)**; labels keep raw W/L.
 Combined exclusive holder rate is the swing-factor Yahtzee = 50 row
 (58/70 ≈ 83%) — not a separate dashboard visual.
 
-| Holder | Seed (n=132, 0 ties) |
+| Holder | Seed (n=135, 0 ties) |
 |---|---|
 | Erin alone | 30W / 10L of 40 = 75% |
 | Jordan alone | 28W / 2L of 30 ≈ 93% |

@@ -52,12 +52,17 @@ SCORESHEET_ONE_VISIT = (
     "LEICESTER ARMS SOHO",
 )
 
+# IMG_2929 does not have a written date. Change this one placeholder.
+SHEET_2929_DATE = date(2026, 11, 11)
+
 # A scoresheet day at a venue that already has Chase days. Unioned with
 # those days, so a later statement for the same calendar day does not
 # add a second row. The visit log has no date column; the date lives here.
+# Two games on SHEET_2929_DATE are one visit day, not two.
 SCORESHEET_DATED_DAYS = {
     "ANCHOR BANKSIDE": {date(2026, 10, 11), date(2026, 10, 31)},
-    "THREE JOHNS": {date(2026, 10, 31)},
+    "THREE JOHNS": {date(2026, 10, 31), SHEET_2929_DATE},
+    "SAN SEBASTIAN": {SHEET_2929_DATE},
 }
 
 # In visits but not seed_pubs (logged, unresolved coords).
@@ -244,6 +249,7 @@ def main() -> None:
         "VAUXHALL MARKETPLACE",
         "ANCHOR BANKSIDE",
         "THREE JOHNS",
+        "SAN SEBASTIAN",
         "THE BLACK DOG VAUX",
         "CROWN 052892",
         "MONUMENT",

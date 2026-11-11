@@ -171,11 +171,11 @@ were replaced by Chase Bankside days so visit_count is statement-based, not
 mixed demo+Chase. Games 127–129 add one scoresheet day at Anchor Bar,
 2026-10-11 (`SCORESHEET_DATED_DAYS`). Games 130–131 add **2026-10-31**
 at the same pin, and game 132 adds that same day at The Three Johns
-(`THREE JOHNS`). Games 133–134 are another Three Johns day, and game 135
-is San Sebastián (`SAN SEBASTIAN`), outside London. The sheet has no
-date; both venues use the placeholder `SHEET_2929_DATE` in
-`build_pub_visits.py` (currently 2026-11-11). Two games on that day are
-one visit. Each day is unioned with the Chase days for that merchant,
+(`THREE JOHNS`). Games 133–134 were also **2026-10-31** at The Three Johns, the same
+visit day as game 132, so they do not add a visit. Game 135 is San
+Sebastián (`SAN SEBASTIAN`) on **2026-11-06**, one visit, outside London.
+Those dates live on `played_on` in `seed_game_locations.csv`. Each day is
+unioned with the Chase days for that merchant,
 so a later statement for the same date does not add another row. The
 visit log has no date column; the date lives in the rebuild script.
 The Chase export those eight Anchor days came from ends 2026-08-30, so

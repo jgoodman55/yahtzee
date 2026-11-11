@@ -38,27 +38,27 @@ def test_anchor_scoresheet_day_unions_and_does_not_double():
 
 def test_three_johns_scoresheet_day_unions_and_does_not_double():
     mod = _load()
-    played = {date(2026, 10, 31), mod.SHEET_2929_DATE}
+    played = {date(2026, 10, 31)}
     assert mod.SCORESHEET_DATED_DAYS["THREE JOHNS"] == played
     assert "THREE JOHNS" not in mod.SCORESHEET_ONE_VISIT
     chase = {date(2026, 8, 1)}
     combined = mod.combined_days("THREE JOHNS", chase)
     assert combined == chase | played
-    assert mod.visit_row_count("THREE JOHNS", combined) == 3
-    already = chase | played
+    assert mod.visit_row_count("THREE JOHNS", combined) == 2
+    already = chase | {date(2026, 10, 31)}
     assert mod.combined_days("THREE JOHNS", already) == already
-    assert mod.visit_row_count("THREE JOHNS", already) == 3
+    assert mod.visit_row_count("THREE JOHNS", already) == 2
 
 
-def test_img_2929_placeholder_date_is_one_day_for_both_venues():
+def test_san_sebastian_is_one_day_and_three_johns_does_not_gain_it():
     mod = _load()
-    assert mod.SHEET_2929_DATE == date(2026, 11, 11)
-    assert mod.SCORESHEET_DATED_DAYS["SAN SEBASTIAN"] == {mod.SHEET_2929_DATE}
-    assert mod.SHEET_2929_DATE in mod.SCORESHEET_DATED_DAYS["THREE JOHNS"]
+    played = date(2026, 11, 6)
+    assert mod.SCORESHEET_DATED_DAYS["SAN SEBASTIAN"] == {played}
+    assert played not in mod.SCORESHEET_DATED_DAYS["THREE JOHNS"]
     assert mod.visit_row_count(
         "SAN SEBASTIAN", mod.combined_days("SAN SEBASTIAN", set())
     ) == 1
-    already = {mod.SHEET_2929_DATE}
+    already = {played}
     assert mod.combined_days("SAN SEBASTIAN", already) == already
     assert mod.visit_row_count("SAN SEBASTIAN", already) == 1
 

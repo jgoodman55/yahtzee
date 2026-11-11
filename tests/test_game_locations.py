@@ -145,6 +145,10 @@ def test_img_2929_three_johns_and_san_sebastian():
     assert by_seq[134]["sheet_label"] == "Three Johns Islington - 2"
     assert by_seq[135]["pub_name"] == "San Sebastián"
     assert by_seq[135]["sheet_label"] == "San Sebastian - 1"
+    assert by_seq[132]["played_on"] == "2026-10-31"
+    assert by_seq[133]["played_on"] == "2026-10-31"
+    assert by_seq[134]["played_on"] == "2026-10-31"
+    assert by_seq[135]["played_on"] == "2026-11-06"
     pub = {row["pub_name"]: row for row in _rows(PUBS)}["San Sebastián"]
     assert pub["merchant_name_raw"] == "SAN SEBASTIAN"
     assert pub["lat"] == "43.32390"

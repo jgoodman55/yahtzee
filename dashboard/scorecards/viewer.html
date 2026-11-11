@@ -213,8 +213,9 @@
         story.hidden = false;
         story.textContent = game.story;
       }
+      const when = game.played_on ? game.played_on + " · " : "";
       document.getElementById("subtitle").textContent =
-        `${game.sheet} · game ${game.game_on_sheet} of ${sheetGames.length} on this sheet · winner ${w} · margin ${game.margin} · Erin ${game.erin.recorded_total} / Jordan ${game.jordan.recorded_total}`;
+        `${when}${game.sheet} · game ${game.game_on_sheet} of ${sheetGames.length} on this sheet · winner ${w} · margin ${game.margin} · Erin ${game.erin.recorded_total} / Jordan ${game.jordan.recorded_total}`;
 
       const prev = games[idx - 1];
       const next = games[idx + 1];

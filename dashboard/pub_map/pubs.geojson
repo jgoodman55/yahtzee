@@ -98,32 +98,6 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -0.1090829,
-          51.532915
-        ]
-      },
-      "properties": {
-        "name": "The Three Johns",
-        "merchant_name_raw": "THREE JOHNS",
-        "source": "seed",
-        "visit_count": 4,
-        "note": "73 White Lion Street, Islington",
-        "merged_from": "THREE JOHNS",
-        "games_played": 3,
-        "erin_wins": 1,
-        "jordan_wins": 2,
-        "ties": 0,
-        "photo_url": "pub_map/photos/three_johns.jpg",
-        "photo_source": "seed",
-        "photo_attribution": "Jordan",
-        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Three+Johns+51.532915%2C-0.1090829"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
           -0.0886568,
           51.5062565
         ]
@@ -183,6 +157,32 @@
         "photo_source": "seed",
         "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=MC+and+Sons+Vauxhall+51.4862183%2C-0.1195286"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.1090829,
+          51.532915
+        ]
+      },
+      "properties": {
+        "name": "The Three Johns",
+        "merchant_name_raw": "THREE JOHNS",
+        "source": "seed",
+        "visit_count": 3,
+        "note": "73 White Lion Street, Islington",
+        "merged_from": "THREE JOHNS",
+        "games_played": 3,
+        "erin_wins": 1,
+        "jordan_wins": 2,
+        "ties": 0,
+        "photo_url": "pub_map/photos/three_johns.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Jordan",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=The+Three+Johns+51.532915%2C-0.1090829"
       }
     },
     {

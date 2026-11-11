@@ -73,9 +73,10 @@
       "    opacity: 0.6;",
       "  }",
       "  table.yahtzee-story-table td[data-col='Game'] { order: 1; }",
-      "  table.yahtzee-story-table td[data-col='Winner'] { order: 2; }",
-      "  table.yahtzee-story-table td[data-col='Erin'] { order: 3; }",
-      "  table.yahtzee-story-table td[data-col='Jordan'] { order: 4; }",
+      "  table.yahtzee-story-table td[data-col='Date'] { order: 2; }",
+      "  table.yahtzee-story-table td[data-col='Winner'] { order: 3; }",
+      "  table.yahtzee-story-table td[data-col='Erin'] { order: 4; }",
+      "  table.yahtzee-story-table td[data-col='Jordan'] { order: 5; }",
       "  table.yahtzee-story-table td.yahtzee-comment { order: 5; }",
       "  table.yahtzee-story-table td.yahtzee-story { order: 6; }",
       "  table.yahtzee-story-table td.yahtzee-replay {",
@@ -95,6 +96,7 @@
 
   function chipLabel(label) {
     if (label.indexOf("GAME") === 0) return "Game";
+    if (label.indexOf("DATE") === 0) return "Date";
     if (label.indexOf("WINNER") !== -1) return "Winner";
     if (label.indexOf("ERIN") === 0) return "Erin";
     if (label.indexOf("JORDAN") === 0) return "Jordan";
@@ -133,7 +135,13 @@
             if (cell.tagName === "TD") linkReplay(cell, row, labels);
           }
           var chip = chipLabel(label);
-          if (hasStory && cell.tagName === "TD" && chip) cell.setAttribute("data-col", chip);
+          if (hasStory && cell.tagName === "TD" && chip) {
+            if (chip === "Date" && !(cell.textContent || "").trim()) {
+              cell.style.display = "none";
+            } else {
+              cell.setAttribute("data-col", chip);
+            }
+          }
         });
       });
     });

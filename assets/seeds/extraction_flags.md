@@ -487,8 +487,8 @@ Header: **Anchor - 2** then **Three Johns Islington - 1**.
 One sheet after IMG_2928. Conceptual name `IMG_2929`. Columns `E J E J E J`
 left to right = game_on_sheet 1, 2, 3 → `game_seq` **133, 134, 135**.
 Jordan verified the readings. `recorded_total` equals `sum(score)` on every
-player-game. The sheet has no date. The placeholder is `SHEET_2929_DATE`
-in `build_pub_visits.py` (2026-11-11) and nowhere else.
+player-game. Jordan confirmed the dates: games 133–134 are **2026-10-31**,
+the same day as games 130–132, and game 135 is **2026-11-06**.
 
 The committed JPEG has no EXIF and no GPS (1200×1600).
 
@@ -500,5 +500,5 @@ Header: **Three Johns Islington - 2** then **San Sebastian - 1**.
 - game 2 (`134`): box sums **E 402 / J 282**. Erin wins. The Three Johns. Jordan's written grand looks like **262**. Stored **282**, the sum of the boxes (upper 100 + lower 182). Erin has one Yahtzee bonus box coloured, stored **100**.
 - game 3 (`135`): grands **E 248 / J 348**. Jordan wins. San Sebastián. Neither upper bonus (both upper faces sum to 53). Jordan has one Yahtzee bonus box marked, stored **100**.
 - game 1 (`133`), erin, yahtzee_bonus: a scribble, not a coloured box. The lower **128** and grand **226** include no 100. Stored **0**.
-- Locations: games 133–134 reuse **The Three Johns** and add one visit day, not two. Game 135 is the new **San Sebastián** pin, one visit on the same placeholder day, shown outside London. Games 1–111 still have no row and read as Unknown.
+- Locations: games 133–134 reuse **The Three Johns** on **2026-10-31**, which is already the visit day for game 132, so the visit count does not rise. Game 135 is the new **San Sebastián** pin, one visit on **2026-11-06**, shown outside London. Dates are `played_on` on `seed_game_locations.csv`. Games 1–111 still have no row and read as Unknown.
 - No score-rule leftovers. Nothing added to `known_score_rule_violations.csv`.

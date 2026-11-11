@@ -16,3 +16,5 @@ columns:
     type: string
     checks:
       - name: not_null
+  - name: played_on
+    type: string

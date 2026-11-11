@@ -261,9 +261,9 @@ def test_confirmed_pin_count():
     assert anchor["properties"]["games_played"] == 5
     assert anchor["properties"]["erin_wins"] == 1
     assert anchor["properties"]["jordan_wins"] == 4
-    assert visits["THREE JOHNS"] == 4
+    assert visits["THREE JOHNS"] == 3
     johns = next(f for f in features if f["properties"]["name"] == "The Three Johns")
-    assert johns["properties"]["visit_count"] == 4
+    assert johns["properties"]["visit_count"] == 3
     assert johns["properties"]["games_played"] == 3
     assert johns["properties"]["erin_wins"] == 1
     assert johns["properties"]["jordan_wins"] == 2

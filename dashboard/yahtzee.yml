@@ -1783,6 +1783,7 @@ rows:
         sql: |
           select
             h.game_seq,
+            nullif(l.played_on, '') as played_on,
             'Watch replay' as replay,
             replace(replace(h.comment, 'jordan:', 'Jordan:'), 'erin:', 'Erin:') as comment,
             h.story,
@@ -1791,11 +1792,14 @@ rows:
             t.jordan_recorded_total as jordan_score
           from mart_head_to_head h
           inner join mart_game_trends t using (game_seq)
+          left join seed_game_locations l using (game_seq)
           order by h.game_seq desc
         columns:
           - name: game_seq
             label: Game
             frozen: true
+          - name: played_on
+            label: Date
           - name: replay
             label: Replay
           - name: comment

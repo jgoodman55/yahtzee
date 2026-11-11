@@ -24,7 +24,7 @@ SEED = REPO / "assets" / "seeds" / "seed_commentary.csv"
 GAMES = REPO / "assets" / "seeds" / "raw_games.csv"
 BUILD_COMMENTARY = REPO / "assets" / "python" / "build_commentary.py"
 
-CANDY = "like taking candy from a stupid baby"
+CANDY = "like taking candy from a baby"
 KEPT_BIG_MARGIN = (
     "absolute domination, not even close",
     "one-sided. someone brought their A-game",
@@ -47,6 +47,11 @@ def test_candy_and_kept_big_margin_phrases():
     for kept in KEPT_BIG_MARGIN:
         assert kept in big
     assert len(big) >= 8
+    for options in phrases.values():
+        for phrase in options:
+            assert "stupid" not in phrase.lower(), phrase
+            assert "five-of-a-kind" not in phrase.lower(), phrase
+            assert "five of a kind" not in phrase.lower(), phrase
 
 
 def _load_build_commentary():

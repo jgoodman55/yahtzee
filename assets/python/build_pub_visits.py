@@ -52,13 +52,28 @@ SCORESHEET_ONE_VISIT = (
     "LEICESTER ARMS SOHO",
 )
 
-# A scoresheet day at a venue that already has Chase days. Unioned with
-# those days, so a later statement for the same calendar day does not
-# add a second row. The visit log has no date column; the date lives here.
-SCORESHEET_DATED_DAYS = {
-    "ANCHOR BANKSIDE": {date(2026, 10, 11), date(2026, 10, 31)},
-    "THREE JOHNS": {date(2026, 10, 31)},
-}
+# Unique played_on dates from seed_game_locations. Two games on one day
+# are one visit. A later Chase sale on that same date does not add a row.
+def scoresheet_dated_days() -> dict[str, set]:
+    by_pub: dict[str, str] = {}
+    with SEED_PUBS.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            pub = row["pub_name"].strip()
+            merchant = row["merchant_name_raw"].strip()
+            if pub not in by_pub or merchant != "ANCHOR BAR":
+                by_pub[pub] = merchant
+    days: dict[str, set] = defaultdict(set)
+    locations = REPO_ROOT / "assets" / "seeds" / "seed_game_locations.csv"
+    with locations.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            played = (row.get("played_on") or "").strip()
+            if not played:
+                continue
+            days[by_pub[row["pub_name"].strip()]].add(date.fromisoformat(played))
+    return dict(days)
+
+
+SCORESHEET_DATED_DAYS = scoresheet_dated_days()
 
 # In visits but not seed_pubs (logged, unresolved coords).
 EXTRA_INCLUDED = [
@@ -244,6 +259,7 @@ def main() -> None:
         "VAUXHALL MARKETPLACE",
         "ANCHOR BANKSIDE",
         "THREE JOHNS",
+        "SAN SEBASTIAN",
         "THE BLACK DOG VAUX",
         "CROWN 052892",
         "MONUMENT",

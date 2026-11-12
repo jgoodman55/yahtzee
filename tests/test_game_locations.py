@@ -36,7 +36,7 @@ def test_img_2922_locations_and_blank_earlier_games():
     assert by_seq[114]["pub_name"] == "The Queen's Arms"
     assert "Pimlico" not in by_seq[113]["pub_name"]
     game_seqs = {int(row["game_seq"]) for row in _rows(GAMES)}
-    assert max(game_seqs) == 132
+    assert max(game_seqs) == 135
     # Games through the first new sheet have no written location.
     assert not any(seq <= 111 for seq in by_seq)
 
@@ -135,3 +135,26 @@ def test_img_2928_anchor_and_three_johns():
     assert johns["photo_url"] == "pub_map/photos/three_johns.jpg"
     assert johns["photo_attribution"] == "Jordan"
     assert "73 White Lion Street" in johns["note"]
+
+
+def test_img_2929_three_johns_and_san_sebastian():
+    by_seq = {int(row["game_seq"]): row for row in _rows(LOCATIONS)}
+    assert by_seq[133]["pub_name"] == "The Three Johns"
+    assert by_seq[133]["sheet_label"] == "Three Johns Islington - 2"
+    assert by_seq[134]["pub_name"] == "The Three Johns"
+    assert by_seq[134]["sheet_label"] == "Three Johns Islington - 2"
+    assert by_seq[135]["pub_name"] == "San Sebastián"
+    assert by_seq[135]["sheet_label"] == "San Sebastian - 1"
+    assert by_seq[132]["played_on"] == "2026-10-31"
+    assert by_seq[133]["played_on"] == "2026-10-31"
+    assert by_seq[134]["played_on"] == "2026-10-31"
+    assert by_seq[135]["played_on"] == "2026-11-06"
+    pub = {row["pub_name"]: row for row in _rows(PUBS)}["San Sebastián"]
+    assert pub["merchant_name_raw"] == "SAN SEBASTIAN"
+    assert pub["lat"] == "43.32390"
+    assert pub["lng"] == "-1.97950"
+    assert "Leizaola" in pub["note"]
+    assert "Donostia" in pub["note"]
+    assert pub["photo_url"] == "pub_map/photos/san_sebastian.jpg"
+    assert "Nicolas Vigier" in pub["photo_attribution"]
+    assert "CC0" in pub["photo_attribution"]

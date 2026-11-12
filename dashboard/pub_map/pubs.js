@@ -176,9 +176,9 @@ window.PUB_MAP_DATA = {
         "visit_count": 3,
         "note": "73 White Lion Street, Islington",
         "merged_from": "THREE JOHNS",
-        "games_played": 1,
-        "erin_wins": 0,
-        "jordan_wins": 1,
+        "games_played": 3,
+        "erin_wins": 1,
+        "jordan_wins": 2,
         "ties": 0,
         "photo_url": "pub_map/photos/three_johns.jpg",
         "photo_source": "seed",
@@ -562,6 +562,32 @@ window.PUB_MAP_DATA = {
         "photo_source": "seed",
         "photo_attribution": "Ewan-M / Wikimedia Commons (CC BY-SA 4.0)",
         "maps_url": "https://www.google.com/maps/search/?api=1&query=Pedro%27s+Wine+Bar+51.4984945%2C-0.073223"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -1.9795,
+          43.3239
+        ]
+      },
+      "properties": {
+        "name": "San Sebastián",
+        "merchant_name_raw": "SAN SEBASTIAN",
+        "source": "seed",
+        "visit_count": 1,
+        "note": "Jesús María de Leizaola Ibilbidea, 20002 Donostia / San Sebastián, Gipuzkoa, Spain",
+        "merged_from": "SAN SEBASTIAN",
+        "games_played": 1,
+        "erin_wins": 0,
+        "jordan_wins": 1,
+        "ties": 0,
+        "photo_url": "pub_map/photos/san_sebastian.jpg",
+        "photo_source": "seed",
+        "photo_attribution": "Nicolas Vigier / Wikimedia Commons (CC0)",
+        "maps_url": "https://www.google.com/maps/search/?api=1&query=San+Sebasti%C3%A1n+43.3239%2C-1.9795"
       }
     },
     {
@@ -1093,7 +1119,7 @@ window.PUB_MAP_DATA = {
       "lng": -0.1278,
       "lat": 51.5074
     },
-    "confirmed_pub_count": 48,
-    "photo_count": 48
+    "confirmed_pub_count": 49,
+    "photo_count": 49
   }
 };

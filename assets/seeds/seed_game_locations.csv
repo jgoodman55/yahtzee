@@ -1,22 +1,25 @@
-game_seq,pub_name,sheet_label
-112,The Butcher's Hook,Butcher's Hook - 1
-113,The Queen's Arms,Queen's Arms - 2
-114,The Queen's Arms,Queen's Arms - 2
-115,The Queen's Arms,Queen's Arms - 2
-116,The Queen's Arms,Queen's Arms - 2
-117,Munkbron,Sweden - Munkbron - 1
-118,Munkbron,Munkbron - 2
-119,Munkbron,Munkbron - 2
-120,The Atlas,Atlas - 1
-121,The Atlas,Atlas - 3
-122,The Atlas,Atlas - 3
-123,The Atlas,Atlas - 3
-124,The Atlas,Atlas - 1
-125,The Leicester Arms,Leicester Arms - 2
-126,The Leicester Arms,Leicester Arms - 2
-127,Anchor Bar,Anchor - 3
-128,Anchor Bar,Anchor - 3
-129,Anchor Bar,Anchor - 3
-130,Anchor Bar,Anchor - 2
-131,Anchor Bar,Anchor - 2
-132,The Three Johns,Three Johns Islington - 1
+game_seq,pub_name,sheet_label,played_on
+112,The Butcher's Hook,Butcher's Hook - 1,
+113,The Queen's Arms,Queen's Arms - 2,
+114,The Queen's Arms,Queen's Arms - 2,
+115,The Queen's Arms,Queen's Arms - 2,
+116,The Queen's Arms,Queen's Arms - 2,
+117,Munkbron,Sweden - Munkbron - 1,
+118,Munkbron,Munkbron - 2,
+119,Munkbron,Munkbron - 2,
+120,The Atlas,Atlas - 1,
+121,The Atlas,Atlas - 3,
+122,The Atlas,Atlas - 3,
+123,The Atlas,Atlas - 3,
+124,The Atlas,Atlas - 1,
+125,The Leicester Arms,Leicester Arms - 2,
+126,The Leicester Arms,Leicester Arms - 2,
+127,Anchor Bar,Anchor - 3,2026-10-11
+128,Anchor Bar,Anchor - 3,2026-10-11
+129,Anchor Bar,Anchor - 3,2026-10-11
+130,Anchor Bar,Anchor - 2,2026-10-31
+131,Anchor Bar,Anchor - 2,2026-10-31
+132,The Three Johns,Three Johns Islington - 1,2026-10-31
+133,The Three Johns,Three Johns Islington - 2,2026-10-31
+134,The Three Johns,Three Johns Islington - 2,2026-10-31
+135,San Sebastián,San Sebastian - 1,2026-11-06

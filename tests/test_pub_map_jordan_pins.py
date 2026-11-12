@@ -206,7 +206,7 @@ def test_map_uses_pint_pins_and_esri_basemap():
 def test_confirmed_pin_count():
     features = load_features()
     names = [f["properties"]["name"] for f in features]
-    assert len(features) == 48
+    assert len(features) == 49
     assert "The Butcher's Hook" in names
     assert "The Queen's Arms" in names
     visits = load_visits()
@@ -264,9 +264,20 @@ def test_confirmed_pin_count():
     assert visits["THREE JOHNS"] == 3
     johns = next(f for f in features if f["properties"]["name"] == "The Three Johns")
     assert johns["properties"]["visit_count"] == 3
-    assert johns["properties"]["games_played"] == 1
-    assert johns["properties"]["erin_wins"] == 0
-    assert johns["properties"]["jordan_wins"] == 1
+    assert johns["properties"]["games_played"] == 3
+    assert johns["properties"]["erin_wins"] == 1
+    assert johns["properties"]["jordan_wins"] == 2
+    visits_ss = visits["SAN SEBASTIAN"]
+    assert visits_ss == 1
+    sebastian = next(f for f in features if f["properties"]["name"] == "San Sebastián")
+    assert sebastian["properties"]["visit_count"] == 1
+    assert sebastian["properties"]["games_played"] == 1
+    assert sebastian["properties"]["erin_wins"] == 0
+    assert sebastian["properties"]["jordan_wins"] == 1
+    assert sebastian["properties"]["photo_url"] == "pub_map/photos/san_sebastian.jpg"
+    assert "Nicolas Vigier" in sebastian["properties"]["photo_attribution"]
+    assert "Leizaola" in sebastian["properties"]["note"]
+    assert sebastian["geometry"]["coordinates"] == [-1.9795, 43.3239]
     assert johns["properties"]["photo_attribution"] == "Jordan"
     assert johns["properties"]["photo_url"] == "pub_map/photos/three_johns.jpg"
     assert anchor["geometry"]["coordinates"] == [-0.0931, 51.5073]

@@ -96,6 +96,18 @@ def load_venues() -> dict[int, str]:
     return rows
 
 
+def load_played_on() -> dict[int, str]:
+    rows: dict[int, str] = {}
+    if not LOCATIONS_CSV.exists():
+        return rows
+    with LOCATIONS_CSV.open(newline="", encoding="utf-8") as fh:
+        for rec in csv.DictReader(fh):
+            played = (rec.get("played_on") or "").strip()
+            if played:
+                rows[int(rec["game_seq"])] = played
+    return rows
+
+
 def load_crosswalk() -> dict[int, dict]:
     rows = {}
     with CROSSWALK_CSV.open(newline="", encoding="utf-8") as fh:
@@ -212,6 +224,7 @@ def build_games(db_path: Path) -> list[dict]:
     crosswalk = load_crosswalk()
     scores = load_scores()
     venues = load_venues()
+    played_on = load_played_on()
     trends = load_trends(db_path)
     story_for, focus_for = _game_story_fn()
     games = []
@@ -250,6 +263,9 @@ def build_games(db_path: Path) -> list[dict]:
         venue = venues.get(seq)
         if venue:
             games[-1]["venue"] = venue
+        played = played_on.get(seq)
+        if played:
+            games[-1]["played_on"] = played
     return games
 
 
